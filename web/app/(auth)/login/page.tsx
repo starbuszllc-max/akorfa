@@ -19,8 +19,8 @@ export default function LoginPage() {
       });
       if (signInError) setError(signInError.message);
       else {
-        // successful sign in — client will have session
-        window.location.href = '/';
+        // successful sign in — redirect to feed
+        window.location.href = '/feed';
       }
     } catch (err: any) {
       setError(err.message || String(err));
