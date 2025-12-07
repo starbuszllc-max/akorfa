@@ -19,22 +19,16 @@ jobs:
           cache: 'npm'
 
       - name: Install root dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build shared package
         run: npm run build:shared
 
-      - name: Build shared package dist for web
-        run: cd shared && npm run build
-
       - name: Run shared tests
         run: npm run test:shared
 
-      - name: Install and build web
-        run: |
-          cd web
-          npm ci
-          npm run build
+      - name: Build web app
+        run: cd web && npm run build
 
       - name: Run ESLint
         run: |
