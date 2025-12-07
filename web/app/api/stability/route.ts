@@ -18,18 +18,14 @@ export async function POST(req: Request) {
 
     // Persist to assessments as a special stability record for now, include user_id if provided
     const user_id = body.user_id ?? null;
-    const {data, error} = await supabaseAdmin
-      .from('assessments')
-      .insert([
-        {
-          user_id: user_id,
-          layer_scores: metrics,
-          overall_score: stability,
-          insights: JSON.stringify({note: 'stability-calc'})
-        }
-      ])
-      .select('*')
-      .single();
+    const {data, error} = await supabaseAdmin().from('assessments').insert([
+      {
+        user_id: user_id,
+        layer_scores: metrics,
+        overall_score: stability,
+        insights: JSON.stringify({note: 'stability-calc'})
+      }
+    ]).select('*').single();
 
     if (error) return NextResponse.json({error: error.message}, {status: 500});
 

@@ -12,7 +12,7 @@ export async function POST(req: Request){
     if(!post_id || !user_id) return NextResponse.json({error: 'post_id and user_id required'},{status:400});
 
     // Upsert a reaction (if exists do nothing)
-    const {data, error} = await supabaseAdmin.from('reactions').insert([{post_id, user_id, reaction_type}]).select('*');
+    const {data, error} = await supabaseAdmin().from('reactions').insert([{post_id, user_id, reaction_type}]).select('*');
     if(error) {
       // Could be unique constraint; return 409
       console.error(error);
@@ -21,15 +21,15 @@ export async function POST(req: Request){
 
     // increment like_count on post (simplest approach)
     try{
-      await supabaseAdmin.rpc('increment_post_like_count', {p_post_id: post_id});
+      await supabaseAdmin().rpc('increment_post_like_count', {p_post_id: post_id});
     }catch(e){}
 
     // insert user_event for reaction
-    await supabaseAdmin.from('user_events').insert([{user_id, event_type: 'reaction_given', points_earned: 1, metadata: {post_id}}]);
+    await supabaseAdmin().from('user_events').insert([{user_id, event_type: 'reaction_given', points_earned: 1, metadata: {post_id}}]);
 
     // compute delta and atomically increment user score via RPC
     const delta = calculateAkorfaScore({usersHelped:1});
-    await supabaseAdmin.rpc('increment_user_score', {p_user_id: user_id, p_delta: delta});
+    await supabaseAdmin().rpc('increment_user_score', {p_user_id: user_id, p_delta: delta});
 
     return NextResponse.json({ok: true});
   }catch(err:any){
