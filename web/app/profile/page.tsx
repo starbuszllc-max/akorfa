@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {supabaseClient} from '../../lib/supabaseClient';
 import { BadgesList, LevelDisplay } from '../../components/badges';
+import { ActivityHeatmap } from '../../components/heatmap';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<any>(null);
@@ -133,6 +134,11 @@ export default function ProfilePage() {
         {profile.bio && <p className="text-gray-700 mb-4">{profile.bio}</p>}
         
         <LevelDisplay score={Number(profile.akorfa_score || 0)} />
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Activity</h2>
+        <ActivityHeatmap userId={userId!} />
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow">
