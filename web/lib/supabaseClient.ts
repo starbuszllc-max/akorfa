@@ -1,11 +1,17 @@
-import {createClient} from '@supabase/supabase-js';
+import {createClient, SupabaseClient} from '@supabase/supabase-js';
 
-// Lazy factory for public client (browser)
+let browserClient: SupabaseClient | null = null;
+
+// Singleton for public client (browser)
 export function supabaseClient() {
+  if (browserClient) return browserClient;
+  
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anon) throw new Error('NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be set');
-  return createClient(url, anon);
+  
+  browserClient = createClient(url, anon);
+  return browserClient;
 }
 
 // Lazy factory for admin client (server)
