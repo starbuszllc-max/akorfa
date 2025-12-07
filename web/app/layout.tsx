@@ -4,7 +4,7 @@ import Header from '../components/ui/Header';
 
 export const metadata = {
   title: 'Akorfa',
-  description: 'Akorfa — Human Stack platform'
+  description: 'Akorfa — Human Stack platform for self-discovery and growth'
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
@@ -12,7 +12,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en">
       <body className="min-h-screen bg-bg text-text">
         <Header />
-        <div className="max-w-4xl mx-auto p-6">{children}</div>
+        <div className="max-w-6xl mx-auto p-6">{children}</div>
       </body>
     </html>
   );
