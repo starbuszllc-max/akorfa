@@ -18,6 +18,9 @@
     "incremental": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "paths": {
+      "@akorfa/shared/*": ["../shared/*"]
+    },
     "plugins": [
       {
         "name": "next"
