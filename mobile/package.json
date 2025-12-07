@@ -1,0 +1,19 @@
+{
+  "name": "akorfa-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "App.tsx",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios"
+  },
+  "dependencies": {
+    "expo": "~48.0.0",
+    "react": "18.2.0",
+    "react-native": "0.71.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.0"
+  }
+}

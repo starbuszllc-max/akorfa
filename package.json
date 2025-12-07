@@ -1,0 +1,18 @@
+{
+  "name": "akorfa-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "shared",
+    "web",
+    "mobile",
+    "supabase"
+  ],
+  "scripts": {
+    "bootstrap": "npm install",
+    "test": "echo \"Run tests in packages (e.g. cd shared && npm test)\"",
+    "build:shared": "cd shared && npm run build",
+    "test:shared": "cd shared && npm test",
+    "ci": "npm run build:shared && npm run test:shared"
+  }
+}
