@@ -4,9 +4,18 @@ import {posts, userEvents, profiles} from '@akorfa/shared/src/schema';
 import {calculateAkorfaScore} from '@akorfa/shared/dist/scoring';
 import {eq, desc, sql} from 'drizzle-orm';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const allPosts = await db
+    const { searchParams } = new URL(req.url);
+    const pageParam = parseInt(searchParams.get('page') || '1');
+    const limitParam = parseInt(searchParams.get('limit') || '20');
+    const layer = searchParams.get('layer');
+    
+    const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+    const limit = isNaN(limitParam) || limitParam < 1 ? 20 : Math.min(limitParam, 50);
+    const offset = (page - 1) * limit;
+
+    const baseQuery = db
       .select({
         id: posts.id,
         userId: posts.userId,
@@ -26,8 +35,28 @@ export async function GET() {
       .from(posts)
       .leftJoin(profiles, eq(posts.userId, profiles.id))
       .orderBy(desc(posts.createdAt))
-      .limit(50);
-    return NextResponse.json({posts: allPosts});
+      .limit(limit)
+      .offset(offset);
+
+    const allPosts = layer 
+      ? await baseQuery.where(eq(posts.layer, layer))
+      : await baseQuery;
+
+    const countQuery = layer
+      ? db.select({ count: sql<number>`count(*)::int` }).from(posts).where(eq(posts.layer, layer))
+      : db.select({ count: sql<number>`count(*)::int` }).from(posts);
+    
+    const totalCount = await countQuery;
+
+    return NextResponse.json({
+      posts: allPosts,
+      pagination: {
+        page,
+        limit,
+        total: totalCount[0]?.count || 0,
+        hasMore: allPosts.length === limit
+      }
+    });
   } catch (err: any) {
     console.error(err);
     return NextResponse.json({error: err.message ?? String(err)}, {status: 500});
