@@ -67,3 +67,30 @@ export const userEvents = pgTable('user_events', {
   metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
+
+// Challenges table
+export const challenges = pgTable('challenges', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  layer: text('layer').default('social'),
+  durationDays: integer('duration_days').default(7),
+  pointsReward: integer('points_reward').default(50),
+  createdBy: uuid('created_by').references(() => profiles.id, { onDelete: 'set null' }),
+  startsAt: timestamp('starts_at', { withTimezone: true }).defaultNow(),
+  endsAt: timestamp('ends_at', { withTimezone: true }),
+  participantCount: integer('participant_count').default(0),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
+// Challenge participants table
+export const challengeParticipants = pgTable('challenge_participants', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  challengeId: uuid('challenge_id').references(() => challenges.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').references(() => profiles.id, { onDelete: 'cascade' }),
+  status: text('status').default('active'),
+  progress: integer('progress').default(0),
+  joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow(),
+  completedAt: timestamp('completed_at', { withTimezone: true })
+});

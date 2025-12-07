@@ -180,6 +180,7 @@ export default function Home() {
           <p className="text-sm mb-6">Human Stack Platform for Self-Discovery</p>
           <div className="flex justify-center gap-6 text-sm">
             <Link href="/assessments" className="hover:text-white transition-colors">Assessments</Link>
+            <Link href="/challenges" className="hover:text-white transition-colors">Challenges</Link>
             <Link href="/stability" className="hover:text-white transition-colors">Stability</Link>
             <Link href="/feed" className="hover:text-white transition-colors">Community</Link>
             <Link href="/profile" className="hover:text-white transition-colors">Profile</Link>
