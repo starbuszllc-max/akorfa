@@ -1,8 +1,10 @@
 'use client';
 import React, {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import {supabaseClient} from '../../../lib/supabaseClient';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,8 +19,15 @@ export default function SignupPage() {
         email,
         password
       });
-      if (signUpError) setMessage(signUpError.message);
-      else setMessage('Check your email for a confirmation link.');
+      if (signUpError) {
+        setMessage(signUpError.message);
+      } else if (data.session) {
+        router.push('/feed');
+      } else if (data.user?.identities?.length === 0) {
+        setMessage('An account with this email already exists. Please log in.');
+      } else {
+        setMessage('Check your email for a confirmation link.');
+      }
     } catch (err: any) {
       setMessage(err.message || String(err));
     } finally {
