@@ -39,6 +39,10 @@ localPort = 37197
 externalPort = 3000
 
 [[ports]]
+localPort = 38285
+externalPort = 3003
+
+[[ports]]
 localPort = 42275
 externalPort = 3001
 
@@ -50,3 +54,9 @@ externalPort = 3002
 deploymentTarget = "autoscale"
 run = ["bash", "-c", "cd web && npm start -- -H 0.0.0.0 -p 5000"]
 build = ["bash", "-c", "npm run build:shared && cd web && npm run build"]
+
+[userenv]
+
+[userenv.shared]
+NEXT_PUBLIC_SUPABASE_URL = "https://pbhrknchyuepwfqrepbi.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiaHJrbmNoeXVlcHdmcXJlcGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzMwMzMsImV4cCI6MjA4MDY0OTAzM30.B1U1uHhJsbYCdbh52eAqYaxGvG9-W_vqkpKzb6av-Qk"
