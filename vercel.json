@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
   "installCommand": "npm install",
-  "buildCommand": "npm run build:shared && cd web && npm run build",
+  "buildCommand": "npm run build -w @akorfa/shared && npm run build -w akorfa-web",
   "outputDirectory": "web/.next"
 }

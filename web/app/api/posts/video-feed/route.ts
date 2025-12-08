@@ -64,18 +64,21 @@ export async function GET(request: NextRequest) {
 
     const scoredVideos = videos.map((video) => {
       let relevanceScore = 0;
+      const likeCount = video.likeCount ?? 0;
+      const commentCount = video.commentCount ?? 0;
       
       if (category === 'for-you' && Object.keys(userLayerScores).length > 0) {
         const videoLayer = video.layer || 'social';
         const layerScore = userLayerScores[videoLayer] || 50;
         relevanceScore = layerScore / 100;
         
-        const recencyBoost = Math.max(0, 1 - (Date.now() - new Date(video.createdAt).getTime()) / (7 * 24 * 60 * 60 * 1000));
-        const engagementBoost = (video.likeCount + video.commentCount * 2) / 100;
+        const createdTime = video.createdAt ? new Date(video.createdAt).getTime() : Date.now();
+        const recencyBoost = Math.max(0, 1 - (Date.now() - createdTime) / (7 * 24 * 60 * 60 * 1000));
+        const engagementBoost = (likeCount + commentCount * 2) / 100;
         
         relevanceScore = relevanceScore * 0.5 + recencyBoost * 0.3 + engagementBoost * 0.2;
       } else {
-        relevanceScore = (video.likeCount + video.commentCount * 2) / 100;
+        relevanceScore = (likeCount + commentCount * 2) / 100;
       }
       
       return { ...video, relevanceScore };

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { newsArticles, newsSources } from '@akorfa/shared/src/schema';
-import { desc, eq, and } from 'drizzle-orm';
+import { desc, eq, and, sql } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +11,11 @@ export async function GET(request: NextRequest) {
 
     const db = getDb();
     
-    let query = db
+    const whereCondition = category && category !== 'all' 
+      ? eq(newsArticles.category, category) 
+      : undefined;
+
+    const articles = await db
       .select({
         id: newsArticles.id,
         title: newsArticles.title,
@@ -32,14 +36,9 @@ export async function GET(request: NextRequest) {
       })
       .from(newsArticles)
       .leftJoin(newsSources, eq(newsArticles.sourceId, newsSources.id))
+      .where(whereCondition)
       .orderBy(desc(newsArticles.publishedAt))
       .limit(limit);
-
-    if (category && category !== 'all') {
-      query = query.where(eq(newsArticles.category, category));
-    }
-
-    const articles = await query;
 
     return NextResponse.json({ articles });
   } catch (error) {

@@ -170,7 +170,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
           className="h-full w-full relative"
         >
           <video
-            ref={el => videoRefs.current[currentIndex] = el}
+            ref={el => { videoRefs.current[currentIndex] = el; }}
             src={currentVideo.videoUrl}
             poster={currentVideo.videoThumbnail}
             className="h-full w-full object-cover"
