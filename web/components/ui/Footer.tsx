@@ -1,10 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('demo_user_id');
+    setIsLoggedIn(!!userId);
+  }, []);
 
   return (
     <footer className="w-full bg-gray-900 dark:bg-slate-950 text-gray-300 mt-auto">
@@ -48,11 +54,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-white text-sm mb-2 md:mb-3">Get Started</h3>
+            <h3 className="font-semibold text-white text-sm mb-2 md:mb-3">{isLoggedIn ? 'Your Space' : 'Get Started'}</h3>
             <ul className="space-y-1 text-xs md:text-sm">
               <li>
-                <Link href="/onboarding" className="hover:text-white transition-colors">
-                  Start Journey
+                <Link href={isLoggedIn ? "/dashboard" : "/onboarding"} className="hover:text-white transition-colors">
+                  {isLoggedIn ? 'Dashboard' : 'Start Journey'}
                 </Link>
               </li>
               <li>

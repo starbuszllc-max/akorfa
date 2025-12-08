@@ -94,6 +94,8 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const [replyingTo, setReplyingTo] = useState<{ id: string; username: string } | null>(null);
   const [showShareToast, setShowShareToast] = useState(false);
+  const [shareToastMessage, setShareToastMessage] = useState('Link copied to clipboard!');
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const username = post.profiles?.username || 'Anonymous';
   const avatarUrl = post.profiles?.avatar_url;
@@ -198,30 +200,39 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
     }
   }
 
-  async function handleShare() {
-    try {
-      const shareUrl = `${window.location.origin}/feed#post-${post.id}`;
-      
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Check out this post on Akorfa',
-          text: post.content.slice(0, 100) + (post.content.length > 100 ? '...' : ''),
-          url: shareUrl
-        });
-      } else {
-        await navigator.clipboard.writeText(shareUrl);
+  function handleShare() {
+    setShowShareModal(true);
+  }
+
+  async function handleShareOption(option: 'feed' | 'story' | 'community' | 'external' | 'copy') {
+    setShowShareModal(false);
+    
+    if (option === 'feed' || option === 'story' || option === 'community') {
+      setShareToastMessage('Coming soon! Use Copy Link for now.');
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+      return;
+    } else if (option === 'external') {
+      try {
+        const shareUrl = `${window.location.origin}/feed#post-${post.id}`;
+        if (navigator.share) {
+          await navigator.share({
+            title: 'Check out this post on Akorfa',
+            text: post.content.slice(0, 100) + (post.content.length > 100 ? '...' : ''),
+            url: shareUrl
+          });
+        }
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else if (option === 'copy') {
+      try {
+        await navigator.clipboard.writeText(`${window.location.origin}/feed#post-${post.id}`);
+        setShareToastMessage('Link copied to clipboard!');
         setShowShareToast(true);
         setTimeout(() => setShowShareToast(false), 2000);
-      }
-    } catch (err) {
-      if ((err as Error).name !== 'AbortError') {
-        try {
-          await navigator.clipboard.writeText(`${window.location.origin}/feed#post-${post.id}`);
-          setShowShareToast(true);
-          setTimeout(() => setShowShareToast(false), 2000);
-        } catch (clipErr) {
-          console.error('Failed to copy link:', clipErr);
-        }
+      } catch (err) {
+        console.error('Copy failed:', err);
       }
     }
   }
@@ -242,9 +253,86 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
           exit={{ opacity: 0, y: -20 }}
           className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-green-500 text-white rounded-lg shadow-lg text-sm font-medium"
         >
-          Link copied to clipboard!
+          {shareToastMessage}
         </motion.div>
       )}
+
+      <AnimatePresence>
+        {showShareModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowShareModal(false)}
+              className="fixed inset-0 bg-black/50 z-40"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-4"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">Share to...</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => handleShareOption('feed')}
+                  className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors relative"
+                >
+                  <svg className="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Feed</span>
+                  <span className="absolute top-1 right-1 text-[10px] px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 rounded-full">Soon</span>
+                </button>
+                <button
+                  onClick={() => handleShareOption('story')}
+                  className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors relative"
+                >
+                  <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Story</span>
+                  <span className="absolute top-1 right-1 text-[10px] px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 rounded-full">Soon</span>
+                </button>
+                <button
+                  onClick={() => handleShareOption('community')}
+                  className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/30 transition-colors relative"
+                >
+                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Community</span>
+                  <span className="absolute top-1 right-1 text-[10px] px-1.5 py-0.5 bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300 rounded-full">Soon</span>
+                </button>
+                <button
+                  onClick={() => handleShareOption('copy')}
+                  className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
+                >
+                  <svg className="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Copy Link</span>
+                </button>
+              </div>
+              {typeof navigator !== 'undefined' && 'share' in navigator && (
+                <button
+                  onClick={() => handleShareOption('external')}
+                  className="w-full mt-3 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-colors"
+                >
+                  Share to Other Apps
+                </button>
+              )}
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="w-full mt-2 py-2 text-gray-500 dark:text-gray-400 text-sm hover:text-gray-700 dark:hover:text-gray-200"
+              >
+                Cancel
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">

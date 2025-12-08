@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { User, Flame, Zap, Trophy, Settings, ChevronRight } from 'lucide-react';
+import { User, Flame, Zap, Trophy, Settings, ChevronRight, Camera } from 'lucide-react';
 import { BadgesList, LevelDisplay } from '../../components/badges';
 import { ActivityHeatmap } from '../../components/heatmap';
 import ProfilePictureUpload from '@/components/media/ProfilePictureUpload';
@@ -11,6 +11,39 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !userId) return;
+    
+    setUploadingCover(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'media');
+      
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (uploadRes.ok) {
+        const { url } = await uploadRes.json();
+        await fetch('/api/profiles', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: userId, cover_url: url })
+        });
+        setProfile({ ...profile, coverUrl: url });
+      }
+    } catch (err) {
+      console.error('Cover upload error:', err);
+    } finally {
+      setUploadingCover(false);
+    }
+  }
 
   useEffect(() => {
     const uid = localStorage.getItem('demo_user_id');
@@ -86,7 +119,35 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="h-24 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+        <div className="relative h-32 md:h-40">
+          {profile.coverUrl ? (
+            <img 
+              src={profile.coverUrl} 
+              alt="Cover" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+          )}
+          <button
+            onClick={() => coverInputRef.current?.click()}
+            disabled={uploadingCover}
+            className="absolute bottom-3 right-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+          >
+            {uploadingCover ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Camera className="w-5 h-5" />
+            )}
+          </button>
+          <input
+            ref={coverInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleCoverUpload}
+            className="hidden"
+          />
+        </div>
         <div className="px-6 pb-6">
           <div className="flex items-end gap-4 -mt-12 mb-4">
             <ProfilePictureUpload

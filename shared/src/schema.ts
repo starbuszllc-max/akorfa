@@ -5,6 +5,7 @@ export const profiles = pgTable('profiles', {
   username: text('username').notNull().unique(),
   fullName: text('full_name'),
   avatarUrl: text('avatar_url'),
+  coverUrl: text('cover_url'),
   bio: text('bio'),
   akorfaScore: decimal('akorfa_score', { precision: 10, scale: 2 }).default('0'),
   layerScores: jsonb('layer_scores').default({}),
