@@ -4,9 +4,11 @@ import { postScores, posts, wallets, pointsLog } from '@akorfa/shared/src/schema
 import { eq, sql, desc } from 'drizzle-orm';
 import OpenAI from 'openai';
 
-const openai = new OpenAI();
-
 const LAYERS = ['environment', 'bio', 'internal', 'cultural', 'social', 'conscious', 'existential'];
+
+function getOpenAIClient() {
+  return new OpenAI();
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -73,6 +75,7 @@ Example response:
 
 Return ONLY valid JSON.`;
 
+    const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
