@@ -160,7 +160,7 @@ export function VoiceCoach({ userId, onMessage }: VoiceCoachProps) {
       </div>
 
       <div className="flex flex-col items-center gap-6">
-        <div className="relative">
+        <div className="relative flex flex-col items-center gap-3">
           <button
             onClick={toggleListening}
             disabled={isProcessing}
@@ -180,7 +180,22 @@ export function VoiceCoach({ userId, onMessage }: VoiceCoachProps) {
           </button>
           
           {isListening && (
-            <div className="absolute inset-0 rounded-full border-4 border-red-400 animate-ping" />
+            <>
+              <div className="absolute inset-0 w-24 h-24 rounded-full border-4 border-red-400 animate-ping" />
+              <button
+                onClick={() => {
+                  if (recognitionRef.current) {
+                    recognitionRef.current.abort();
+                  }
+                  setIsListening(false);
+                  setTranscript('');
+                }}
+                className="px-6 py-2 bg-red-600 text-white rounded-full text-sm font-semibold shadow-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                <MicOff className="w-4 h-4" />
+                Stop Recording
+              </button>
+            </>
           )}
         </div>
 

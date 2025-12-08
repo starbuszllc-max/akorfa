@@ -9,6 +9,7 @@ import RightSidebar from '../../components/feed/RightSidebar';
 import SkeletonPost from '../../components/feed/SkeletonPost';
 import Toast from '../../components/feed/Toast';
 import FloatingComposeButton from '../../components/feed/FloatingComposeButton';
+import CameraCapture from '../../components/camera/CameraCapture';
 
 interface Post {
   id: string;
@@ -33,6 +34,7 @@ export default function FeedPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' as 'success' | 'error' | 'info' });
   const [showMobileComposer, setShowMobileComposer] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef(1);
 
@@ -127,6 +129,39 @@ export default function FeedPage() {
 
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
     setToast({ visible: true, message, type });
+  };
+
+  const handleCameraCapture = async (data: {
+    mediaUrl: string;
+    mediaType: 'image' | 'video';
+    layer: string;
+    destination: 'feed' | 'story' | 'save';
+  }) => {
+    if (data.destination === 'feed') {
+      try {
+        const res = await fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: currentUserId,
+            content: '',
+            layer: data.layer,
+            mediaUrl: data.mediaUrl,
+            mediaType: data.mediaType
+          })
+        });
+        if (res.ok) {
+          showToast('Posted to feed!', 'success');
+          setRefreshTrigger(prev => prev + 1);
+        }
+      } catch (error) {
+        showToast('Failed to post', 'error');
+      }
+    } else if (data.destination === 'story') {
+      showToast('Stories coming soon!', 'info');
+    } else {
+      showToast('Saved to gallery!', 'success');
+    }
   };
 
   return (
@@ -231,7 +266,10 @@ export default function FeedPage() {
         </div>
       </main>
 
-      <FloatingComposeButton onClick={() => setShowMobileComposer(true)} />
+      <FloatingComposeButton 
+        onClick={() => setShowMobileComposer(true)} 
+        onCameraClick={() => setShowCamera(true)} 
+      />
 
       <AnimatePresence>
         {showMobileComposer && (
@@ -263,6 +301,16 @@ export default function FeedPage() {
         type={toast.type}
         onClose={() => setToast(prev => ({ ...prev, visible: false }))}
       />
+
+      <AnimatePresence>
+        {showCamera && (
+          <CameraCapture
+            onClose={() => setShowCamera(false)}
+            onCapture={handleCameraCapture}
+            userId={currentUserId}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -338,3 +338,27 @@ export const notifications = pgTable('notifications', {
   isRead: boolean('is_read').default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
+
+// Direct Messages - Conversations
+export const conversations = pgTable('conversations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  participantOneId: uuid('participant_one_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  participantTwoId: uuid('participant_two_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  lastMessageAt: timestamp('last_message_at', { withTimezone: true }).defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+}, (table) => ({
+  uniqueConversation: unique().on(table.participantOneId, table.participantTwoId)
+}));
+
+// Direct Messages - Messages
+export const messages = pgTable('messages', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  conversationId: uuid('conversation_id').notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  senderId: uuid('sender_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  content: text('content'),
+  messageType: text('message_type').default('text'),
+  mediaUrl: text('media_url'),
+  audioDuration: integer('audio_duration'),
+  isRead: boolean('is_read').default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
