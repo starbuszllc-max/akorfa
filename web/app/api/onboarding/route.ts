@@ -25,6 +25,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ userId, success: true });
   } catch (err: any) {
     console.error('Onboarding error:', err);
-    return NextResponse.json({ error: err.message ?? String(err) }, { status: 500 });
+    const errorMessage = err?.message || String(err);
+    const errorStack = err?.stack || '';
+    const errorCode = err?.code || '';
+    return NextResponse.json({ 
+      error: errorMessage,
+      code: errorCode,
+      details: errorStack,
+      hint: 'Check DATABASE_URL environment variable and database schema'
+    }, { status: 500 });
   }
 }

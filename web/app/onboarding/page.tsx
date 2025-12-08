@@ -62,9 +62,13 @@ export default function OnboardingPage() {
       if (data.userId) {
         localStorage.setItem('demo_user_id', data.userId);
         router.push('/dashboard');
+      } else if (data.error) {
+        alert(`Signup Error: ${data.error}\n\nCode: ${data.code || 'N/A'}\n\nHint: ${data.hint || 'N/A'}`);
+        console.error('Onboarding error details:', data);
       }
     } catch (err) {
       console.error('Onboarding error:', err);
+      alert('Network error - please try again');
     }
     setLoading(false);
   };
