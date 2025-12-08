@@ -34,7 +34,17 @@ The platform uses a shared scoring engine (`@akorfa/shared`) consumed by both we
 - **Fixed Comment Button**: Changed color from bg-primary to bg-indigo-600 for visibility
 - **Database Schema Migration**: Migrated from Supabase migrations to Drizzle ORM schema
 
+### Phase 3: Insight School (December 2025)
+- **Learning Tracks**: 4 tracks with full lesson content (Human Behavior OS, Social Systems OS, Leadership OS, Stability Equation)
+- **AI-Powered Learning**: "Deepen this idea" feature explains concepts in simpler terms using AI mentor
+- **Interactive Q&A**: Users can ask questions about lesson content with session continuity
+- **Progress Tracking**: Lesson completion tracked in localStorage, shown on main Insight School page
+- **Anonymous User Support**: Auto-generates user ID for visitors without accounts
+
 ### Key Files Changed
+- `web/app/insight-school/[slug]/page.tsx` - Track detail page with lessons and AI features
+- `web/app/insight-school/page.tsx` - Main Insight School page with progress tracking
+- `web/app/api/ai-mentor/route.ts` - AI mentor API for learning assistance
 - `web/lib/db.ts` - Lazy database initialization with Proxy pattern
 - `web/lib/openai.ts` - Lazy OpenAI client initialization
 - `web/lib/ThemeContext.tsx` - Dark mode context provider
