@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Wallet, Coins, TrendingUp, ArrowUpRight, ArrowDownRight, Gift, DollarSign, Clock } from 'lucide-react';
+import { Wallet, Coins, TrendingUp, ArrowUpRight, ArrowDownRight, Gift, DollarSign, Clock, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface WalletData {
   wallet: {
@@ -35,6 +36,7 @@ export default function WalletPage() {
   const [data, setData] = useState<WalletData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'coins' | 'withdraw'>('overview');
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
 
   useEffect(() => {
     fetchWallet();
@@ -66,6 +68,53 @@ export default function WalletPage() {
   const wallet = data?.wallet || { pointsBalance: 0, coinsBalance: 0, totalEarned: 0, cashValue: '0.00', canWithdraw: false, creatorLevel: 1, canMonetize: false };
   const history = data?.history || [];
 
+  const tooltipContent: Record<string, { title: string; description: string; tips: string[] }> = {
+    points: {
+      title: 'Akorfa Points (AP)',
+      description: 'Earn points through engagement and quality contributions. Convert to real money!',
+      tips: [
+        'Create quality posts to earn +5 AP',
+        'Complete daily challenges for +10 AP',
+        'Maintain streaks for +3 AP daily',
+        '1,000 AP = $1.00 USD',
+        'Withdraw at Level 2+ (500 followers)'
+      ]
+    },
+    coins: {
+      title: 'Akorfa Coins',
+      description: 'Virtual currency for gifting and purchasing premium items within Akorfa.',
+      tips: [
+        'Send gifts to your favorite creators',
+        'Purchase special emojis and stickers',
+        'Unlock premium content access',
+        'Buy directly or earn through special events',
+        'Non-refundable, use wisely!'
+      ]
+    },
+    earned: {
+      title: 'Total Earned',
+      description: 'Your all-time Akorfa Points earnings. This shows your overall contribution value.',
+      tips: [
+        'Track your growth over time',
+        'Higher earnings = higher creator status',
+        'Includes withdrawn and current points',
+        'Level up faster with consistent earning',
+        'Quality content earns AI bonuses'
+      ]
+    },
+    level: {
+      title: 'Creator Level',
+      description: 'Your creator tier determines monetization access and special features.',
+      tips: [
+        'Level 1: 0-499 followers (current tier)',
+        'Level 2: 500+ followers (monetization unlocked)',
+        'Level 3: 5,000+ followers (premium features)',
+        'Grow followers through quality content',
+        'Higher levels unlock better rewards'
+      ]
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <main className="max-w-6xl mx-auto px-4 py-8">
@@ -78,42 +127,166 @@ export default function WalletPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border-purple-500/30 p-6">
+          {/* Akorfa Points Card */}
+          <Card className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border-purple-500/30 p-6 relative">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-purple-300 text-sm">Akorfa Points</span>
+              <div className="flex items-center gap-2">
+                <span className="text-purple-300 text-sm">Akorfa Points</span>
+                <button
+                  onClick={() => setActiveTooltip(activeTooltip === 'points' ? null : 'points')}
+                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
               <TrendingUp className="w-5 h-5 text-purple-400" />
             </div>
             <div className="text-3xl font-bold text-white">{wallet.pointsBalance?.toLocaleString() || 0}</div>
             <div className="text-sm text-gray-400 mt-1">≈ ${wallet.cashValue} USD</div>
+            
+            <AnimatePresence>
+              {activeTooltip === 'points' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute z-50 top-full left-0 right-0 mt-2 bg-slate-900 border border-purple-500/30 rounded-xl p-4 shadow-xl"
+                >
+                  <h4 className="text-white font-semibold mb-2">{tooltipContent.points.title}</h4>
+                  <p className="text-gray-300 text-sm mb-3">{tooltipContent.points.description}</p>
+                  <ul className="space-y-1.5">
+                    {tooltipContent.points.tips.map((tip, i) => (
+                      <li key={i} className="text-purple-300 text-xs flex items-start gap-2">
+                        <span className="text-purple-500 mt-0.5">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 border-yellow-500/30 p-6">
+          {/* Coins Card */}
+          <Card className="bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 border-yellow-500/30 p-6 relative">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-yellow-300 text-sm">Coins</span>
+              <div className="flex items-center gap-2">
+                <span className="text-yellow-300 text-sm">Coins</span>
+                <button
+                  onClick={() => setActiveTooltip(activeTooltip === 'coins' ? null : 'coins')}
+                  className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
               <Coins className="w-5 h-5 text-yellow-400" />
             </div>
             <div className="text-3xl font-bold text-white">{wallet.coinsBalance?.toLocaleString() || 0}</div>
             <div className="text-sm text-gray-400 mt-1">For gifts & items</div>
+            
+            <AnimatePresence>
+              {activeTooltip === 'coins' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute z-50 top-full left-0 right-0 mt-2 bg-slate-900 border border-yellow-500/30 rounded-xl p-4 shadow-xl"
+                >
+                  <h4 className="text-white font-semibold mb-2">{tooltipContent.coins.title}</h4>
+                  <p className="text-gray-300 text-sm mb-3">{tooltipContent.coins.description}</p>
+                  <ul className="space-y-1.5">
+                    {tooltipContent.coins.tips.map((tip, i) => (
+                      <li key={i} className="text-yellow-300 text-xs flex items-start gap-2">
+                        <span className="text-yellow-500 mt-0.5">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-600/20 to-green-800/20 border-green-500/30 p-6">
+          {/* Total Earned Card */}
+          <Card className="bg-gradient-to-br from-green-600/20 to-green-800/20 border-green-500/30 p-6 relative">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-green-300 text-sm">Total Earned</span>
+              <div className="flex items-center gap-2">
+                <span className="text-green-300 text-sm">Total Earned</span>
+                <button
+                  onClick={() => setActiveTooltip(activeTooltip === 'earned' ? null : 'earned')}
+                  className="text-green-400 hover:text-green-300 transition-colors"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
               <DollarSign className="w-5 h-5 text-green-400" />
             </div>
             <div className="text-3xl font-bold text-white">{wallet.totalEarned?.toLocaleString() || 0}</div>
             <div className="text-sm text-gray-400 mt-1">All-time points</div>
+            
+            <AnimatePresence>
+              {activeTooltip === 'earned' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute z-50 top-full left-0 right-0 mt-2 bg-slate-900 border border-green-500/30 rounded-xl p-4 shadow-xl"
+                >
+                  <h4 className="text-white font-semibold mb-2">{tooltipContent.earned.title}</h4>
+                  <p className="text-gray-300 text-sm mb-3">{tooltipContent.earned.description}</p>
+                  <ul className="space-y-1.5">
+                    {tooltipContent.earned.tips.map((tip, i) => (
+                      <li key={i} className="text-green-300 text-xs flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border-blue-500/30 p-6">
+          {/* Creator Level Card */}
+          <Card className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border-blue-500/30 p-6 relative">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-blue-300 text-sm">Creator Level</span>
+              <div className="flex items-center gap-2">
+                <span className="text-blue-300 text-sm">Creator Level</span>
+                <button
+                  onClick={() => setActiveTooltip(activeTooltip === 'level' ? null : 'level')}
+                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
               <Gift className="w-5 h-5 text-blue-400" />
             </div>
             <div className="text-3xl font-bold text-white">Lvl {wallet.creatorLevel}</div>
             <div className="text-sm text-gray-400 mt-1">
               {wallet.canMonetize ? '✓ Can monetize' : 'Reach 500 followers'}
             </div>
+            
+            <AnimatePresence>
+              {activeTooltip === 'level' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute z-50 top-full left-0 right-0 mt-2 bg-slate-900 border border-blue-500/30 rounded-xl p-4 shadow-xl"
+                >
+                  <h4 className="text-white font-semibold mb-2">{tooltipContent.level.title}</h4>
+                  <p className="text-gray-300 text-sm mb-3">{tooltipContent.level.description}</p>
+                  <ul className="space-y-1.5">
+                    {tooltipContent.level.tips.map((tip, i) => (
+                      <li key={i} className="text-blue-300 text-xs flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Card>
         </div>
 

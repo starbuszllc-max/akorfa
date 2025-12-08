@@ -39,6 +39,10 @@ localPort = 34569
 externalPort = 5173
 
 [[ports]]
+localPort = 35025
+externalPort = 9000
+
+[[ports]]
 localPort = 36347
 externalPort = 6000
 
@@ -98,6 +102,4 @@ build = ["bash", "-c", "npm run build:shared && cd web && npm run build"]
 [userenv]
 
 [userenv.shared]
-NEXT_PUBLIC_SUPABASE_URL = "https://pbhrknchyuepwfqrepbi.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiaHJrbmNoeXVlcHdmcXJlcGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNzMwMzMsImV4cCI6MjA4MDY0OTAzM30.B1U1uHhJsbYCdbh52eAqYaxGvG9-W_vqkpKzb6av-Qk"
 NEXT_PUBLIC_GIPHY_API_KEY = "4tMIMBQNo0UKr9mZbMkerDKKeJgMji0b"
