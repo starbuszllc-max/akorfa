@@ -76,15 +76,36 @@ const DEFAULT_TRACKS: Track[] = [
   }
 ];
 
+const LESSON_COUNTS: { [key: string]: number } = {
+  'human-behavior-os': 5,
+  'social-systems-os': 4,
+  'leadership-os': 4,
+  'stability-equation': 5
+};
+
 export default function InsightSchoolPage() {
   const [tracks, setTracks] = useState<Track[]>(DEFAULT_TRACKS);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [localProgress, setLocalProgress] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const uid = localStorage.getItem('demo_user_id');
     setUserId(uid);
     fetchTracks(uid);
+    
+    const progress: { [key: string]: number } = {};
+    DEFAULT_TRACKS.forEach(track => {
+      const saved = localStorage.getItem(`completed_lessons_${track.slug}`);
+      if (saved) {
+        const completed = JSON.parse(saved);
+        const total = LESSON_COUNTS[track.slug] || track.totalLessons;
+        progress[track.slug] = Math.round((completed.length / total) * 100);
+      } else {
+        progress[track.slug] = 0;
+      }
+    });
+    setLocalProgress(progress);
   }, []);
 
   async function fetchTracks(uid: string | null) {
@@ -101,8 +122,17 @@ export default function InsightSchoolPage() {
     setLoading(false);
   }
 
-  const foundationTracks = tracks.filter(t => t.category === 'foundation');
-  const advancedTracks = tracks.filter(t => t.category === 'advanced');
+  const tracksWithProgress = tracks.map(track => ({
+    ...track,
+    userProgress: {
+      progress: localProgress[track.slug] || track.userProgress?.progress || 0,
+      completedLessons: 0,
+      status: localProgress[track.slug] === 100 ? 'completed' : 'in_progress'
+    }
+  }));
+
+  const foundationTracks = tracksWithProgress.filter(t => t.category === 'foundation');
+  const advancedTracks = tracksWithProgress.filter(t => t.category === 'advanced');
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 px-4 py-6">
