@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { 
   ShoppingBag, Coins, Sparkles, Frame, Sticker, Zap, 
@@ -123,7 +122,6 @@ export default function MarketplacePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <Header />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
