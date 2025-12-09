@@ -11,12 +11,12 @@ interface Category {
 }
 
 const categories: Category[] = [
-  { id: 'live', label: 'Live', icon: <Radio className="w-4 h-4" />, color: 'text-red-500' },
-  { id: 'stem', label: 'STEM', icon: <Zap className="w-4 h-4" />, color: 'text-blue-500' },
-  { id: 'for-you', label: 'For You', icon: <Sparkles className="w-4 h-4" />, color: 'text-purple-500' },
-  { id: 'following', label: 'Following', icon: <Users className="w-4 h-4" />, color: 'text-green-500' },
-  { id: 'akorfa-live', label: 'Akorfa Live', icon: <Flame className="w-4 h-4" />, color: 'text-orange-500' },
-  { id: 'explore', label: 'Explore', icon: <Compass className="w-4 h-4" />, color: 'text-indigo-500' }
+  { id: 'live', label: 'Live', icon: <Radio className="w-3 h-3" />, color: 'text-red-500' },
+  { id: 'stem', label: 'STEM', icon: <Zap className="w-3 h-3" />, color: 'text-blue-500' },
+  { id: 'for-you', label: 'For You', icon: <Sparkles className="w-3 h-3" />, color: 'text-purple-500' },
+  { id: 'following', label: 'Following', icon: <Users className="w-3 h-3" />, color: 'text-green-500' },
+  { id: 'akorfa-live', label: 'Akorfa', icon: <Flame className="w-3 h-3" />, color: 'text-orange-500' },
+  { id: 'explore', label: 'Explore', icon: <Compass className="w-3 h-3" />, color: 'text-indigo-500' }
 ];
 
 interface CategoryTabsProps {
@@ -28,13 +28,13 @@ interface CategoryTabsProps {
 export default function CategoryTabs({ activeCategory, onCategoryChange, variant = 'normal' }: CategoryTabsProps) {
   if (variant === 'overlay') {
     return (
-      <div className="fixed top-4 left-0 right-0 z-50 px-4">
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1.5 max-w-2xl mx-auto">
+      <div className="fixed top-4 left-0 right-0 z-50 px-2 sm:px-4">
+        <div className="flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5 max-w-2xl mx-auto">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}
-              className="relative px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all"
+              className="relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-[10px] sm:text-xs font-medium transition-all flex-shrink-0"
             >
               {activeCategory === category.id && (
                 <motion.div
@@ -43,13 +43,13 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
-              <span className={`relative flex items-center gap-1.5 ${
+              <span className={`relative flex items-center gap-1 ${
                 activeCategory === category.id ? 'text-white' : 'text-white/70'
               }`}>
                 <span className={activeCategory === category.id ? category.color : ''}>
                   {category.icon}
                 </span>
-                {category.label}
+                <span>{category.label}</span>
               </span>
             </button>
           ))}

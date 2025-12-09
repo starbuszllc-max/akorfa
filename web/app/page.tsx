@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import VerticalVideoFeed from '@/components/feed/VerticalVideoFeed';
 import CategoryTabs from '@/components/feed/CategoryTabs';
+import FloatingExploreButton from '@/components/ui/FloatingExploreButton';
 
 export default function Home() {
   const [category, setCategory] = useState('for-you');
@@ -40,6 +41,7 @@ export default function Home() {
         category={category}
         userLayerScores={userLayerScores}
       />
+      <FloatingExploreButton />
     </div>
   );
 }
