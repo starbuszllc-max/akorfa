@@ -27,7 +27,6 @@ interface CameraCaptureProps {
 
 export default function CameraCapture({ onClose, onCapture, userId }: CameraCaptureProps) {
   const [mode, setMode] = useState<'photo' | 'video'>('photo');
-  const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedMedia, setCapturedMedia] = useState<string | null>(null);
   const [capturedBlob, setCapturedBlob] = useState<Blob | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -41,17 +40,51 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const isClosingRef = useRef(false);
+
+  const stopAllTracks = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {
+        // Ignore errors when stopping already stopped recorder
+      }
+      mediaRecorderRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => {
+        track.stop();
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  }, []);
 
   const startCamera = useCallback(async () => {
+    if (isClosingRef.current) return;
+    
     try {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      
       const constraints = {
         video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: mode === 'video'
       };
       
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      setStream(mediaStream);
+      
+      if (isClosingRef.current) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      
+      streamRef.current = mediaStream;
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
@@ -67,11 +100,22 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
     startCamera();
     
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      isClosingRef.current = true;
+      stopAllTracks();
     };
-  }, [facingMode, mode]);
+  }, []);
+
+  useEffect(() => {
+    if (!capturedMedia) {
+      startCamera();
+    }
+  }, [facingMode, mode, capturedMedia, startCamera]);
+
+  const handleClose = useCallback(() => {
+    isClosingRef.current = true;
+    stopAllTracks();
+    onClose();
+  }, [stopAllTracks, onClose]);
 
   const takePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return;
@@ -95,10 +139,10 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
   };
 
   const startRecording = () => {
-    if (!stream) return;
+    if (!streamRef.current) return;
     
     chunksRef.current = [];
-    const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    const mediaRecorder = new MediaRecorder(streamRef.current, { mimeType: 'video/webm' });
     
     mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0) {
@@ -133,8 +177,9 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
   };
 
   const flipCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
     }
     setFacingMode(prev => prev === 'user' ? 'environment' : 'user');
   };
@@ -161,7 +206,7 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
           layer: selectedLayer,
           destination
         });
-        onClose();
+        handleClose();
       }
     } catch (err) {
       console.error('Upload error:', err);
@@ -180,9 +225,9 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-black z-50 flex flex-col"
     >
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
+      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white"
         >
           <X className="w-6 h-6" />
@@ -239,6 +284,7 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
             animate={{ y: 0 }}
             exit={{ y: 100 }}
             className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
           >
             <p className="text-white text-center mb-4 text-sm">Tag your layer</p>
             <div className="flex gap-2 justify-center flex-wrap mb-6">
@@ -280,6 +326,7 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
             animate={{ y: 0 }}
             exit={{ y: 100 }}
             className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
           >
             <p className="text-white text-center mb-4 text-sm">Share to</p>
             <div className="grid grid-cols-3 gap-3 mb-4">
@@ -318,7 +365,7 @@ export default function CameraCapture({ onClose, onCapture, userId }: CameraCapt
         )}
 
         {!capturedMedia && !showLayerPicker && (
-          <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="absolute bottom-0 left-0 right-0 p-6" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
             <div className="flex justify-center gap-8 mb-6">
               <button
                 onClick={() => setMode('photo')}

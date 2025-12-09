@@ -59,8 +59,8 @@ export default function BottomNavBar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-40 bg-transparent backdrop-blur-md"
-            style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+            className="fixed bottom-0 left-0 right-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200/50 dark:border-slate-700/50"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
           >
             <div className="flex items-center justify-around h-16 max-w-4xl mx-auto px-4">
               {navItems.map((item) => {
@@ -138,7 +138,7 @@ export default function BottomNavBar() {
 
       <ExploreMenu isOpen={isExploreOpen} onClose={handleCloseExplore} />
 
-      <div className="h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
+      <div className="h-24" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
     </>
   );
 }

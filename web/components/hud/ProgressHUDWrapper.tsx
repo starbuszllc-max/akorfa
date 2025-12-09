@@ -3,21 +3,23 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import ProgressHUD from './ProgressHUD';
-import { useScrollVisibility } from '@/hooks/useScrollVisibility';
 
-const HIDDEN_PATHS = ['/', '/onboarding', '/login', '/signup', '/logout', '/dashboard', '/profile'];
+const HIDDEN_PATHS = ['/onboarding', '/login', '/signup', '/logout', '/notifications'];
 
 export default function ProgressHUDWrapper() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const isVisible = useScrollVisibility({ threshold: 24 });
 
   useEffect(() => {
+    setMounted(true);
     const id = localStorage.getItem('demo_user_id');
     setUserId(id);
   }, []);
 
-  const shouldHide = HIDDEN_PATHS.includes(pathname) || pathname.startsWith('/profile');
+  if (!mounted) return null;
+
+  const shouldHide = HIDDEN_PATHS.includes(pathname) || pathname.startsWith('/profile/');
 
   if (shouldHide) {
     return null;
@@ -27,5 +29,5 @@ export default function ProgressHUDWrapper() {
     return null;
   }
 
-  return <ProgressHUD userId={userId} isVisible={isVisible} />;
+  return <ProgressHUD userId={userId} isVisible={true} />;
 }
