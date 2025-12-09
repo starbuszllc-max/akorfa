@@ -15,7 +15,7 @@ export default function EnhancedHeader() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
-  const hideHeaderPaths = ['/', '/live'];
+  const hideHeaderPaths = ['/', '/live', '/insight-school', '/feed'];
   const shouldHideHeader = hideHeaderPaths.includes(pathname);
 
   useEffect(() => {
