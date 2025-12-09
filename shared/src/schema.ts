@@ -646,3 +646,47 @@ export const dailyDigests = pgTable('daily_digests', {
   isRead: boolean('is_read').default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
+
+// ============== CREDIT SCORE & LOAN SYSTEM ==============
+
+// Credit Scores - tracks user credit worthiness for loans
+export const creditScores = pgTable('credit_scores', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }).unique(),
+  score: integer('score').default(300),
+  tier: text('tier').default('bronze'),
+  creditLimit: integer('credit_limit').default(100),
+  totalLoansCompleted: integer('total_loans_completed').default(0),
+  totalLoansDefaulted: integer('total_loans_defaulted').default(0),
+  onTimePayments: integer('on_time_payments').default(0),
+  latePayments: integer('late_payments').default(0),
+  lastCalculatedAt: timestamp('last_calculated_at', { withTimezone: true }).defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()
+});
+
+// Loans - tracks coin loans issued to users
+export const loans = pgTable('loans', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  amount: integer('amount').notNull(),
+  interestRate: decimal('interest_rate', { precision: 5, scale: 2 }).default('5.00'),
+  totalDue: integer('total_due').notNull(),
+  amountRepaid: integer('amount_repaid').default(0),
+  termDays: integer('term_days').default(7),
+  status: text('status').default('active'),
+  dueDate: timestamp('due_date', { withTimezone: true }).notNull(),
+  approvedAt: timestamp('approved_at', { withTimezone: true }).defaultNow(),
+  repaidAt: timestamp('repaid_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
+// Loan Repayments - tracks individual loan payments
+export const loanRepayments = pgTable('loan_repayments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  loanId: uuid('loan_id').notNull().references(() => loans.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => profiles.id, { onDelete: 'cascade' }),
+  amount: integer('amount').notNull(),
+  isLate: boolean('is_late').default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
