@@ -3,8 +3,6 @@ import { db } from '@/lib/db';
 import { creditScores, loans, loanRepayments, wallets, profiles } from '@akorfa/shared/src/schema';
 import { eq, sql, and, desc } from 'drizzle-orm';
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 const CREDIT_TIERS = {
   bronze: { minScore: 0, maxScore: 399, limit: 100, interestRate: 10 },
   silver: { minScore: 400, maxScore: 549, limit: 300, interestRate: 7.5 },
@@ -64,8 +62,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
-    if (!userId || !UUID_REGEX.test(userId)) {
-      return NextResponse.json({ error: 'Valid userId required' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
     const { score, tier, creditLimit } = await calculateCreditScore(userId);
@@ -124,8 +122,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { userId, amount, termDays = 7 } = body;
 
-    if (!userId || !UUID_REGEX.test(userId)) {
-      return NextResponse.json({ error: 'Valid userId required' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
     if (!amount || amount <= 0) {
@@ -205,8 +203,8 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { userId, loanId, amount } = body;
 
-    if (!userId || !UUID_REGEX.test(userId)) {
-      return NextResponse.json({ error: 'Valid userId required' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
     if (!loanId || !amount || amount <= 0) {
