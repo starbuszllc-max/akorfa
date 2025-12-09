@@ -24,9 +24,10 @@ interface VideoPost {
 interface VerticalVideoFeedProps {
   category?: string;
   userLayerScores?: Record<string, number>;
+  onVideoChange?: (isScrolling: boolean) => void;
 }
 
-export default function VerticalVideoFeed({ category = 'for-you', userLayerScores }: VerticalVideoFeedProps) {
+export default function VerticalVideoFeed({ category = 'for-you', userLayerScores, onVideoChange }: VerticalVideoFeedProps) {
   const [videos, setVideos] = useState<VideoPost[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -88,6 +89,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
+    onVideoChange?.(true);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -101,6 +103,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
         handleScroll('up');
       }
     }
+    setTimeout(() => onVideoChange?.(false), 300);
   };
 
   const handleLike = async () => {

@@ -24,9 +24,10 @@ const LAYER_CONFIG: Record<string, { color: string; icon: React.ReactNode }> = {
 
 interface ProgressHUDProps {
   userId?: string;
+  isVisible?: boolean;
 }
 
-export default function ProgressHUD({ userId }: ProgressHUDProps) {
+export default function ProgressHUD({ userId, isVisible = true }: ProgressHUDProps) {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [aKorfaScore, setAkorfaScore] = useState(0);
@@ -92,17 +93,21 @@ export default function ProgressHUD({ userId }: ProgressHUDProps) {
     : null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="fixed bottom-20 right-4 z-40"
-    >
-      <motion.div
-        layout
-        className={`bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden ${
-          expanded ? 'w-72' : 'w-auto'
-        }`}
-      >
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="fixed top-16 right-4 z-40"
+        >
+          <motion.div
+            layout
+            className={`bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden ${
+              expanded ? 'w-72' : 'w-auto'
+            }`}
+          >
         <button
           onClick={() => setExpanded(!expanded)}
           className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
@@ -234,7 +239,9 @@ export default function ProgressHUD({ userId }: ProgressHUDProps) {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
-    </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

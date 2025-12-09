@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Sparkles, Users, Zap, Radio, Compass } from 'lucide-react';
 
 interface Category {
@@ -23,38 +23,49 @@ interface CategoryTabsProps {
   activeCategory: string;
   onCategoryChange: (category: string) => void;
   variant?: 'overlay' | 'normal';
+  isVisible?: boolean;
 }
 
-export default function CategoryTabs({ activeCategory, onCategoryChange, variant = 'normal' }: CategoryTabsProps) {
+export default function CategoryTabs({ activeCategory, onCategoryChange, variant = 'normal', isVisible = true }: CategoryTabsProps) {
   if (variant === 'overlay') {
     return (
-      <div className="fixed top-4 left-0 right-0 z-50 px-2 sm:px-4">
-        <div className="flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5 max-w-2xl mx-auto">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => onCategoryChange(category.id)}
-              className="relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-[10px] sm:text-xs font-medium transition-all flex-shrink-0"
-            >
-              {activeCategory === category.id && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 bg-white/20 rounded-full"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <span className={`relative flex items-center gap-1 ${
-                activeCategory === category.id ? 'text-white' : 'text-white/70'
-              }`}>
-                <span className={activeCategory === category.id ? category.color : ''}>
-                  {category.icon}
-                </span>
-                <span>{category.label}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed top-4 left-0 right-0 z-50 px-2 sm:px-4"
+          >
+            <div className="flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5 max-w-2xl mx-auto">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => onCategoryChange(category.id)}
+                  className="relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-[10px] sm:text-xs font-medium transition-all flex-shrink-0"
+                >
+                  {activeCategory === category.id && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 bg-white/20 rounded-full"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className={`relative flex items-center gap-1 ${
+                    activeCategory === category.id ? 'text-white' : 'text-white/70'
+                  }`}>
+                    <span className={activeCategory === category.id ? category.color : ''}>
+                      {category.icon}
+                    </span>
+                    <span>{category.label}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     );
   }
 
