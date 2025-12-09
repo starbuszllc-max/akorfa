@@ -2,15 +2,24 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const pathname = usePathname();
+
+  const hideFooterPaths = ['/', '/live'];
+  const shouldHideFooter = hideFooterPaths.includes(pathname);
 
   useEffect(() => {
     const userId = localStorage.getItem('demo_user_id');
     setIsLoggedIn(!!userId);
   }, []);
+
+  if (shouldHideFooter) {
+    return null;
+  }
 
   return (
     <footer className="w-full bg-gray-900 dark:bg-slate-950 text-gray-300 mt-auto">

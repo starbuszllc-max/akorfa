@@ -15,6 +15,9 @@ export default function EnhancedHeader() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
+  const hideHeaderPaths = ['/', '/live'];
+  const shouldHideHeader = hideHeaderPaths.includes(pathname);
+
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');
     if (demoUserId) {
@@ -30,6 +33,10 @@ export default function EnhancedHeader() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (shouldHideHeader) {
+    return null;
+  }
 
   function handleLogout() {
     localStorage.removeItem('demo_user_id');
