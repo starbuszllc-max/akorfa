@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import VerticalVideoFeed from '@/components/feed/VerticalVideoFeed';
 import CategoryTabs from '@/components/feed/CategoryTabs';
-import FloatingExploreButton from '@/components/ui/FloatingExploreButton';
 
 export default function Home() {
   const [category, setCategory] = useState('for-you');
@@ -31,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative h-screen overflow-hidden -mt-4 md:-mt-6 -mx-3 sm:-mx-4 lg:-mx-6">
+    <div className="relative h-screen overflow-hidden -mt-4 md:-mt-6 -mx-3 sm:-mx-4 lg:-mx-6 pb-16">
       <CategoryTabs
         activeCategory={category}
         onCategoryChange={setCategory}
@@ -41,7 +40,6 @@ export default function Home() {
         category={category}
         userLayerScores={userLayerScores}
       />
-      <FloatingExploreButton />
     </div>
   );
 }
