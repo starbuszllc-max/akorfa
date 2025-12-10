@@ -109,14 +109,14 @@ export default function DiscoverPage() {
         />
       </div>
 
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl p-6 text-white">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-white/20 rounded-xl">
-            <MapPin className="w-8 h-8" />
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl p-4 sm:p-6 text-white">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <div className="p-2 sm:p-3 bg-white/20 rounded-xl">
+            <MapPin className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold">What's Happening Near You</h3>
-            <p className="text-white/80 text-sm mt-1">
+            <h3 className="text-base sm:text-lg font-semibold">What's Happening Near You</h3>
+            <p className="text-white/80 text-xs sm:text-sm mt-1">
               Discover local stories, trending topics, and community updates
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function DiscoverPage() {
                 );
               }
             }}
-            className="px-4 py-2 bg-white text-cyan-600 rounded-lg font-medium hover:bg-white/90 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 bg-white text-cyan-600 rounded-lg font-medium hover:bg-white/90 transition-colors text-sm"
           >
             Enable Location
           </button>

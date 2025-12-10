@@ -142,19 +142,19 @@ export default function InsightsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
             Daily Insights
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
             AI-powered guidance for your growth journey
           </p>
         </div>
         {streak > 0 && (
-          <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full">
-            <Flame className="w-5 h-5" />
+          <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm sm:text-base">
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="font-bold">{streak} day streak</span>
           </div>
         )}

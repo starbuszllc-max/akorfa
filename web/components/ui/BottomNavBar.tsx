@@ -4,14 +4,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Newspaper, Compass, Trophy, User } from 'lucide-react';
+import { Home, Newspaper, MoreHorizontal, Trophy, User } from 'lucide-react';
 import { useScrollVisibility } from '@/hooks/useScrollVisibility';
 import ExploreMenu from './ExploreMenu';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/feed', label: 'Feed', icon: Newspaper },
-  { href: '#explore', label: 'Explore', icon: Compass, isExplore: true },
+  { href: '#explore', label: 'More', icon: MoreHorizontal, isExplore: true },
   { href: '/challenges', label: 'Challenges', icon: Trophy },
   { href: '/profile', label: 'Profile', icon: User },
 ];

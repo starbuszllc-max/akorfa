@@ -204,29 +204,31 @@ export default function UserProfilePage() {
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="h-24 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
         <div className="px-6 pb-6">
-          <div className="flex items-end gap-4 -mt-12 mb-4">
-            <div className="w-24 h-24 rounded-full border-4 border-white dark:border-slate-700 overflow-hidden bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0">
-              {profile.avatarUrl ? (
-                <img src={profile.avatarUrl} alt={profile.username} className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-3xl text-white font-bold">
-                  {(profile.fullName || profile.username).charAt(0).toUpperCase()}
-                </span>
-              )}
-            </div>
-            <div className="pb-2 flex-1">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {profile.fullName || profile.username}
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">@{profile.username}</p>
+          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 mb-4">
+            <div className="flex items-end gap-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white dark:border-slate-700 overflow-hidden bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0">
+                {profile.avatarUrl ? (
+                  <img src={profile.avatarUrl} alt={profile.username} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-2xl sm:text-3xl text-white font-bold">
+                    {(profile.fullName || profile.username).charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div className="pb-2 flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
+                  {profile.fullName || profile.username}
+                </h1>
+                <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base truncate">@{profile.username}</p>
+              </div>
             </div>
             
             {!isOwnProfile && currentUserId && (
-              <div className="flex gap-2 pb-2">
+              <div className="flex gap-2 flex-wrap">
                 {isFollowing ? (
                   <button
                     onClick={handleUnfollow}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
                   >
                     <UserMinus className="w-4 h-4" />
                     Unfollow
@@ -234,7 +236,7 @@ export default function UserProfilePage() {
                 ) : (
                   <button
                     onClick={handleFollow}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-all"
                   >
                     <UserPlus className="w-4 h-4" />
                     Follow
@@ -242,7 +244,7 @@ export default function UserProfilePage() {
                 )}
                 <button
                   onClick={() => router.push(`/messages?user=${profileId}`)}
-                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
                 >
                   <MessageCircle className="w-4 h-4" />
                 </button>
@@ -252,7 +254,7 @@ export default function UserProfilePage() {
             {isOwnProfile && (
               <Link
                 href="/profile"
-                className="pb-2 px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 Edit Profile
               </Link>

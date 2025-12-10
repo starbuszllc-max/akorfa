@@ -132,7 +132,7 @@ export default function ProgressHUD({ userId, isVisible = true, sticky = false }
 
   const positionClasses = sticky 
     ? "sticky top-0 z-40 mb-4" 
-    : "fixed top-4 right-4 z-40";
+    : "fixed top-20 right-4 z-40";
 
   return (
     <div className={positionClasses}>

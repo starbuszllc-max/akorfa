@@ -26,7 +26,6 @@ const menuLinks = [
   { href: '/news', label: 'News', icon: Newspaper, color: 'text-red-500' },
   { href: '/discover', label: 'Discover', icon: Compass, color: 'text-teal-500' },
   { href: '/insight-school', label: 'Learn', icon: BookOpen, color: 'text-purple-500' },
-  { href: '/challenges', label: 'Challenges', icon: Trophy, color: 'text-yellow-500' },
   { href: '/assessments', label: 'Assess', icon: ClipboardCheck, color: 'text-pink-500' },
   { href: '/insights', label: 'Insights', icon: Zap, color: 'text-orange-500' },
   { href: '/coach', label: 'Coach', icon: Lightbulb, color: 'text-amber-500' },
@@ -103,7 +102,7 @@ export default function ExploreMenu({ isOpen, onClose }: ExploreMenuProps) {
               <div>
                 <h3 className="font-bold text-base flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  Explore
+                  More
                 </h3>
                 <p className="text-xs text-white/80">All features</p>
               </div>

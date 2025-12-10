@@ -159,26 +159,26 @@ export default function DashboardPage() {
   const levelInfo = calculateLevel(totalXp);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto px-4 space-y-4 sm:space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             Welcome back, {data?.profile?.fullName || data?.profile?.username || 'Explorer'}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Here&apos;s your growth journey overview</p>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Here&apos;s your growth journey overview</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {streak > 0 && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full animate-pulse-success">
-              <Flame className="w-5 h-5" />
+            <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full animate-pulse-success text-sm">
+              <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="font-bold">{streak} day streak!</span>
             </div>
           )}
           <Link 
             href="/coach"
-            className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center gap-2"
+            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center gap-1.5 sm:gap-2 text-sm"
           >
-            <Sparkles className="w-5 h-5" />
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             Talk to Coach
           </Link>
         </div>
