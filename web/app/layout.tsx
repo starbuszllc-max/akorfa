@@ -5,7 +5,6 @@ import EnhancedHeader from '../components/ui/EnhancedHeader';
 import Footer from '../components/ui/Footer';
 import InstallPrompt from '../components/pwa/InstallPrompt';
 import BottomNavBar from '../components/ui/BottomNavBar';
-import ProgressHUDWrapper from '../components/hud/ProgressHUDWrapper';
 
 export const metadata = {
   title: 'Akorfa',
@@ -43,7 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
           <BottomNavBar />
-          <ProgressHUDWrapper />
           <InstallPrompt />
         </ThemeProvider>
       </body>

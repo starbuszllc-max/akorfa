@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Sparkles, Users, Zap, Radio, Compass } from 'lucide-react';
+import { Flame, Sparkles, Users, Radio, Search } from 'lucide-react';
+import Link from 'next/link';
 
 interface Category {
   id: string;
@@ -12,11 +13,9 @@ interface Category {
 
 const categories: Category[] = [
   { id: 'live', label: 'Live', icon: <Radio className="w-3 h-3" />, color: 'text-red-500' },
-  { id: 'stem', label: 'STEM', icon: <Zap className="w-3 h-3" />, color: 'text-blue-500' },
+  { id: 'akorfa', label: 'Akorfa', icon: <Flame className="w-3 h-3" />, color: 'text-orange-500' },
   { id: 'for-you', label: 'For You', icon: <Sparkles className="w-3 h-3" />, color: 'text-purple-500' },
-  { id: 'following', label: 'Following', icon: <Users className="w-3 h-3" />, color: 'text-green-500' },
-  { id: 'akorfa-live', label: 'Akorfa', icon: <Flame className="w-3 h-3" />, color: 'text-orange-500' },
-  { id: 'explore', label: 'Explore', icon: <Compass className="w-3 h-3" />, color: 'text-indigo-500' }
+  { id: 'following', label: 'Following', icon: <Users className="w-3 h-3" />, color: 'text-green-500' }
 ];
 
 interface CategoryTabsProps {
@@ -38,30 +37,39 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed top-4 left-0 right-0 z-50 px-2 sm:px-4"
           >
-            <div className="flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5 max-w-2xl mx-auto">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => onCategoryChange(category.id)}
-                  className="relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-[10px] sm:text-xs font-medium transition-all flex-shrink-0"
-                >
-                  {activeCategory === category.id && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-white/20 rounded-full"
-                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                  <span className={`relative flex items-center gap-1 ${
-                    activeCategory === category.id ? 'text-white' : 'text-white/70'
-                  }`}>
-                    <span className={activeCategory === category.id ? category.color : ''}>
-                      {category.icon}
+            <div className="flex items-center gap-2 max-w-2xl mx-auto">
+              <Link
+                href="/discover"
+                className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/60 transition-colors"
+              >
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </Link>
+              
+              <div className="flex-1 flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => onCategoryChange(category.id)}
+                    className="relative px-2 sm:px-3 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-[10px] sm:text-xs font-medium transition-all flex-shrink-0"
+                  >
+                    {activeCategory === category.id && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-white/20 rounded-full"
+                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <span className={`relative flex items-center gap-1 ${
+                      activeCategory === category.id ? 'text-white' : 'text-white/70'
+                    }`}>
+                      <span className={activeCategory === category.id ? category.color : ''}>
+                        {category.icon}
+                      </span>
+                      <span>{category.label}</span>
                     </span>
-                    <span>{category.label}</span>
-                  </span>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

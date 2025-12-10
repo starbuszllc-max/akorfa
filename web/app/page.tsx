@@ -4,19 +4,14 @@ import { useState, useEffect, useCallback } from 'react';
 import VerticalVideoFeed from '@/components/feed/VerticalVideoFeed';
 import CategoryTabs from '@/components/feed/CategoryTabs';
 import FloatingCreateButton from '@/components/ui/FloatingCreateButton';
-import ProgressHUD from '@/components/hud/ProgressHUD';
 
 export default function Home() {
   const [category, setCategory] = useState('for-you');
   const [userLayerScores, setUserLayerScores] = useState<Record<string, number> | undefined>();
-  const [userId, setUserId] = useState<string | undefined>();
   const [isUIVisible, setIsUIVisible] = useState(true);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('demo_user_id');
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
 
     const fetchUserAssessment = async () => {
       try {
@@ -55,7 +50,6 @@ export default function Home() {
         onVideoChange={handleVideoChange}
       />
       <FloatingCreateButton isVisible={isUIVisible} />
-      <ProgressHUD userId={userId} isVisible={isUIVisible} />
     </div>
   );
 }
