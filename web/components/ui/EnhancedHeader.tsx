@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Star, Flame, Search, TrendingUp, ChevronDown, Target, Brain, Heart, Users, Leaf, Sparkles, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 const EXCLUDED_PATHS = ['/profile/settings', '/login', '/signup', '/logout', '/onboarding'];
-const PAGES_WITH_SEARCH = ['/discover', '/messages', '/groups', '/marketplace', '/news', '/insight-school'];
+const AUTO_COLLAPSE_DELAY = 3000;
 
 const LAYER_CONFIG: Record<string, { color: string; icon: React.ReactNode }> = {
   environment: { color: 'bg-green-500', icon: <Leaf className="w-2.5 h-2.5" /> },
@@ -37,9 +37,26 @@ export default function EnhancedHeader() {
   const [loading, setLoading] = useState(true);
 
   const isExcludedPage = EXCLUDED_PATHS.some(path => pathname?.startsWith(path));
-  const hasSearchFeature = PAGES_WITH_SEARCH.some(path => pathname?.startsWith(path));
-  const isHomePage = pathname === '/';
   const isNotificationPage = pathname === '/notifications';
+  const isDiscoverPage = pathname === '/discover';
+  const collapseTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isScoreExpanded) {
+      collapseTimerRef.current = setTimeout(() => {
+        setIsScoreExpanded(false);
+      }, AUTO_COLLAPSE_DELAY);
+    }
+    return () => {
+      if (collapseTimerRef.current) {
+        clearTimeout(collapseTimerRef.current);
+      }
+    };
+  }, [isScoreExpanded]);
+
+  useEffect(() => {
+    setIsScoreExpanded(false);
+  }, [pathname]);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('demo_user_id');
@@ -122,7 +139,7 @@ export default function EnhancedHeader() {
 
   return (
     <div className="fixed top-3 right-3 z-50 flex flex-col items-end gap-1.5">
-      {!hasSearchFeature && !isHomePage && (
+      {!isDiscoverPage && (
         <Link
           href="/discover"
           className="w-8 h-8 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"

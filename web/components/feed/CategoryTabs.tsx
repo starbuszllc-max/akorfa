@@ -1,8 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Sparkles, Users, Radio, Search } from 'lucide-react';
-import Link from 'next/link';
+import { Flame, Sparkles, Users, Radio } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -35,16 +34,9 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-4 left-0 right-0 z-50 px-2 sm:px-4"
+            className="fixed top-4 left-0 right-14 z-40 px-2 sm:px-4"
           >
-            <div className="flex items-center gap-2 max-w-2xl mx-auto">
-              <Link
-                href="/discover"
-                className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/60 transition-colors"
-              >
-                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </Link>
-              
+            <div className="flex items-center gap-2">
               <div className="flex-1 flex gap-0.5 sm:gap-1 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md rounded-full p-1 sm:p-1.5">
                 {categories.map((category) => (
                   <button
