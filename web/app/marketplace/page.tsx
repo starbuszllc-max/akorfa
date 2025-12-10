@@ -111,71 +111,71 @@ export default function MarketplacePage() {
 
   const getItemIcon = (type: string) => {
     switch (type) {
-      case 'frame': return <Frame className="w-8 h-8 text-purple-400" />;
-      case 'boost': return <Zap className="w-8 h-8 text-yellow-400" />;
-      case 'badge': return <Award className="w-8 h-8 text-blue-400" />;
-      case 'sticker': return <Sticker className="w-8 h-8 text-pink-400" />;
-      case 'avatar': return <Star className="w-8 h-8 text-orange-400" />;
-      default: return <Sparkles className="w-8 h-8 text-gray-400" />;
+      case 'frame': return <Frame className="w-6 h-6 text-purple-400" />;
+      case 'boost': return <Zap className="w-6 h-6 text-yellow-400" />;
+      case 'badge': return <Award className="w-6 h-6 text-blue-400" />;
+      case 'sticker': return <Sticker className="w-6 h-6 text-pink-400" />;
+      case 'avatar': return <Star className="w-6 h-6 text-orange-400" />;
+      default: return <Sparkles className="w-6 h-6 text-gray-400" />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+      <main className="max-w-6xl mx-auto px-3 py-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-              <ShoppingBag className="w-8 h-8 text-purple-400" />
+            <h1 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
+              <ShoppingBag className="w-6 h-6 text-purple-400" />
               Marketplace
             </h1>
-            <p className="text-gray-400">Get gifts, frames, boosts, and more</p>
+            <p className="text-xs text-gray-400">Gifts, frames, boosts & more</p>
           </div>
-          <Card className="bg-gradient-to-r from-yellow-600/30 to-yellow-800/30 border-yellow-500/30 px-6 py-3 inline-flex items-center gap-3">
-            <Coins className="w-6 h-6 text-yellow-400" />
-            <span className="text-2xl font-bold text-white">{coinsBalance.toLocaleString()}</span>
-            <span className="text-yellow-300">coins</span>
-            <a href="/wallet" className="ml-2 text-sm text-yellow-400 hover:text-yellow-300">+ Buy</a>
+          <Card className="bg-gradient-to-r from-yellow-600/30 to-yellow-800/30 border-yellow-500/30 px-4 py-2 inline-flex items-center gap-2">
+            <Coins className="w-5 h-5 text-yellow-400" />
+            <span className="text-lg font-bold text-white">{coinsBalance.toLocaleString()}</span>
+            <span className="text-xs text-yellow-300">coins</span>
+            <a href="/wallet" className="ml-1 text-xs text-yellow-400 hover:text-yellow-300">+ Buy</a>
           </Card>
         </div>
 
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+        <div className="flex gap-1.5 mb-4 overflow-x-auto pb-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap ${
                 activeCategory === cat.id
                   ? 'bg-purple-600 text-white'
                   : 'bg-white/5 text-gray-400 hover:bg-white/10'
               }`}
             >
-              <cat.icon className="w-4 h-4" />
+              <cat.icon className="w-3.5 h-3.5" />
               {cat.name}
             </button>
           ))}
         </div>
 
         {activeCategory === 'gift' && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Send Gifts to Creators</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-white mb-3">Send Gifts</h2>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
               {GIFT_TYPES.map((gift) => (
                 <Card 
                   key={gift.type}
-                  className="bg-white/5 border-white/10 p-4 text-center hover:bg-white/10 transition-colors cursor-pointer"
+                  className="bg-white/5 border-white/10 p-3 text-center hover:bg-white/10 transition-colors cursor-pointer"
                 >
-                  <div className="text-4xl mb-2">{gift.emoji}</div>
-                  <div className="text-white font-medium">{gift.name}</div>
-                  <div className="flex items-center justify-center gap-1 text-yellow-400 mt-1">
-                    <Coins className="w-4 h-4" />
+                  <div className="text-2xl mb-1">{gift.emoji}</div>
+                  <div className="text-xs text-white font-medium">{gift.name}</div>
+                  <div className="flex items-center justify-center gap-0.5 text-yellow-400 mt-0.5 text-xs">
+                    <Coins className="w-3 h-3" />
                     <span>{gift.coins}</span>
                   </div>
                 </Card>
               ))}
             </div>
-            <p className="text-gray-400 text-sm mt-4 text-center">
-              Send gifts on posts to support your favorite creators. They receive 50% of the coin value!
+            <p className="text-gray-400 text-xs mt-3 text-center">
+              Support creators - they receive 50% of the value!
             </p>
           </div>
         )}
@@ -185,34 +185,34 @@ export default function MarketplacePage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {filteredItems.map((item) => (
               <Card 
                 key={item.id}
-                className={`bg-white/5 border-white/10 p-4 ${item.owned ? 'ring-2 ring-green-500/50' : ''}`}
+                className={`bg-white/5 border-white/10 p-3 ${item.owned ? 'ring-2 ring-green-500/50' : ''}`}
               >
-                <div className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-lg flex items-center justify-center mb-2">
                   {getItemIcon(item.itemType)}
                 </div>
-                <h3 className="text-white font-semibold mb-1">{item.name}</h3>
-                <p className="text-gray-400 text-sm mb-3">{item.description}</p>
+                <h3 className="text-sm text-white font-semibold mb-0.5">{item.name}</h3>
+                <p className="text-gray-400 text-xs mb-2 line-clamp-2">{item.description}</p>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-yellow-400">
-                    <Coins className="w-4 h-4" />
+                  <div className="flex items-center gap-0.5 text-yellow-400 text-xs">
+                    <Coins className="w-3 h-3" />
                     <span className="font-medium">{item.coinPrice}</span>
                   </div>
                   {item.owned ? (
-                    <span className="flex items-center gap-1 text-green-400 text-sm">
-                      <CheckCircle className="w-4 h-4" />
+                    <span className="flex items-center gap-0.5 text-green-400 text-xs">
+                      <CheckCircle className="w-3 h-3" />
                       Owned
                     </span>
                   ) : (
                     <button
                       onClick={() => handlePurchase(item.id)}
                       disabled={purchasing === item.id || coinsBalance < item.coinPrice}
-                      className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                      {purchasing === item.id ? 'Buying...' : 'Buy'}
+                      {purchasing === item.id ? '...' : 'Buy'}
                     </button>
                   )}
                 </div>

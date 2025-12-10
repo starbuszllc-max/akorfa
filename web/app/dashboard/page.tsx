@@ -159,104 +159,104 @@ export default function DashboardPage() {
   const levelInfo = calculateLevel(totalXp);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 space-y-4 sm:space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto px-3 space-y-3 sm:space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-            Welcome back, {data?.profile?.fullName || data?.profile?.username || 'Explorer'}
+          <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+            Welcome, {data?.profile?.fullName || data?.profile?.username || 'Explorer'}
           </h1>
-          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">Here&apos;s your growth journey overview</p>
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Your growth journey overview</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           {streak > 0 && (
-            <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full animate-pulse-success text-sm">
-              <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-xs">
+              <Flame className="w-3.5 h-3.5" />
               <span className="font-bold">{streak} day streak!</span>
             </div>
           )}
           <Link 
             href="/coach"
-            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center gap-1.5 sm:gap-2 text-sm"
+            className="px-2.5 py-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center gap-1 text-xs"
           >
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-            Talk to Coach
+            <Sparkles className="w-3.5 h-3.5" />
+            Coach
           </Link>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold">
               {levelInfo.level}
             </div>
             <div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Level {levelInfo.level}</div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Zap className="w-5 h-5 text-indigo-500" />
+              <div className="text-xs text-gray-500 dark:text-gray-400">Level {levelInfo.level}</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-indigo-500" />
                 {totalXp} XP
               </div>
             </div>
           </div>
-          <Link href="/leaderboard" className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:underline">
-            <Trophy className="w-4 h-4" />
-            View Leaderboard
+          <Link href="/leaderboard" className="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Trophy className="w-3.5 h-3.5" />
+            Leaderboard
           </Link>
         </div>
-        <div className="relative h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
           <div 
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500"
             style={{ width: `${levelInfo.progress}%` }}
           />
         </div>
-        <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
           {levelInfo.xpForNext} XP to Level {levelInfo.level + 1}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         <StatCard
           title="Akorfa Score"
           value={akorfaScore.toFixed(0)}
-          subtitle="Your growth index"
-          icon={<TrendingUp className="w-6 h-6" />}
+          subtitle="Growth index"
+          icon={<TrendingUp className="w-4 h-4" />}
         />
         <StatCard
           title="Assessments"
           value={data?.recentAssessments?.length || 0}
           subtitle="Completed"
-          icon={<Target className="w-6 h-6" />}
+          icon={<Target className="w-4 h-4" />}
         />
         <StatCard
           title="Challenges"
           value={`${data?.challengeStats?.completed || 0}/${data?.challengeStats?.total || 0}`}
           subtitle="Completed"
-          icon={<Trophy className="w-6 h-6" />}
+          icon={<Trophy className="w-4 h-4" />}
         />
         <StatCard
-          title="Activity Streak"
+          title="Streak"
           value={`${streak} days`}
-          subtitle="Keep it going!"
-          icon={<Flame className="w-6 h-6" />}
+          subtitle="Keep going!"
+          icon={<Flame className="w-4 h-4" />}
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div className="lg:col-span-1 space-y-3">
           <DailyFlow userId={userId} />
           <SavedRoutines userId={userId} availableChallenges={data?.challenges || []} />
           <AccountabilityPods userId={userId} />
         </div>
         
-        <div className="lg:col-span-2 space-y-6">
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Layer Progress</h2>
-            <Link href="/assessments" className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-              Take Assessment
+        <div className="lg:col-span-2 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Layer Progress</h2>
+            <Link href="/assessments" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+              Assess
             </Link>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-2">
             {layerNames.map((layer, index) => {
               const key = layer.toLowerCase();
               const score = layerScores[key] || 0;
@@ -267,68 +267,68 @@ export default function DashboardPage() {
                   value={Number(score)}
                   max={10}
                   color={layerColors[index] as any || 'indigo'}
-                  size="md"
+                  size="sm"
                 />
               );
             })}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Actions</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Quick Actions</h2>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <Link 
               href="/insights"
-              className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+              className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
             >
-              <Sparkles className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mb-2" />
-              <div className="font-medium text-gray-900 dark:text-white">Daily Insights</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">AI-powered guidance</div>
+              <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mb-1" />
+              <div className="text-sm font-medium text-gray-900 dark:text-white">Insights</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">AI guidance</div>
             </Link>
             <Link 
               href="/groups"
-              className="p-4 bg-pink-50 dark:bg-pink-900/30 rounded-xl hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors"
+              className="p-3 bg-pink-50 dark:bg-pink-900/30 rounded-lg hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors"
             >
-              <svg className="w-6 h-6 text-pink-600 dark:text-pink-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-pink-600 dark:text-pink-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <div className="font-medium text-gray-900 dark:text-white">Communities</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Join growth groups</div>
+              <div className="text-sm font-medium text-gray-900 dark:text-white">Groups</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Communities</div>
             </Link>
             <Link 
               href="/challenges"
-              className="p-4 bg-green-50 dark:bg-green-900/30 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
+              className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
             >
-              <Trophy className="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
-              <div className="font-medium text-gray-900 dark:text-white">Challenges</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Earn XP & grow</div>
+              <Trophy className="w-4 h-4 text-green-600 dark:text-green-400 mb-1" />
+              <div className="text-sm font-medium text-gray-900 dark:text-white">Challenges</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Earn XP</div>
             </Link>
             <Link 
               href="/leaderboard"
-              className="p-4 bg-amber-50 dark:bg-amber-900/30 rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors"
+              className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors"
             >
-              <TrendingUp className="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
-              <div className="font-medium text-gray-900 dark:text-white">Leaderboard</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">See top performers</div>
+              <TrendingUp className="w-4 h-4 text-amber-600 dark:text-amber-400 mb-1" />
+              <div className="text-sm font-medium text-gray-900 dark:text-white">Leaderboard</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Rankings</div>
             </Link>
           </div>
         </div>
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
+        <div className="flex items-center justify-between gap-3">
           <div>
-            <h3 className="text-xl font-bold mb-2">Ready to grow?</h3>
-            <p className="text-indigo-100">Join a challenge and earn XP while developing new skills.</p>
+            <h3 className="text-base font-bold">Ready to grow?</h3>
+            <p className="text-xs text-indigo-100">Join a challenge and earn XP.</p>
           </div>
           <Link 
             href="/challenges"
-            className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition-colors"
+            className="px-4 py-2 bg-white text-indigo-600 rounded-md text-sm font-medium hover:bg-indigo-50 transition-colors whitespace-nowrap"
           >
-            Browse Challenges
+            Challenges
           </Link>
         </div>
       </div>

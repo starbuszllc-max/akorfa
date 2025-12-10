@@ -58,26 +58,26 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       <div className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-3 mb-4">
-            <Newspaper className="w-8 h-8 text-indigo-500" />
+        <div className="max-w-6xl mx-auto px-3 py-3">
+          <div className="flex items-center gap-2 mb-3">
+            <Newspaper className="w-6 h-6 text-indigo-500" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Verified News</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">From trusted sources</p>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white">Verified News</h1>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Trusted sources</p>
             </div>
           </div>
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-1.5 overflow-x-auto hide-scrollbar">
             {newsCategories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-full whitespace-nowrap text-xs font-medium transition-colors ${
                   category === cat.id
                     ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300'
                     : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-slate-700'
                 }`}
               >
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
                   <span className={category === cat.id ? cat.color : ''}>{cat.icon}</span>
                   {cat.label}
                 </span>
@@ -87,25 +87,25 @@ export default function NewsPage() {
         </div>
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 py-6">
+      <main className="max-w-6xl mx-auto px-3 py-4">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="p-4 animate-pulse">
-                <div className="aspect-video bg-gray-200 dark:bg-slate-700 rounded-lg mb-4" />
-                <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded mb-2" />
-                <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-2/3" />
+              <Card key={i} className="p-3 animate-pulse">
+                <div className="aspect-video bg-gray-200 dark:bg-slate-700 rounded-lg mb-3" />
+                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded mb-2" />
+                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-2/3" />
               </Card>
             ))}
           </div>
         ) : articles.length === 0 ? (
-          <div className="text-center py-16">
-            <Newspaper className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No news articles yet</h3>
-            <p className="text-gray-600 dark:text-gray-400">Check back later for verified news from trusted sources.</p>
+          <div className="text-center py-12">
+            <Newspaper className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">No news yet</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Check back later.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {articles.map((article) => (
               <motion.div
                 key={article.id}
@@ -114,7 +114,7 @@ export default function NewsPage() {
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.2 }}
               >
-                <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-shadow">
+                <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
                   {article.imageUrl && (
                     <div className="aspect-video relative overflow-hidden">
                       <img
@@ -122,51 +122,51 @@ export default function NewsPage() {
                         alt={article.title}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute top-3 right-3 px-2 py-1 bg-white/90 dark:bg-black/90 rounded-full text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-green-500" />
+                      <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-white/90 dark:bg-black/90 rounded-full text-[10px] font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-0.5">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-green-500" />
                         Verified
                       </div>
                     </div>
                   )}
-                  <div className="p-4 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="p-3 flex-1 flex flex-col">
+                    <div className="flex items-center gap-1.5 mb-2">
                       {article.newsSource.logoUrl ? (
                         <img
                           src={article.newsSource.logoUrl}
                           alt={article.newsSource.name}
-                          className="w-5 h-5 rounded"
+                          className="w-4 h-4 rounded"
                         />
                       ) : (
-                        <Newspaper className="w-5 h-5 text-gray-400" />
+                        <Newspaper className="w-4 h-4 text-gray-400" />
                       )}
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
                         {article.newsSource.name}
                       </span>
-                      <span className="ml-auto px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-xs rounded-full">
+                      <span className="ml-auto px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 text-[10px] rounded-full flex-shrink-0">
                         {article.category}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1.5 line-clamp-2">
                       {article.title}
                     </h3>
                     {article.summary && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-1">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-1">
                         {article.summary}
                       </p>
                     )}
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mt-auto pt-3 border-t border-gray-100 dark:border-slate-700">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 border-t border-gray-100 dark:border-slate-700">
                       <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
+                        <Clock className="w-3 h-3" />
                         {new Date(article.publishedAt).toLocaleDateString()}
                       </div>
                       <a
                         href={article.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-indigo-600 dark:text-indigo-400 hover:underline"
+                        className="flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400 hover:underline"
                       >
-                        Read more
-                        <ExternalLink className="w-3 h-3" />
+                        Read
+                        <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     </div>
                   </div>

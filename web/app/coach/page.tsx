@@ -47,46 +47,46 @@ export default function CoachPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-slate-700">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+    <div className="max-w-3xl mx-auto px-3">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-slate-700">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">AI Growth Coach</h1>
-                <p className="text-indigo-100 text-sm">Your personal guide to balanced development</p>
+                <h1 className="text-base font-bold text-white">AI Coach</h1>
+                <p className="text-indigo-100 text-xs">Personal growth guide</p>
               </div>
             </div>
             
-            <div className="flex bg-white/20 rounded-lg p-1">
+            <div className="flex bg-white/20 rounded-md p-0.5">
               <button
                 onClick={() => setMode('text')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 transition-all ${
+                className={`px-2 py-1 rounded text-xs font-medium flex items-center gap-1 transition-all ${
                   mode === 'text' ? 'bg-white text-indigo-600' : 'text-white hover:bg-white/10'
                 }`}
               >
-                <MessageSquare className="w-4 h-4" />
+                <MessageSquare className="w-3.5 h-3.5" />
                 Text
               </button>
               <button
                 onClick={() => setMode('voice')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 transition-all ${
+                className={`px-2 py-1 rounded text-xs font-medium flex items-center gap-1 transition-all ${
                   mode === 'voice' ? 'bg-white text-indigo-600' : 'text-white hover:bg-white/10'
                 }`}
               >
-                <Mic className="w-4 h-4" />
+                <Mic className="w-3.5 h-3.5" />
                 Voice
               </button>
             </div>
           </div>
         </div>
         
-        <div className="p-6">
+        <div className="p-4">
           {mode === 'text' ? (
-            <div className="h-[500px]">
+            <div className="h-[400px]">
               <AICoach userId={userId} />
             </div>
           ) : (

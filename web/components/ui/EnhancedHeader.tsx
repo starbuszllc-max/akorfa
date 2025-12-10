@@ -121,24 +121,24 @@ export default function EnhancedHeader() {
     : null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
+    <div className="fixed top-3 right-3 z-50 flex flex-col items-end gap-1.5">
       {!hasSearchFeature && !isHomePage && (
         <Link
           href="/discover"
-          className="w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          className="w-8 h-8 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
         >
-          <Search className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+          <Search className="w-4 h-4 text-gray-600 dark:text-gray-300" />
         </Link>
       )}
 
       {!isNotificationPage && (
         <Link
           href="/notifications"
-          className="relative w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          className="relative w-8 h-8 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
         >
-          <Bell className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <Bell className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-semibold">
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-semibold">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -149,12 +149,12 @@ export default function EnhancedHeader() {
         <div className="relative">
           <button
             onClick={() => setIsScoreExpanded(!isScoreExpanded)}
-            className="relative w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+            className="relative w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full shadow-md flex items-center justify-center hover:scale-105 transition-transform"
           >
-            <Star className="w-5 h-5 text-white" />
+            <Star className="w-4 h-4 text-white" />
             {streak > 0 && (
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center shadow-md">
-                <Flame className="w-3 h-3 text-white" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center shadow-sm">
+                <Flame className="w-2.5 h-2.5 text-white" />
               </div>
             )}
           </button>

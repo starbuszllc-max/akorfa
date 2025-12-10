@@ -58,7 +58,22 @@ The platform uses a shared scoring engine (`@akorfa/shared`) consumed by both we
 - **Contextual Search**: Search icon only appears on pages without built-in search feature
 - **Persistent Header Elements**: Notification and score icons don't auto-hide, always accessible
 
+### Phase 6: Compact UI Overhaul (December 2025)
+- **Reduced Icon Sizes**: Icons from 40px to 32px across the app (w-8 h-8 to w-6 h-6, w-6 h-6 to w-4 h-4)
+- **Compact Cards**: Reduced padding (p-4 to p-3, p-6 to p-4), smaller rounded corners (rounded-2xl to rounded-lg)
+- **Smaller Text**: Text sizes reduced (text-3xl to text-xl, text-2xl to text-lg, text-sm to text-xs)
+- **Tighter Spacing**: Reduced margins and gaps (mb-8 to mb-4, gap-4 to gap-2)
+- **Compact Grids**: Denser layouts for marketplace items, groups, leaderboard entries
+- **Touch-Friendly**: Maintained minimum 44px touch targets for accessibility
+- **Pages Updated**: Coach, Leaderboard, Groups, Marketplace, Profile, Dashboard, Discover, Challenges, News, Insight School
+- **Stat Cards**: Compacted with smaller padding, icons, and typography
+
 ### Key Files Changed
+- `web/app/coach/page.tsx` - Compact AI coach page with smaller header and buttons (Phase 6)
+- `web/app/leaderboard/page.tsx` - Compact leaderboard with smaller entries and tabs (Phase 6)
+- `web/app/groups/page.tsx` - Compact communities page with smaller cards (Phase 6)
+- `web/app/marketplace/page.tsx` - Compact marketplace with denser product grid (Phase 6)
+- `web/app/profile/page.tsx` - Compact profile with smaller stat cards and tabs (Phase 6)
 - `web/app/insight-school/[slug]/page.tsx` - Track detail page with lessons and AI features
 - `web/app/insight-school/page.tsx` - Main Insight School page with progress tracking
 - `web/app/api/ai-mentor/route.ts` - AI mentor API for learning assistance
