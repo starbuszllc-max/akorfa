@@ -120,9 +120,17 @@ export default function LeaderboardPage() {
                   )}
                 </div>
 
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
-                  {(entry.fullName || entry.username || '?')[0].toUpperCase()}
-                </div>
+                {entry.avatarUrl ? (
+                  <img 
+                    src={entry.avatarUrl} 
+                    alt={entry.fullName || entry.username} 
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                    {(entry.fullName || entry.username || '?')[0].toUpperCase()}
+                  </div>
+                )}
 
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
