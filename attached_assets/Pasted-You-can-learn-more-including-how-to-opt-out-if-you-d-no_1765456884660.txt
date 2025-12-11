@@ -1,0 +1,63 @@
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.7
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings in 17.8s
+
+../node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 39) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+../node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+../node_modules/@supabase/realtime-js/dist/module/index.js
+../node_modules/@supabase/supabase-js/dist/main/index.js
+../node_modules/@supabase/supabase-js/dist/esm/wrapper.mjs
+../node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+../node_modules/@supabase/ssr/dist/module/index.js
+./lib/supabase/middleware.ts
+
+../node_modules/@supabase/supabase-js/dist/main/index.js
+A Node.js API is used (process.version at line: 60) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+../node_modules/@supabase/supabase-js/dist/main/index.js
+../node_modules/@supabase/supabase-js/dist/esm/wrapper.mjs
+../node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+../node_modules/@supabase/ssr/dist/module/index.js
+./lib/supabase/middleware.ts
+
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/81) ...
+   Generating static pages (20/81) 
+   Generating static pages (40/81) 
+Error occurred prerendering page "/auth/login". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: @supabase/ssr: Your project's URL and API key are required to create a Supabase client!
+
+Check your Supabase project's API settings to find these values
+
+https://supabase.com/dashboard/project/_/settings/api
+    at <unknown> (https://supabase.com/dashboard/project/_/settings/api)
+    at aj (.next/server/chunks/2365.js:1:4385)
+    at e (.next/server/app/auth/login/page.js:2:8096)
+    at h (.next/server/app/auth/login/page.js:1:476) {
+  digest: '3408341466'
+}
+Export encountered an error on /auth/login/page: /auth/login, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /home/runner/work/AK-FA/AK-FA/web
+npm error workspace akorfa-web@0.1.0
+npm error location /home/runner/work/AK-FA/AK-FA/web
+npm error command failed
+npm error command sh -c next build
+Error: Process completed with exit code 1.
+0s
+0s
+0s
