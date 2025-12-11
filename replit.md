@@ -20,6 +20,14 @@ Next.js API routes (Route Handlers) manage server-side logic and interact with a
 ### Authentication & Authorization
 The platform uses Supabase Auth for real email/password authentication. Users can sign up with their email, receive confirmation emails, and log in securely. Session management is handled via Supabase's SSR package with middleware integration. The auth flow includes proper handling of email confirmation requirements.
 
+**Auth Flow (Updated Dec 2024):**
+1. All "Get Started" buttons redirect to `/signup` (not `/onboarding`)
+2. After successful signup with session, users are redirected to `/onboarding`
+3. Onboarding page requires authentication - redirects to `/signup` if not logged in
+4. The `useAuth` hook syncs Supabase user ID with `localStorage.demo_user_id` for UI state
+5. Login pages also sync the user ID to localStorage after successful authentication
+6. The onboarding API uses the authenticated user's ID (passed from client) for profile creation
+
 ### Media Storage
 Media uploads (photos and videos) are stored in Supabase Storage for cloud-based persistence. The upload API handles file validation and returns public URLs that are saved with posts. Users can attach up to 4 media files per post. **Important**: An "uploads" bucket must be created in the Supabase dashboard with public access enabled for media URLs to work.
 
