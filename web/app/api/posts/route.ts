@@ -3,6 +3,7 @@ import {db} from '../../../lib/db';
 import {posts, userEvents, profiles} from '@akorfa/shared/src/schema';
 import {calculateAkorfaScore} from '@akorfa/shared/src/scoring';
 import {eq, desc, sql, and} from 'drizzle-orm';
+import {createClient} from '@/lib/supabase/server';
 
 export async function GET(req: Request) {
   try {
@@ -33,6 +34,8 @@ export async function GET(req: Request) {
         content: posts.content,
         layer: posts.layer,
         postType: posts.postType,
+        mediaUrls: posts.mediaUrls,
+        mediaTypes: posts.mediaTypes,
         likeCount: posts.likeCount,
         commentCount: posts.commentCount,
         viewCount: posts.viewCount,
@@ -40,6 +43,7 @@ export async function GET(req: Request) {
         updatedAt: posts.updatedAt,
         profiles: {
           username: profiles.username,
+          fullName: profiles.fullName,
           avatarUrl: profiles.avatarUrl
         }
       })
@@ -76,33 +80,53 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({error: 'You must be signed in to post'}, {status: 401});
+    }
+
     const body = await req.json();
     const content = body.content ?? '';
     const layer = body.layer ?? 'social';
-    const user_id = body.user_id ?? null;
+
+    if (!content.trim()) {
+      return NextResponse.json({error: 'Post content is required'}, {status: 400});
+    }
+
+    const existingProfile = await db.select().from(profiles).where(eq(profiles.id, user.id)).limit(1);
+    
+    if (existingProfile.length === 0) {
+      const username = user.user_metadata?.full_name || user.email?.split('@')[0] || `user_${user.id.slice(0, 8)}`;
+      await db.insert(profiles).values({
+        id: user.id,
+        username: username,
+        fullName: user.user_metadata?.full_name || null,
+        avatarUrl: user.user_metadata?.avatar_url || null
+      });
+    }
 
     const [newPost] = await db.insert(posts).values({
-      userId: user_id,
+      userId: user.id,
       content: content,
       layer: layer
     }).returning();
 
-    if (user_id) {
-      await db.insert(userEvents).values({
-        userId: user_id,
-        eventType: 'post_created',
-        pointsEarned: 5,
-        metadata: {post_id: newPost.id}
-      });
+    await db.insert(userEvents).values({
+      userId: user.id,
+      eventType: 'post_created',
+      pointsEarned: 5,
+      metadata: {post_id: newPost.id}
+    });
 
-      const scoreDelta = calculateAkorfaScore({postsCreated: 1});
-      await db.update(profiles)
-        .set({
-          akorfaScore: sql`COALESCE(${profiles.akorfaScore}, 0) + ${scoreDelta}`,
-          updatedAt: new Date()
-        })
-        .where(eq(profiles.id, user_id));
-    }
+    const scoreDelta = calculateAkorfaScore({postsCreated: 1});
+    await db.update(profiles)
+      .set({
+        akorfaScore: sql`COALESCE(${profiles.akorfaScore}, 0) + ${scoreDelta}`,
+        updatedAt: new Date()
+      })
+      .where(eq(profiles.id, user.id));
 
     return NextResponse.json({post: newPost});
   } catch (err: any) {

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
+import { useAuth } from '@/hooks/useAuth';
 
 const layers = [
   { value: 'environment', label: 'Environment', emoji: '🌍', color: 'bg-emerald-500' },
@@ -27,25 +28,15 @@ interface EnhancedPostComposerProps {
 }
 
 export default function EnhancedPostComposer({ onPostCreated, onToast }: EnhancedPostComposerProps) {
+  const { user, loading: authLoading } = useAuth();
   const [content, setContent] = useState('');
   const [layer, setLayer] = useState('social');
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [demoMode, setDemoMode] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showLayerDropdown, setShowLayerDropdown] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const storedUserId = localStorage.getItem('demo_user_id');
-    if (storedUserId) {
-      setUserId(storedUserId);
-    } else {
-      setDemoMode(true);
-    }
-  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -69,38 +60,20 @@ export default function EnhancedPostComposer({ onPostCreated, onToast }: Enhance
     autoGrow();
   }, [content, autoGrow]);
 
-  async function enableDemoMode() {
-    const demoId = crypto.randomUUID();
-    
-    try {
-      const resp = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: demoId })
-      });
-      
-      if (resp.ok) {
-        localStorage.setItem('demo_user_id', demoId);
-        setUserId(demoId);
-        setDemoMode(false);
-        onToast?.('Welcome! You can now post.', 'success');
-      }
-    } catch (err) {
-      console.error('Error creating demo profile:', err);
-      onToast?.('Failed to create profile', 'error');
-    }
-  }
-
   async function submitPost(e?: React.FormEvent) {
     if (e) e.preventDefault();
     if (!content.trim()) return;
+    if (!user) {
+      onToast?.('Please sign in to post', 'error');
+      return;
+    }
 
     setLoading(true);
     try {
       const resp = await fetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, layer, user_id: userId })
+        body: JSON.stringify({ content, layer })
       });
 
       if (resp.ok) {
@@ -110,7 +83,7 @@ export default function EnhancedPostComposer({ onPostCreated, onToast }: Enhance
       } else {
         const error = await resp.json();
         console.error('Error creating post:', error);
-        onToast?.('Failed to create post', 'error');
+        onToast?.(error.error || 'Failed to create post', 'error');
       }
     } catch (err) {
       console.error(err);
@@ -132,7 +105,17 @@ export default function EnhancedPostComposer({ onPostCreated, onToast }: Enhance
     textareaRef.current?.focus();
   }
 
-  if (demoMode && !userId) {
+  if (authLoading) {
+    return (
+      <div className="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 dark:border-slate-700">
+        <div className="flex items-center justify-center py-4">
+          <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -141,20 +124,22 @@ export default function EnhancedPostComposer({ onPostCreated, onToast }: Enhance
       >
         <div className="text-3xl mb-3">✍️</div>
         <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">Join the conversation</h3>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Start sharing your thoughts and connect with others</p>
-        <motion.button 
-          onClick={enableDemoMode}
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Sign in to share your thoughts and connect with others</p>
+        <motion.a 
+          href="/auth/login"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="inline-block px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-medium hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg shadow-indigo-500/25"
         >
-          Start Posting
-        </motion.button>
+          Sign In to Post
+        </motion.a>
       </motion.div>
     );
   }
 
   const selectedLayer = layers.find(l => l.value === layer);
+  const userAvatar = user.user_metadata?.avatar_url;
+  const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
 
   return (
     <motion.form
@@ -164,8 +149,12 @@ export default function EnhancedPostComposer({ onPostCreated, onToast }: Enhance
       className="p-5 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 dark:border-slate-700"
     >
       <div className="flex items-start gap-3">
-        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium shrink-0 text-lg shadow-lg shadow-indigo-500/25">
-          👤
+        <div className="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium shrink-0 text-lg shadow-lg shadow-indigo-500/25 overflow-hidden">
+          {userAvatar ? (
+            <img src={userAvatar} alt={userName} className="w-full h-full object-cover" />
+          ) : (
+            userName.charAt(0).toUpperCase()
+          )}
         </div>
         <div className="flex-1">
           <textarea
