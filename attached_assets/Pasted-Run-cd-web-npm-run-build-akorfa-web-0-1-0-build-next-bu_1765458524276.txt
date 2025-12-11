@@ -1,0 +1,66 @@
+Run cd web && npm run build
+
+> akorfa-web@0.1.0 build
+> next build
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.7
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings in 17.6s
+
+../node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 39) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+../node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+../node_modules/@supabase/realtime-js/dist/module/index.js
+../node_modules/@supabase/supabase-js/dist/main/index.js
+../node_modules/@supabase/supabase-js/dist/esm/wrapper.mjs
+../node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+../node_modules/@supabase/ssr/dist/module/index.js
+./lib/supabase/middleware.ts
+
+../node_modules/@supabase/supabase-js/dist/main/index.js
+A Node.js API is used (process.version at line: 60) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+../node_modules/@supabase/supabase-js/dist/main/index.js
+../node_modules/@supabase/supabase-js/dist/esm/wrapper.mjs
+../node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+../node_modules/@supabase/ssr/dist/module/index.js
+./lib/supabase/middleware.ts
+
+   Linting and checking validity of types ...
+Failed to compile.
+
+./hooks/useAuth.ts:19:48
+Type error: Binding element 'session' implicitly has an 'any' type.
+
+  17 |     }
+  18 |
+> 19 |     supabase.auth.getSession().then(({ data: { session } }) => {
+     |                                                ^
+  20 |       setSession(session);
+  21 |       setUser(session?.user ?? null);
+  22 |       setLoading(false);
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /home/runner/work/AK-FA/AK-FA/web
+npm error workspace akorfa-web@0.1.0
+npm error location /home/runner/work/AK-FA/AK-FA/web
+npm error command failed
+npm error command sh -c next build
+Error: Process completed with exit code 1.
+0s
+0s
+0s
