@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Star, TrendingUp, ChevronUp, ChevronDown, Zap, Target, Brain, Heart, Users, Leaf, Sparkles, Bell } from 'lucide-react';
-import Link from 'next/link';
+import { Flame, Star, TrendingUp, Zap, Target, Brain, Heart, Users, Leaf, Sparkles } from 'lucide-react';
 
 interface LayerScore {
   name: string;
@@ -29,7 +28,7 @@ interface ProgressHUDProps {
 }
 
 export default function ProgressHUD({ userId, isVisible = true, sticky = false }: ProgressHUDProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [loading, setLoading] = useState(true);
   const [aKorfaScore, setAkorfaScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -52,16 +51,24 @@ export default function ProgressHUD({ userId, isVisible = true, sticky = false }
     if (!isVisible || sticky) return;
     
     setShowHUD(true);
+    setExpanded(true);
     setShowNotificationIcon(false);
     
-    const timer = setTimeout(() => {
+    const collapseTimer = setTimeout(() => {
+      setExpanded(false);
+    }, 3000);
+
+    const hideTimer = setTimeout(() => {
       setShowHUD(false);
       setTimeout(() => {
         setShowNotificationIcon(true);
       }, 300);
-    }, 4000);
+    }, 5000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(collapseTimer);
+      clearTimeout(hideTimer);
+    };
   }, [isVisible, sticky]);
 
   const fetchNotificationCount = async () => {
@@ -121,18 +128,15 @@ export default function ProgressHUD({ userId, isVisible = true, sticky = false }
     ? Math.round(layerScores.reduce((sum, l) => sum + l.score, 0) / layerScores.length) 
     : 0;
 
-  const lowestLayer = layerScores.length > 0 
-    ? layerScores.reduce((min, l) => l.score < min.score ? l : min, layerScores[0])
-    : null;
-
   const handleNotificationClick = () => {
     setShowNotificationIcon(false);
     setShowHUD(true);
+    setExpanded(true);
   };
 
   const positionClasses = sticky 
     ? "sticky top-0 z-40 mb-4" 
-    : "fixed top-20 right-4 z-40";
+    : "fixed top-16 right-4 z-40";
 
   return (
     <div className={positionClasses}>
@@ -140,147 +144,66 @@ export default function ProgressHUD({ userId, isVisible = true, sticky = false }
         {isVisible && showHUD && (
           <motion.div
             key="hud"
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            initial={{ opacity: 0, x: 20, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
             <motion.div
               layout
-              className={`bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden ${
-                expanded ? 'w-64' : 'w-auto'
-              }`}
+              className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 dark:border-slate-700/50 overflow-hidden w-16"
             >
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-          >
-            <div className="flex items-center gap-1.5">
-              <div className="relative">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-sm">
-                  <Star className="w-3.5 h-3.5 text-white" />
-                </div>
-                {streak > 0 && (
-                  <div className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-orange-500 rounded-full flex items-center justify-center">
-                    <Flame className="w-2 h-2 text-white" />
-                  </div>
-                )}
-              </div>
-              
-              <div className="text-left">
-                <div className="font-semibold text-xs text-indigo-600 dark:text-indigo-400">
-                  {loading ? '...' : Math.round(aKorfaScore)}
-                </div>
-              </div>
-            </div>
-
-            {!expanded && streak > 0 && (
-              <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                <Flame className="w-2.5 h-2.5 text-orange-500" />
-                <span className="text-[10px] font-semibold text-orange-600 dark:text-orange-400">{streak}</span>
-              </div>
-            )}
-
-            <div className="ml-auto">
-              {expanded ? (
-                <ChevronDown className="w-3 h-3 text-gray-400" />
-              ) : (
-                <ChevronUp className="w-3 h-3 text-gray-400" />
-              )}
-            </div>
-          </button>
-
-          <AnimatePresence>
-            {expanded && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="border-t border-gray-100 dark:border-slate-700"
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="w-full flex flex-col items-center gap-1 px-2 py-3 hover:bg-gray-50/50 dark:hover:bg-slate-700/30 transition-colors"
               >
-                <div className="p-3 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                        <Flame className="w-4 h-4 text-orange-500" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Streak</div>
-                        <div className="font-semibold text-orange-600 dark:text-orange-400">{streak} days</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-green-500" />
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Balance</div>
-                        <div className="font-semibold text-green-600 dark:text-green-400">{averageLayerScore}%</div>
-                      </div>
-                    </div>
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg ring-2 ring-white/50 dark:ring-slate-900/50">
+                    <Star className="w-5 h-5 text-white" />
                   </div>
-
-                  {layerScores.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Layer Balance</div>
-                      <div className="flex gap-1">
-                        {layerScores.map((layer) => (
-                          <div 
-                            key={layer.name}
-                            className="flex-1 group relative"
-                          >
-                            <div className="h-8 bg-gray-100 dark:bg-slate-700 rounded-lg overflow-hidden">
-                              <div
-                                className={`h-full ${layer.color} transition-all duration-500`}
-                                style={{ height: `${layer.score}%` }}
-                              />
-                            </div>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                                {layer.name}: {layer.score}%
-                              </div>
-                            </div>
-                            <div className="flex justify-center mt-1">
-                              <div className={`w-5 h-5 rounded-full ${layer.color} flex items-center justify-center text-white`}>
-                                {layer.icon}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                  {streak > 0 && (
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-md ring-2 ring-white dark:ring-slate-800">
+                      <Flame className="w-3 h-3 text-white" />
                     </div>
                   )}
-
-                  {lowestLayer && lowestLayer.score < 50 && (
-                    <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-2 flex items-start gap-2">
-                      <Target className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-amber-700 dark:text-amber-300">
-                        Focus on <span className="font-semibold capitalize">{lowestLayer.name}</span> to improve balance
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      href="/assessments"
-                      className="flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg text-xs font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
-                    >
-                      <Target className="w-3.5 h-3.5" />
-                      Take Assessment
-                    </Link>
-                    <Link
-                      href="/daily-challenges"
-                      className="flex items-center justify-center gap-1.5 px-3 py-2 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg text-xs font-medium hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-colors"
-                    >
-                      <Flame className="w-3.5 h-3.5" />
-                      Daily Challenge
-                    </Link>
-                  </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                
+                <div className="text-center">
+                  <div className="font-bold text-base text-indigo-600 dark:text-indigo-400">
+                    {loading ? '...' : Math.round(aKorfaScore)}
+                  </div>
+                  <div className="text-[9px] text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">Score</div>
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {expanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="border-t border-gray-100/50 dark:border-slate-700/50"
+                  >
+                    <div className="py-2 px-2 space-y-2">
+                      <div className="flex flex-col items-center gap-1 py-1.5 px-1 bg-orange-50/80 dark:bg-orange-900/20 rounded-xl">
+                        <Flame className="w-4 h-4 text-orange-500" />
+                        <div className="text-center">
+                          <div className="font-bold text-sm text-orange-600 dark:text-orange-400">{streak}</div>
+                          <div className="text-[8px] text-orange-500/70 dark:text-orange-400/70 uppercase">days</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col items-center gap-1 py-1.5 px-1 bg-green-50/80 dark:bg-green-900/20 rounded-xl">
+                        <TrendingUp className="w-4 h-4 text-green-500" />
+                        <div className="text-center">
+                          <div className="font-bold text-sm text-green-600 dark:text-green-400">{averageLayerScore}%</div>
+                          <div className="text-[8px] text-green-500/70 dark:text-green-400/70 uppercase">balance</div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </motion.div>
         )}
@@ -293,17 +216,20 @@ export default function ProgressHUD({ userId, isVisible = true, sticky = false }
             exit={{ opacity: 0, scale: 0.5 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           >
-            <Link
-              href="/notifications"
-              className="relative flex items-center justify-center w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+            <button
+              onClick={handleNotificationClick}
+              className="relative flex items-center justify-center w-12 h-12 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
-              <Bell className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="flex flex-col items-center">
+                <Star className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-[9px] font-bold text-indigo-600 dark:text-indigo-400">{Math.round(aKorfaScore)}</span>
+              </div>
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-semibold">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-semibold shadow-md">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
-            </Link>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

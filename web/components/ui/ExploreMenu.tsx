@@ -95,27 +95,38 @@ export default function ExploreMenu({ isOpen, onClose }: ExploreMenuProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed bottom-20 left-2 right-2 sm:left-auto sm:right-4 sm:w-80 z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden"
+            className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-4 sm:w-96 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/50 overflow-hidden"
             style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
           >
-            <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-base flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  More
+            <div className="p-4 bg-gradient-to-r from-indigo-500/90 to-purple-600/90 backdrop-blur-sm text-white">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-lg flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  Explore
                 </h3>
-                <p className="text-xs text-white/80">All features</p>
+                <button
+                  onClick={onClose}
+                  className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-4">
+                <Link href="/messages" onClick={onClose} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
+                  <MessageCircle className="w-4 h-4" />
+                  <span className="text-sm font-medium">Messages</span>
+                </Link>
+                <Link href="/notifications" onClick={onClose} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
+                  <div className="relative">
+                    <Compass className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium">Notifications</span>
+                </Link>
+              </div>
             </div>
 
-            <nav className="p-2 grid grid-cols-4 gap-1" aria-label="Feature navigation">
+            <nav className="p-4 grid grid-cols-4 gap-3" aria-label="Feature navigation">
               {menuLinks.map((link, index) => {
                 const Icon = link.icon;
                 return (
@@ -128,14 +139,14 @@ export default function ExploreMenu({ isOpen, onClose }: ExploreMenuProps) {
                     <Link
                       href={link.href}
                       onClick={onClose}
-                      className="flex flex-col items-center p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors group focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex flex-col items-center p-3 rounded-2xl hover:bg-gray-100/80 dark:hover:bg-slate-700/50 transition-all group focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <div
-                        className={`w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform ${link.color}`}
+                        className={`w-12 h-12 rounded-2xl bg-gray-100/80 dark:bg-slate-700/80 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-sm ${link.color}`}
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-6 h-6" />
                       </div>
-                      <span className="text-[10px] font-medium text-gray-600 dark:text-gray-300 text-center leading-tight">
+                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">
                         {link.label}
                       </span>
                     </Link>
@@ -145,13 +156,13 @@ export default function ExploreMenu({ isOpen, onClose }: ExploreMenuProps) {
             </nav>
 
             {!user && (
-              <div className="p-2 border-t border-gray-200 dark:border-slate-700">
+              <div className="p-4 border-t border-gray-200/50 dark:border-slate-700/50 bg-gray-50/50 dark:bg-slate-900/30">
                 <Link
                   href="/onboarding"
                   onClick={onClose}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg shadow-indigo-500/25 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-4 h-4" />
                   Get Started
                 </Link>
               </div>
