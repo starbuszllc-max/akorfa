@@ -12,6 +12,7 @@ interface ProfileData {
   username: string;
   fullName: string | null;
   avatarUrl: string | null;
+  coverUrl: string | null;
   bio: string | null;
   akorfaScore: number;
   level: number;
@@ -108,6 +109,7 @@ export default function UserProfilePage() {
           username: data.profile.username,
           fullName: data.profile.fullName,
           avatarUrl: data.profile.avatarUrl,
+          coverUrl: data.profile.coverUrl,
           bio: data.profile.bio,
           akorfaScore: data.profile.akorfaScore || 0,
           level: data.profile.level || 1,
@@ -202,7 +204,17 @@ export default function UserProfilePage() {
       </button>
 
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="h-24 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+        <div className="h-28 sm:h-36 relative">
+          {profile.coverUrl ? (
+            <img 
+              src={profile.coverUrl} 
+              alt="Cover" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+          )}
+        </div>
         <div className="px-6 pb-6">
           <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 mb-4">
             <div className="flex items-end gap-4">
