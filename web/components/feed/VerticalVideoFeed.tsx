@@ -451,23 +451,19 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               <p className="text-sm line-clamp-3 mb-2">{video.content}</p>
             </div>
 
-            <div className="absolute bottom-24 right-4 flex flex-col gap-5">
+            <div className="absolute bottom-24 right-4 flex flex-col gap-4 items-center">
               <button
                 onClick={() => handleLike(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div
-                  whileTap={{ scale: 1.2 }}
-                  className={`p-3 rounded-full backdrop-blur-sm ${
-                    isLiked ? 'bg-red-500' : 'bg-black/40'
-                  }`}
-                >
+                <motion.div whileTap={{ scale: 1.2 }}>
                   <Heart
-                    className="w-6 h-6 text-white"
-                    fill={isLiked ? 'white' : 'none'}
+                    className={`w-8 h-8 drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}
+                    strokeWidth={2.5}
+                    fill={isLiked ? 'currentColor' : 'none'}
                   />
                 </motion.div>
-                <span className="text-white text-xs font-semibold">
+                <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.likeCount + (isLiked ? 1 : 0)).toLocaleString()}
                 </span>
               </button>
@@ -476,10 +472,8 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <div className="p-3 rounded-full bg-black/40 backdrop-blur-sm">
-                  <MessageCircle className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-white text-xs font-semibold">
+                <MessageCircle className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
               </button>
@@ -488,56 +482,46 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleDuet(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <div className="p-3 rounded-full bg-black/40 backdrop-blur-sm">
-                  <Copy className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-white text-xs font-semibold">Duet</span>
+                <Copy className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
               </button>
 
               <button 
                 onClick={() => handleRepost(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div
-                  whileTap={{ scale: 1.2 }}
-                  className={`p-3 rounded-full backdrop-blur-sm ${
-                    repostedVideos.has(video.id) ? 'bg-green-500' : 'bg-black/40'
-                  }`}
-                >
+                <motion.div whileTap={{ scale: 1.2 }}>
                   {repostedVideos.has(video.id) ? (
-                    <Check className="w-6 h-6 text-white" />
+                    <Check className="w-8 h-8 text-green-400 drop-shadow-lg" strokeWidth={2.5} />
                   ) : (
-                    <Repeat2 className="w-6 h-6 text-white" />
+                    <Repeat2 className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
                   )}
                 </motion.div>
-                <span className="text-white text-xs font-semibold">
+                <span className="text-white text-xs font-bold drop-shadow-lg">
                   {repostedVideos.has(video.id) ? 'Reposted' : 'Repost'}
                 </span>
               </button>
 
-              <button onClick={() => handleShare(video)} className="flex flex-col items-center gap-1">
-                <div className="p-3 rounded-full bg-black/40 backdrop-blur-sm">
-                  <Share2 className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-white text-xs font-semibold">Share</span>
+              <button 
+                onClick={() => handleShare(video)} 
+                className="flex flex-col items-center gap-1"
+              >
+                <Share2 className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
               <button 
                 onClick={() => handleSave(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div
-                  whileTap={{ scale: 1.2 }}
-                  className={`p-3 rounded-full backdrop-blur-sm ${
-                    savedVideos.has(video.id) ? 'bg-yellow-500' : 'bg-black/40'
-                  }`}
-                >
+                <motion.div whileTap={{ scale: 1.2 }}>
                   <Bookmark 
-                    className="w-6 h-6 text-white" 
-                    fill={savedVideos.has(video.id) ? 'white' : 'none'}
+                    className={`w-8 h-8 drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
+                    strokeWidth={2.5}
+                    fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
                   />
                 </motion.div>
-                <span className="text-white text-xs font-semibold">
+                <span className="text-white text-xs font-bold drop-shadow-lg">
                   {savedVideos.has(video.id) ? 'Saved' : 'Save'}
                 </span>
               </button>
