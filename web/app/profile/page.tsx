@@ -167,18 +167,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!profile) {
-    return (
-      <div className="max-w-md mx-auto text-center py-16">
-        <p className="text-gray-600 dark:text-gray-300 mb-4">Profile not found.</p>
-        <Link href="/signup" className="text-indigo-600 dark:text-indigo-400 hover:underline">
-          Sign Up
-        </Link>
-      </div>
-    );
-  }
-
-  if (postsLoaded && posts.length === 0) {
+  if (!profile || (postsLoaded && posts.length === 0)) {
     return (
       <div className="max-w-md mx-auto text-center py-16 px-4">
         <div className="relative mb-8">
