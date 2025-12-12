@@ -33,7 +33,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   const [videos, setVideos] = useState<VideoPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const [isMuteButtonVisible, setIsMuteButtonVisible] = useState(true);
+  const [isMuteButtonVisible, setIsMuteButtonVisible] = useState(false);
   const [likedVideos, setLikedVideos] = useState<Set<string>>(new Set());
   const [savedVideos, setSavedVideos] = useState<Set<string>>(new Set());
   const [repostedVideos, setRepostedVideos] = useState<Set<string>>(new Set());
@@ -447,11 +447,11 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white flex items-center justify-center" style={{boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.6)'}}>
                   {isMuted ? (
-                    <VolumeX className="w-10 h-10 text-white drop-shadow-lg" strokeWidth={1.5} />
+                    <VolumeX className="w-10 h-10 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                   ) : (
-                    <Volume2 className="w-10 h-10 text-white drop-shadow-lg" strokeWidth={1.5} />
+                    <Volume2 className="w-10 h-10 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                   )}
                 </div>
                 <span className="text-white text-sm font-bold drop-shadow-lg bg-black/50 px-3 py-1 rounded-full">
@@ -467,9 +467,10 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div whileTap={{ scale: 1.2 }}>
                   <Heart
-                    className={`w-6 h-6 drop-shadow-lg icon-inset ${isLiked ? 'text-red-500' : 'text-white'}`}
+                    className={`w-6 h-6 icon-inset ${isLiked ? 'text-red-500' : 'text-white'}`}
                     strokeWidth={1.5}
                     fill={isLiked ? 'currentColor' : 'none'}
+                    style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}}
                   />
                 </motion.div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
@@ -481,7 +482,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <MessageCircle className="w-6 h-6 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
+                <MessageCircle className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
@@ -491,7 +492,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleDuet(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <Copy className="w-6 h-6 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
+                <Copy className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
               </button>
 
@@ -501,9 +502,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div whileTap={{ scale: 1.2 }}>
                   {repostedVideos.has(video.id) ? (
-                    <Check className="w-6 h-6 text-green-400 drop-shadow-lg icon-inset" strokeWidth={1.5} />
+                    <Check className="w-6 h-6 text-green-400 icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                   ) : (
-                    <Repeat2 className="w-6 h-6 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
+                    <Repeat2 className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                   )}
                 </motion.div>
                 <span className="text-white text-[10px] font-bold drop-shadow-lg">
@@ -515,7 +516,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShare(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <Share2 className="w-6 h-6 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
+                <Share2 className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
@@ -525,9 +526,10 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div whileTap={{ scale: 1.2 }}>
                   <Bookmark 
-                    className={`w-6 h-6 drop-shadow-lg icon-inset ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
+                    className={`w-6 h-6 icon-inset ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
                     strokeWidth={1.5}
                     fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
+                    style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}}
                   />
                 </motion.div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
