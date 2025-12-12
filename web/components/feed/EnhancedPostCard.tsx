@@ -2,6 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import LayeredLikeIcon from '@/components/ui/icons/LayeredLikeIcon';
 
 interface Comment {
   id: string;
@@ -431,9 +432,9 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
           whileTap={{ scale: 0.9 }}
           className={`relative flex items-center gap-1.5 text-sm transition-colors ${
             hasLiked 
-              ? 'text-rose-500 cursor-default' 
+              ? 'like-button-active cursor-default' 
               : currentUserId 
-                ? 'text-gray-500 dark:text-gray-400 hover:text-rose-500' 
+                ? 'text-gray-500 dark:text-gray-400 hover:text-red-500' 
                 : 'text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -451,22 +452,14 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
               </motion.div>
             )}
           </AnimatePresence>
-          <motion.svg 
-            className={`w-5 h-5 ${hasLiked ? 'fill-current' : ''}`} 
-            fill={hasLiked ? 'currentColor' : 'none'} 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
+          <motion.div
+            className="w-5 h-5"
             animate={hasLiked ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3 }}
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={hasLiked ? 0 : 1.5} 
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
-            />
-          </motion.svg>
-          <span>{localLikeCount}</span>
+            <LayeredLikeIcon isActive={hasLiked} className="w-5 h-5" />
+          </motion.div>
+          <span className={hasLiked ? 'text-red-500' : 'text-gray-600 dark:text-gray-400'}>{localLikeCount}</span>
         </motion.button>
 
         <motion.button 

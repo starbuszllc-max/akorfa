@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/layered-icons.css';
 import React from 'react';
 import { ThemeProvider } from '../lib/ThemeContext';
 import EnhancedHeader from '../components/ui/EnhancedHeader';
