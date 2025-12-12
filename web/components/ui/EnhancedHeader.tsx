@@ -142,18 +142,18 @@ export default function EnhancedHeader() {
       {!isDiscoverPage && (
         <Link
           href="/discover"
-          className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+          className="w-12 h-12 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
         >
-          <Search className="w-6 h-6 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
+          <Search className="w-7 h-7 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
         </Link>
       )}
 
       {!isNotificationPage && (
         <Link
           href="/notifications"
-          className="relative w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+          className="relative w-12 h-12 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
         >
-          <Bell className="w-6 h-6 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
+          <Bell className="w-7 h-7 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
           {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-semibold">
               {unreadCount > 9 ? '9+' : unreadCount}
@@ -166,9 +166,9 @@ export default function EnhancedHeader() {
         <div className="relative">
           <button
             onClick={() => setIsScoreExpanded(!isScoreExpanded)}
-            className="relative w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-transform"
+            className="relative w-12 h-12 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/50 transition-transform"
           >
-            <Star className="w-6 h-6 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
+            <Star className="w-7 h-7 text-white" strokeWidth={2.5} style={{filter: 'drop-shadow(0 2px 12px rgba(0, 0, 0, 0.8)) drop-shadow(-2px -2px 8px rgba(0, 0, 0, 0.7)) drop-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.8))'}} />
             {streak > 0 && (
               <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center shadow-sm">
                 <Flame className="w-2.5 h-2.5 text-white" />
