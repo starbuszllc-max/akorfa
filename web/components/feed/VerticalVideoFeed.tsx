@@ -81,6 +81,14 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
             video.muted = false;
           });
         }
+      } else if (e.key === 'AudioVolumeDown') {
+        setIsMuteButtonVisible(true);
+        if (muteButtonTimeoutRef.current) {
+          clearTimeout(muteButtonTimeoutRef.current);
+        }
+        muteButtonTimeoutRef.current = setTimeout(() => {
+          setIsMuteButtonVisible(false);
+        }, 4000);
       }
     };
 
@@ -187,7 +195,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
     }
     muteButtonTimeoutRef.current = setTimeout(() => {
       setIsMuteButtonVisible(false);
-    }, 5000);
+    }, 4000);
     videoRefs.current.forEach((video) => {
       video.muted = newMuted;
     });
