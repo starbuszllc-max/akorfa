@@ -80,7 +80,7 @@ export default function BottomNavBar() {
                       aria-expanded={isExploreOpen}
                     >
                       <motion.div
-                        className={`flex items-center justify-center w-10 h-10 rounded-full ${isVideoPage ? 'bg-white/10 backdrop-blur-md border border-white/20' : 'bg-white/5 backdrop-blur-sm'}`}
+                        className="flex items-center justify-center"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         animate={{ rotate: isExploreOpen ? 45 : 0 }}
