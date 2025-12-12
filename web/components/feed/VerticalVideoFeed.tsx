@@ -423,6 +423,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               src={video.videoUrl}
               poster={video.videoThumbnail}
               className="h-full w-full object-cover"
+              autoPlay
               loop
               playsInline
               muted={isMuted}
