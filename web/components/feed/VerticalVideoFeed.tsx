@@ -479,6 +479,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                     className={`w-6 h-6 ${isLiked ? 'text-red-500' : 'text-white'}`}
                     strokeWidth={1.5}
                     fill={isLiked ? 'currentColor' : 'none'}
+                    style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}}
                   />
                 </motion.div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
@@ -490,7 +491,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} />
+                <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
@@ -500,7 +501,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleDuet(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <Copy className="w-6 h-6 text-white" strokeWidth={1.5} />
+                <Copy className="w-6 h-6 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
               </button>
 
@@ -510,9 +511,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div whileTap={{ scale: 1.2 }}>
                   {repostedVideos.has(video.id) ? (
-                    <Check className="w-6 h-6 text-green-400" strokeWidth={1.5} />
+                    <Check className="w-6 h-6 text-green-400" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                   ) : (
-                    <Repeat2 className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    <Repeat2 className="w-6 h-6 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                   )}
                 </motion.div>
                 <span className="text-white text-[10px] font-bold drop-shadow-lg">
@@ -524,7 +525,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShare(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <Share2 className="w-6 h-6 text-white" strokeWidth={1.5} />
+                <Share2 className="w-6 h-6 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
@@ -537,6 +538,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                     className={`w-6 h-6 ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
                     strokeWidth={1.5}
                     fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
+                    style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}}
                   />
                 </motion.div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">

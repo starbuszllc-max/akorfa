@@ -70,7 +70,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                 href="/discover"
                 className="flex-shrink-0 p-2.5 rounded-full"
               >
-                <Search className="w-5 h-5 text-white drop-shadow-lg" />
+                <Search className="w-5 h-5 text-white" style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
               </Link>
 
               <div className="flex-1 flex gap-0 overflow-x-auto hide-scrollbar rounded-full px-2 py-1.5">
@@ -91,7 +91,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                       className={`relative text-sm font-bold tracking-tight ${
                         activeCategory === category.id ? 'text-white' : 'text-white/70'
                       }`}
-                      style={{ fontStretch: 'condensed' }}
+                      style={{ fontStretch: 'condensed', filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))' }}
                     >
                       {category.label}
                     </span>
@@ -104,7 +104,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                   href="/notifications"
                   className="block p-2.5 rounded-full"
                 >
-                  <Bell className="w-5 h-5 text-white drop-shadow-lg" />
+                  <Bell className="w-5 h-5 text-white" style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
                 </Link>
                 
                 <AnimatePresence>
