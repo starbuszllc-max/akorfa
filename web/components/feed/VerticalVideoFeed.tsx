@@ -423,9 +423,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               className="absolute top-14 right-1 flex flex-col items-center gap-1 z-40"
             >
               {isMuted ? (
-                <VolumeX className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <VolumeX className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
               ) : (
-                <Volume2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <Volume2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
               )}
               <span className="text-white text-xs font-bold drop-shadow-lg">
                 {isMuted ? 'Unmute' : 'Mute'}
@@ -440,7 +440,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 <motion.div whileTap={{ scale: 1.2 }}>
                   <Heart
                     className={`w-6 h-6 drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}
-                    strokeWidth={2.5}
+                    strokeWidth={1.5}
                     fill={isLiked ? 'currentColor' : 'none'}
                   />
                 </motion.div>
@@ -453,7 +453,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <MessageCircle className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <MessageCircle className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
@@ -463,7 +463,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleDuet(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <Copy className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <Copy className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
               </button>
 
@@ -473,9 +473,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div whileTap={{ scale: 1.2 }}>
                   {repostedVideos.has(video.id) ? (
-                    <Check className="w-6 h-6 text-green-400 drop-shadow-lg" strokeWidth={2.5} />
+                    <Check className="w-6 h-6 text-green-400 drop-shadow-lg" strokeWidth={1.5} />
                   ) : (
-                    <Repeat2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                    <Repeat2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
                   )}
                 </motion.div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
@@ -487,7 +487,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShare(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <Share2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <Share2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
                 <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
@@ -498,7 +498,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 <motion.div whileTap={{ scale: 1.2 }}>
                   <Bookmark 
                     className={`w-6 h-6 drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
-                    strokeWidth={2.5}
+                    strokeWidth={1.5}
                     fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
                   />
                 </motion.div>
