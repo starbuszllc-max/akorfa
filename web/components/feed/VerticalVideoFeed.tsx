@@ -486,13 +486,16 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               </motion.button>
             )}
 
-            <div className="absolute right-3 bottom-56 flex flex-col gap-2 items-center z-40">
+            <div className="absolute right-3 bottom-56 flex flex-col gap-4 items-center z-40">
               <button
                 onClick={() => handleLike(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div whileTap={{ scale: 1.5 }} className="w-8 h-8">
-                  <LayeredHeartIcon isActive={isLiked} className="w-8 h-8" />
+                <motion.div 
+                  whileTap={{ scale: 1.5 }} 
+                  className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                >
+                  <LayeredHeartIcon isActive={isLiked} className="w-6 h-6" />
                 </motion.div>
                 <span className={`text-xs font-bold drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}>
                   {(video.likeCount + (isLiked ? 1 : 0)).toLocaleString()}
@@ -503,7 +506,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <MessageCircle className="w-8 h-8 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
+                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} />
+                </div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
@@ -513,7 +518,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShareMenuOpen(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <Send className="w-8 h-8 text-white" strokeWidth={1.5} style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))'}} />
+                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                  <Send className="w-6 h-6 text-white" strokeWidth={1.5} />
+                </div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
@@ -521,11 +528,13 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleSave(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div whileTap={{ scale: 1.5 }} className="w-8 h-8">
+                <motion.div 
+                  whileTap={{ scale: 1.5 }} 
+                  className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                >
                   <Star 
-                    className={`w-8 h-8 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
+                    className={`w-6 h-6 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
                     strokeWidth={1.5}
-                    style={{filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) drop-shadow(inset 0 2px 4px rgba(0, 0, 0, 0.4))', transition: 'all 0.2s ease'}}
                   />
                 </motion.div>
                 <span className={`text-xs font-bold drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}>
