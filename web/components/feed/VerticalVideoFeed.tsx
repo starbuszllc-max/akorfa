@@ -420,14 +420,14 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
 
             <button
               onClick={handleToggleMute}
-              className="absolute top-14 right-1 flex flex-col items-center gap-1 z-40"
+              className="absolute top-14 right-2 flex flex-col items-center gap-0.5 z-40"
             >
               {isMuted ? (
-                <VolumeX className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
+                <VolumeX className="w-5 h-5 text-white drop-shadow-lg" strokeWidth={1.5} />
               ) : (
-                <Volume2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={1.5} />
+                <Volume2 className="w-5 h-5 text-white drop-shadow-lg" strokeWidth={1.5} />
               )}
-              <span className="text-white text-xs font-bold drop-shadow-lg">
+              <span className="text-white text-[9px] font-bold drop-shadow-lg">
                 {isMuted ? 'Unmute' : 'Mute'}
               </span>
             </button>
