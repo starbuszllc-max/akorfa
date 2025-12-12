@@ -435,7 +435,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               </button>
             )}
 
-            <div className="absolute bottom-20 right-2 flex flex-col gap-5 items-center z-40">
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-5 items-center z-40">
               <button
                 onClick={handleToggleMute}
                 className="flex flex-col items-center gap-1"
