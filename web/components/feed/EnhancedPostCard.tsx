@@ -245,7 +245,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      className="p-4 md:p-5 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-all duration-200"
+      className="p-4 md:p-5 transition-all duration-200"
     >
       {showShareToast && (
         <motion.div
@@ -425,7 +425,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         </p>
       </div>
 
-      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
+      <div className="mt-4 pt-3 flex items-center gap-4">
         <motion.button 
           onClick={handleLike}
           disabled={!currentUserId || isLiking || hasLiked}
@@ -496,7 +496,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700/50 overflow-hidden"
+            className="mt-4 pt-4 overflow-hidden"
           >
             {currentUserId && (
               <form onSubmit={submitComment} className="mb-4">
