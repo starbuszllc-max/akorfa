@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TipButton from '@/components/tipping/TipButton';
 
 interface Comment {
@@ -67,6 +67,10 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
   const [newComment, setNewComment] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
   const [localCommentCount, setLocalCommentCount] = useState(post.comment_count);
+  const [likeAnimating, setLikeAnimating] = useState(false);
+  const [commentAnimating, setCommentAnimating] = useState(false);
+  const likeButtonRef = useRef<HTMLButtonElement>(null);
+  const commentButtonRef = useRef<HTMLButtonElement>(null);
 
   const username = post.profiles?.username || 'Anonymous';
   const avatarUrl = post.profiles?.avatar_url;
@@ -88,6 +92,8 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
   }
 
   async function toggleComments() {
+    setCommentAnimating(true);
+    setTimeout(() => setCommentAnimating(false), 400);
     if (!showComments) {
       await fetchComments();
     }
@@ -130,6 +136,9 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
     if (!currentUserId || isLiking || hasLiked) return;
     
     setIsLiking(true);
+    setLikeAnimating(true);
+    setTimeout(() => setLikeAnimating(false), 500);
+    
     try {
       const resp = await fetch('/api/reactions', {
         method: 'POST',
@@ -160,7 +169,7 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
   }
 
   return (
-    <article className="p-3 md:p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <article className="post-card">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           {avatarUrl ? (
@@ -188,9 +197,12 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
 
       <div className="mt-3 pt-2 border-t border-gray-100 flex items-center gap-3">
         <button 
+          ref={likeButtonRef}
           onClick={handleLike}
           disabled={!currentUserId || isLiking || hasLiked}
-          className={`flex items-center gap-1.5 text-sm transition-colors ${
+          className={`flex items-center gap-1.5 text-sm transition-colors button-glow ${
+            likeAnimating ? 'animate-like-pulse' : ''
+          } ${
             hasLiked 
               ? 'text-rose-500 cursor-default' 
               : currentUserId 
@@ -215,8 +227,11 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
         </button>
 
         <button 
+          ref={commentButtonRef}
           onClick={toggleComments}
-          className={`flex items-center gap-1.5 text-sm transition-colors ${
+          className={`flex items-center gap-1.5 text-sm transition-colors button-glow ${
+            commentAnimating ? 'animate-comment-pop' : ''
+          } ${
             showComments ? 'text-blue-500' : 'text-gray-700 hover:text-blue-500'
           }`}
         >
