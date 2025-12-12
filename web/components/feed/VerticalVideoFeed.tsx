@@ -591,15 +591,31 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                   src={video.profiles.avatarUrl || '/default-avatar.png'}
                   alt={video.profiles.username}
                   className="w-8 h-8 rounded-full border border-white"
+                  style={{
+                    filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                  }}
                 />
                 <div>
-                  <div className="font-semibold text-xs">{video.profiles.username}</div>
-                  <div className="text-[10px] text-gray-300">
+                  <div 
+                    className="font-semibold text-xs"
+                    style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' }}
+                  >
+                    {video.profiles.username}
+                  </div>
+                  <div 
+                    className="text-[10px] text-gray-300"
+                    style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)' }}
+                  >
                     {video.layer.charAt(0).toUpperCase() + video.layer.slice(1)} Layer
                   </div>
                 </div>
               </div>
-              <p className="text-sm line-clamp-3 mb-2">{video.content}</p>
+              <p 
+                className="text-sm line-clamp-3 mb-2"
+                style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' }}
+              >
+                {video.content}
+              </p>
             </div>
           </div>
         );

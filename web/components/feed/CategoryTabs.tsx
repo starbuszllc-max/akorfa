@@ -71,7 +71,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                 className="flex-shrink-0 p-2.5 rounded-full"
               >
                 <Search 
-                  className="w-5 h-5 text-white" 
+                  className="w-7 h-7 text-white" 
                   strokeWidth={2.5}
                   style={{filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'}} 
                 />
@@ -112,7 +112,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                   className="block p-2.5 rounded-full"
                 >
                   <Bell 
-                    className="w-5 h-5 text-white" 
+                    className="w-7 h-7 text-white" 
                     strokeWidth={2.5}
                     style={{filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'}} 
                   />

@@ -64,10 +64,12 @@ export default function BottomNavBar() {
             className={`fixed bottom-0 left-0 right-0 z-40 ${isVideoPage ? 'bg-transparent' : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200/50 dark:border-slate-700/50'}`}
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
           >
-            <div className="flex items-center h-16 w-full">
-              {navItems.map((item) => {
+            <div className="flex items-center justify-between h-16 w-full px-2">
+              {navItems.map((item, index) => {
                 const Icon = item.icon;
                 const active = item.isExplore ? isExploreOpen : isActive(item.href);
+                const isFirst = index === 0;
+                const isLast = index === navItems.length - 1;
 
                 if (item.isExplore) {
                   return (
@@ -84,10 +86,16 @@ export default function BottomNavBar() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         animate={{ rotate: isExploreOpen ? 45 : 0 }}
+                        style={isVideoPage ? {
+                          filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                        } : undefined}
                       >
-                        <Icon className={`w-6 h-6 ${isVideoPage ? 'text-white drop-shadow-lg' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={4} />
+                        <Icon className={`w-6 h-6 ${isVideoPage ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={4} />
                       </motion.div>
-                      <span className={`text-[9px] font-medium mt-0.5 ${isVideoPage ? 'text-white drop-shadow-lg font-semibold' : 'text-gray-500 dark:text-gray-400'}`}>
+                      <span 
+                        className={`text-[9px] font-medium mt-0.5 ${isVideoPage ? 'text-white font-semibold' : 'text-gray-500 dark:text-gray-400'}`}
+                        style={isVideoPage ? { textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' } : undefined}
+                      >
                         {item.label}
                       </span>
                     </button>
@@ -99,7 +107,7 @@ export default function BottomNavBar() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsExploreOpen(false)}
-                    className="relative flex flex-col items-center justify-center flex-1 h-full focus:outline-none group"
+                    className={`relative flex flex-col items-center justify-center flex-1 h-full focus:outline-none group ${isFirst ? 'items-start pl-2' : ''} ${isLast ? 'items-end pr-2' : ''}`}
                   >
                     <div
                       className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 ${
@@ -109,16 +117,22 @@ export default function BottomNavBar() {
                             ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
                             : 'text-gray-500 dark:text-gray-400 group-hover:bg-gray-100 dark:group-hover:bg-slate-800'
                       }`}
+                      style={isVideoPage ? {
+                        filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                      } : undefined}
                     >
-                      <Icon className={`w-${isVideoPage ? '6' : '5'} h-${isVideoPage ? '6' : '5'} ${isVideoPage ? 'text-white drop-shadow-lg' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
+                      <Icon className={`w-${isVideoPage ? '6' : '5'} h-${isVideoPage ? '6' : '5'} ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
                     </div>
-                    <span className={`text-[10px] font-medium mt-1 ${
-                      isVideoPage
-                        ? 'text-white drop-shadow-lg font-semibold'
-                        : active
-                          ? 'text-indigo-600 dark:text-indigo-400'
-                          : 'text-gray-500 dark:text-gray-400'
-                    }`}>
+                    <span 
+                      className={`text-[10px] font-medium mt-1 ${
+                        isVideoPage
+                          ? 'text-white font-semibold'
+                          : active
+                            ? 'text-indigo-600 dark:text-indigo-400'
+                            : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                      style={isVideoPage ? { textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' } : undefined}
+                    >
                       {item.label}
                     </span>
                     {active && !item.isExplore && (
