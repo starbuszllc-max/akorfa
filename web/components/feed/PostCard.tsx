@@ -194,7 +194,7 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
             hasLiked 
               ? 'text-rose-500 cursor-default' 
               : currentUserId 
-                ? 'text-gray-500 hover:text-rose-500' 
+                ? 'text-gray-700 hover:text-rose-500' 
                 : 'text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -217,7 +217,7 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
         <button 
           onClick={toggleComments}
           className={`flex items-center gap-1.5 text-sm transition-colors ${
-            showComments ? 'text-blue-500' : 'text-gray-500 hover:text-blue-500'
+            showComments ? 'text-blue-500' : 'text-gray-700 hover:text-blue-500'
           }`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
