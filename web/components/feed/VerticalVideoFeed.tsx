@@ -493,11 +493,17 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div 
                   whileTap={{ scale: 1.5 }} 
-                  className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                  className="w-10 h-10 flex items-center justify-center"
+                  style={{
+                    filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                  }}
                 >
-                  <LayeredHeartIcon isActive={isLiked} className="w-6 h-6" />
+                  <LayeredHeartIcon isActive={isLiked} className="w-8 h-8" />
                 </motion.div>
-                <span className={`text-xs font-bold drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}>
+                <span 
+                  className={`text-xs font-bold ${isLiked ? 'text-red-500' : 'text-white'}`}
+                  style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)' }}
+                >
                   {(video.likeCount + (isLiked ? 1 : 0)).toLocaleString()}
                 </span>
               </button>
@@ -506,10 +512,17 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6 text-white" strokeWidth={1.5} />
-                </div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">
+                <MessageCircle 
+                  className="w-8 h-8 text-white" 
+                  strokeWidth={2}
+                  style={{
+                    filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                  }}
+                />
+                <span 
+                  className="text-white text-xs font-bold"
+                  style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)' }}
+                >
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
               </button>
@@ -518,10 +531,19 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShareMenuOpen(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                  <Send className="w-6 h-6 text-white" strokeWidth={1.5} />
-                </div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
+                <Send 
+                  className="w-8 h-8 text-white" 
+                  strokeWidth={2}
+                  style={{
+                    filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                  }}
+                />
+                <span 
+                  className="text-white text-xs font-bold"
+                  style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)' }}
+                >
+                  Share
+                </span>
               </button>
 
               <button 
@@ -530,14 +552,20 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div 
                   whileTap={{ scale: 1.5 }} 
-                  className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                  className="w-10 h-10 flex items-center justify-center"
+                  style={{
+                    filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
+                  }}
                 >
                   <Star 
-                    className={`w-6 h-6 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
-                    strokeWidth={1.5}
+                    className={`w-8 h-8 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
+                    strokeWidth={2}
                   />
                 </motion.div>
-                <span className={`text-xs font-bold drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}>
+                <span 
+                  className={`text-xs font-bold ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
+                  style={{ textShadow: '0 0 2px #000, 0 0 4px #000, 0 1px 3px rgba(0,0,0,0.9)' }}
+                >
                   {savedVideos.has(video.id) ? 'Favorited' : 'Favorite'}
                 </span>
               </button>
