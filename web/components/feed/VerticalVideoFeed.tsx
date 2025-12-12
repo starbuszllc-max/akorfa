@@ -478,7 +478,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                     <Repeat2 className="w-6 h-6 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
                   )}
                 </motion.div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">
+                <span className="text-white text-[10px] font-bold drop-shadow-lg">
                   {repostedVideos.has(video.id) ? 'Reposted' : 'Repost'}
                 </span>
               </button>
