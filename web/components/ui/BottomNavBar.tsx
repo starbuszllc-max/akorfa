@@ -137,7 +137,7 @@ export default function BottomNavBar() {
                           <Icon className={`w-8 h-8 ${isVideoPage ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={4} />
                         </motion.div>
                         <span 
-                          className={`text-[10px] font-semibold mt-0.5 ${isVideoPage ? 'text-white font-bold' : 'text-gray-500 dark:text-gray-400'}`}
+                          className={`text-[13px] font-bold mt-0.5 ${isVideoPage ? 'text-white font-bold' : 'text-gray-500 dark:text-gray-400'}`}
                           style={isVideoPage ? { textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' } : undefined}
                         >
                           {item.label}
