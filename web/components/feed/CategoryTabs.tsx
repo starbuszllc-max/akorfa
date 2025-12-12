@@ -63,7 +63,7 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-4 left-0 right-0 z-40 px-3"
+            className="fixed top-2 left-0 right-0 z-40 px-3"
           >
             <div className="flex items-center gap-2">
               <Link
