@@ -434,7 +434,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               </button>
             )}
 
-            <div className="absolute top-16 right-4 z-40">
+            <div className="absolute top-16 right-6 flex flex-col gap-5 items-center z-40">
               <button
                 onClick={handleToggleMute}
                 className="flex flex-col items-center gap-1"
@@ -448,9 +448,94 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                   {isMuted ? 'Unmute' : 'Mute'}
                 </span>
               </button>
+
+              <button
+                onClick={() => handleLike(video)}
+                className="flex flex-col items-center gap-1"
+              >
+                <motion.div whileTap={{ scale: 1.2 }}>
+                  <Heart
+                    className={`w-6 h-6 drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}
+                    strokeWidth={2.5}
+                    fill={isLiked ? 'currentColor' : 'none'}
+                  />
+                </motion.div>
+                <span className="text-white text-xs font-bold drop-shadow-lg">
+                  {(video.likeCount + (isLiked ? 1 : 0)).toLocaleString()}
+                </span>
+              </button>
+
+              <button 
+                onClick={() => handleOpenComments(video.id)}
+                className="flex flex-col items-center gap-1"
+              >
+                <MessageCircle className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">
+                  {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
+                </span>
+              </button>
+
+              <button 
+                onClick={() => handleDuet(video)}
+                className="flex flex-col items-center gap-1"
+              >
+                <Copy className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
+              </button>
+
+              <button 
+                onClick={() => handleRepost(video)}
+                className="flex flex-col items-center gap-1"
+              >
+                <motion.div whileTap={{ scale: 1.2 }}>
+                  {repostedVideos.has(video.id) ? (
+                    <Check className="w-6 h-6 text-green-400 drop-shadow-lg" strokeWidth={2.5} />
+                  ) : (
+                    <Repeat2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                  )}
+                </motion.div>
+                <span className="text-white text-xs font-bold drop-shadow-lg">
+                  {repostedVideos.has(video.id) ? 'Reposted' : 'Repost'}
+                </span>
+              </button>
+
+              <button 
+                onClick={() => handleShare(video)} 
+                className="flex flex-col items-center gap-1"
+              >
+                <Share2 className="w-6 h-6 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
+              </button>
+
+              <button 
+                onClick={() => handleSave(video)}
+                className="flex flex-col items-center gap-1"
+              >
+                <motion.div whileTap={{ scale: 1.2 }}>
+                  <Bookmark 
+                    className={`w-6 h-6 drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
+                    strokeWidth={2.5}
+                    fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
+                  />
+                </motion.div>
+                <span className="text-white text-xs font-bold drop-shadow-lg">
+                  {savedVideos.has(video.id) ? 'Saved' : 'Save'}
+                </span>
+              </button>
+
+              <Link href="/create" className="flex flex-col items-center gap-1">
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white flex items-center justify-center"
+                >
+                  <Plus className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={3} />
+                </motion.div>
+                <span className="text-white text-xs font-bold drop-shadow-lg">Create</span>
+              </Link>
             </div>
 
-            <div className="absolute bottom-40 left-0 right-20 p-6 text-white pointer-events-none">
+            <div className="absolute bottom-16 left-0 right-20 p-6 text-white pointer-events-none">
               <div className="flex items-center gap-3 mb-3">
                 <img
                   src={video.profiles.avatarUrl || '/default-avatar.png'}
@@ -465,93 +550,6 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 </div>
               </div>
               <p className="text-sm line-clamp-3 mb-2">{video.content}</p>
-            </div>
-
-            <div className="absolute bottom-36 right-8 flex flex-col gap-5 items-center">
-              <button
-                onClick={() => handleLike(video)}
-                className="flex flex-col items-center gap-1"
-              >
-                <motion.div whileTap={{ scale: 1.2 }}>
-                  <Heart
-                    className={`w-8 h-8 drop-shadow-lg ${isLiked ? 'text-red-500' : 'text-white'}`}
-                    strokeWidth={2.5}
-                    fill={isLiked ? 'currentColor' : 'none'}
-                  />
-                </motion.div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">
-                  {(video.likeCount + (isLiked ? 1 : 0)).toLocaleString()}
-                </span>
-              </button>
-
-              <button 
-                onClick={() => handleOpenComments(video.id)}
-                className="flex flex-col items-center gap-1"
-              >
-                <MessageCircle className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
-                <span className="text-white text-xs font-bold drop-shadow-lg">
-                  {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
-                </span>
-              </button>
-
-              <button 
-                onClick={() => handleDuet(video)}
-                className="flex flex-col items-center gap-1"
-              >
-                <Copy className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
-                <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
-              </button>
-
-              <button 
-                onClick={() => handleRepost(video)}
-                className="flex flex-col items-center gap-1"
-              >
-                <motion.div whileTap={{ scale: 1.2 }}>
-                  {repostedVideos.has(video.id) ? (
-                    <Check className="w-8 h-8 text-green-400 drop-shadow-lg" strokeWidth={2.5} />
-                  ) : (
-                    <Repeat2 className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
-                  )}
-                </motion.div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">
-                  {repostedVideos.has(video.id) ? 'Reposted' : 'Repost'}
-                </span>
-              </button>
-
-              <button 
-                onClick={() => handleShare(video)} 
-                className="flex flex-col items-center gap-1"
-              >
-                <Share2 className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
-                <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
-              </button>
-
-              <button 
-                onClick={() => handleSave(video)}
-                className="flex flex-col items-center gap-1"
-              >
-                <motion.div whileTap={{ scale: 1.2 }}>
-                  <Bookmark 
-                    className={`w-8 h-8 drop-shadow-lg ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
-                    strokeWidth={2.5}
-                    fill={savedVideos.has(video.id) ? 'currentColor' : 'none'}
-                  />
-                </motion.div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">
-                  {savedVideos.has(video.id) ? 'Saved' : 'Save'}
-                </span>
-              </button>
-
-              <Link href="/create" className="flex flex-col items-center gap-1 mt-2">
-                <motion.div 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white flex items-center justify-center"
-                >
-                  <Plus className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={3} />
-                </motion.div>
-                <span className="text-white text-xs font-bold drop-shadow-lg">Create</span>
-              </Link>
             </div>
           </div>
         );
