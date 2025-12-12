@@ -64,7 +64,7 @@ export default function BottomNavBar() {
             className={`fixed bottom-0 left-0 right-0 z-40 ${isVideoPage ? 'bg-transparent' : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200/50 dark:border-slate-700/50'}`}
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
           >
-            <div className="flex items-center justify-around h-16 max-w-4xl mx-auto px-3 gap-6">
+            <div className="flex items-center justify-between h-16 max-w-4xl mx-auto px-8 w-full">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = item.isExplore ? isExploreOpen : isActive(item.href);
