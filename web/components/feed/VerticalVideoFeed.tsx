@@ -474,7 +474,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleLike(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div whileTap={{ scale: 1.5 }}>
+                <motion.div whileTap={{ scale: 1.5 }} className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
                   <Heart
                     className={`w-6 h-6 icon-inset ${isLiked ? 'text-red-500' : 'text-white'}`}
                     strokeWidth={1.5}
@@ -491,7 +491,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleOpenComments(video.id)}
                 className="flex flex-col items-center gap-1"
               >
-                <MessageCircle className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                </div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">
                   {(video.commentCount + (commentCounts[video.id] || 0)).toLocaleString()}
                 </span>
@@ -501,7 +503,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleDuet(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <Copy className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <Copy className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                </div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">Duet</span>
               </button>
 
@@ -509,7 +513,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleRepost(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div whileTap={{ scale: 1.2 }}>
+                <motion.div whileTap={{ scale: 1.2 }} className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
                   {repostedVideos.has(video.id) ? (
                     <Check className="w-6 h-6 text-green-400 icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
                   ) : (
@@ -525,7 +529,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleShare(video)} 
                 className="flex flex-col items-center gap-1"
               >
-                <Share2 className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <Share2 className="w-6 h-6 text-white icon-inset" strokeWidth={1.5} style={{filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.6))'}} />
+                </div>
                 <span className="text-white text-xs font-bold drop-shadow-lg">Share</span>
               </button>
 
@@ -533,7 +539,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 onClick={() => handleSave(video)}
                 className="flex flex-col items-center gap-1"
               >
-                <motion.div whileTap={{ scale: 1.2 }}>
+                <motion.div whileTap={{ scale: 1.2 }} className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
                   <Bookmark 
                     className={`w-6 h-6 icon-inset ${savedVideos.has(video.id) ? 'text-yellow-400' : 'text-white'}`}
                     strokeWidth={1.5}
