@@ -425,7 +425,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         </p>
       </div>
 
-      <div className="mt-2.5 pt-2.5 border-b border-gray-200 dark:border-slate-700/50 flex items-center gap-4 pb-3">
+      <div className="mt-1 pt-2 border-b border-gray-200 dark:border-slate-700/50 flex items-center gap-4 pb-3">
         <motion.button 
           onClick={handleLike}
           disabled={!currentUserId || isLiking || hasLiked}
