@@ -33,6 +33,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   const [videos, setVideos] = useState<VideoPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  const [isMuteButtonVisible, setIsMuteButtonVisible] = useState(true);
   const [likedVideos, setLikedVideos] = useState<Set<string>>(new Set());
   const [savedVideos, setSavedVideos] = useState<Set<string>>(new Set());
   const [repostedVideos, setRepostedVideos] = useState<Set<string>>(new Set());
@@ -47,6 +48,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   const observerRef = useRef<IntersectionObserver | null>(null);
   const videoContainerRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const muteButtonTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isMutedRef = useRef(isMuted);
   const pausedVideosRef = useRef(pausedVideos);
 
@@ -64,7 +66,15 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'AudioVolumeUp' || e.key === 'AudioVolumeDown' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (e.key === 'AudioVolumeUp') {
+        setIsMuteButtonVisible(true);
+        if (muteButtonTimeoutRef.current) {
+          clearTimeout(muteButtonTimeoutRef.current);
+        }
+        muteButtonTimeoutRef.current = setTimeout(() => {
+          setIsMuteButtonVisible(false);
+        }, 5000);
+        
         if (isMuted) {
           setIsMuted(false);
           videoRefs.current.forEach((video) => {
@@ -171,6 +181,13 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   const handleToggleMute = useCallback(() => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
+    setIsMuteButtonVisible(true);
+    if (muteButtonTimeoutRef.current) {
+      clearTimeout(muteButtonTimeoutRef.current);
+    }
+    muteButtonTimeoutRef.current = setTimeout(() => {
+      setIsMuteButtonVisible(false);
+    }, 5000);
     videoRefs.current.forEach((video) => {
       video.muted = newMuted;
     });
@@ -192,6 +209,9 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
     return () => {
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
+      }
+      if (muteButtonTimeoutRef.current) {
+        clearTimeout(muteButtonTimeoutRef.current);
       }
     };
   }, []);
@@ -418,19 +438,27 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               </button>
             )}
 
-            <button
-              onClick={handleToggleMute}
-              className="absolute top-14 right-2 flex flex-col items-center gap-0.5 z-40"
-            >
-              {isMuted ? (
-                <VolumeX className="w-5 h-5 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
-              ) : (
-                <Volume2 className="w-5 h-5 text-white drop-shadow-lg icon-inset" strokeWidth={1.5} />
-              )}
-              <span className="text-white text-[9px] font-bold drop-shadow-lg">
-                {isMuted ? 'Unmute' : 'Mute'}
-              </span>
-            </button>
+            {isMuteButtonVisible && (
+              <motion.button
+                onClick={handleToggleMute}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-40"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white flex items-center justify-center">
+                  {isMuted ? (
+                    <VolumeX className="w-10 h-10 text-white drop-shadow-lg" strokeWidth={1.5} />
+                  ) : (
+                    <Volume2 className="w-10 h-10 text-white drop-shadow-lg" strokeWidth={1.5} />
+                  )}
+                </div>
+                <span className="text-white text-sm font-bold drop-shadow-lg bg-black/50 px-3 py-1 rounded-full">
+                  {isMuted ? 'Unmute' : 'Mute'}
+                </span>
+              </motion.button>
+            )}
 
             <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-5 items-center z-40">
               <button
