@@ -58,9 +58,6 @@ export const comments = pgTable('comments', {
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'cascade' }),
   parentId: uuid('parent_id'),
   content: text('content').notNull(),
-  mediaUrl: text('media_url'),
-  mediaType: text('media_type'),
-  gifUrl: text('gif_url'),
   isHelpful: boolean('is_helpful').default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
