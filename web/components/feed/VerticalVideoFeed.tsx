@@ -611,7 +611,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               </button>
             </div>
 
-            <Link href="/create" className="absolute bottom-40 right-3 flex flex-col items-center gap-1 z-40">
+            <Link href="/create" className="absolute bottom-20 right-3 flex flex-col items-center gap-1 z-40">
               <motion.div 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
