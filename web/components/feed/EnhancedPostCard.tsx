@@ -208,8 +208,68 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   async function handleShareOption(option: 'feed' | 'story' | 'community' | 'external' | 'copy') {
     setShowShareModal(false);
     
-    if (option === 'feed' || option === 'story' || option === 'community') {
-      setShareToastMessage('Coming soon! Use Copy Link for now.');
+    if (option === 'feed') {
+      // Repost to feed
+      try {
+        if (!currentUserId) {
+          setShareToastMessage('Please sign in to repost');
+          setShowShareToast(true);
+          setTimeout(() => setShowShareToast(false), 2500);
+          return;
+        }
+        const resp = await fetch('/api/reposts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            originalPostId: post.id,
+            userId: currentUserId
+          })
+        });
+        if (resp.ok) {
+          setShareToastMessage('Post reposted to your feed!');
+        } else {
+          setShareToastMessage('Failed to repost');
+        }
+      } catch (err) {
+        console.error('Repost failed:', err);
+        setShareToastMessage('Failed to repost');
+      }
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+      return;
+    } else if (option === 'story') {
+      // Share to story
+      try {
+        if (!currentUserId) {
+          setShareToastMessage('Please sign in to share');
+          setShowShareToast(true);
+          setTimeout(() => setShowShareToast(false), 2500);
+          return;
+        }
+        const resp = await fetch('/api/stories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: currentUserId,
+            content: post.content,
+            mediaUrl: post.profiles?.avatar_url || null,
+            layer: post.layer
+          })
+        });
+        if (resp.ok) {
+          setShareToastMessage('Added to your story!');
+        } else {
+          setShareToastMessage('Failed to add story');
+        }
+      } catch (err) {
+        console.error('Story share failed:', err);
+        setShareToastMessage('Failed to add story');
+      }
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+      return;
+    } else if (option === 'community') {
+      setShareToastMessage('Community sharing coming soon!');
       setShowShareToast(true);
       setTimeout(() => setShowShareToast(false), 2500);
       return;
@@ -280,19 +340,18 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <button
                   onClick={() => handleShareOption('feed')}
-                  className="flex flex-col items-center gap-2 p-3 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-2xl transition-colors relative"
+                  className="flex flex-col items-center gap-2 p-3 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-2xl transition-colors"
                 >
                   <div className="w-14 h-14 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
                     <svg className="w-7 h-7 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
                   </div>
-                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Feed</span>
-                  <span className="absolute top-1 right-1 text-[9px] px-1.5 py-0.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 rounded-full font-medium">Soon</span>
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Repost</span>
                 </button>
                 <button
                   onClick={() => handleShareOption('story')}
-                  className="flex flex-col items-center gap-2 p-3 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-2xl transition-colors relative"
+                  className="flex flex-col items-center gap-2 p-3 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-2xl transition-colors"
                 >
                   <div className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
                     <svg className="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -300,7 +359,6 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                     </svg>
                   </div>
                   <span className="text-xs font-medium text-gray-700 dark:text-gray-200">Story</span>
-                  <span className="absolute top-1 right-1 text-[9px] px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 rounded-full font-medium">Soon</span>
                 </button>
                 <button
                   onClick={() => handleShareOption('community')}
