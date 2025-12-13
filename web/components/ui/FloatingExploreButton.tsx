@@ -108,9 +108,30 @@ export default function FloatingExploreButton() {
               <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
                 <h3 className="font-bold text-lg flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
-                  Explore Akorfa
+                  Quick Actions
                 </h3>
-                <p className="text-sm text-white/80 mt-1">Discover all features</p>
+                <p className="text-sm text-white/80 mt-1">Jump to your favorites</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border-b border-indigo-100 dark:border-indigo-800/50">
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/stories" onClick={closeMenu} className="flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all">
+                    <span className="text-lg">📚</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">View Stories</span>
+                  </Link>
+                  <Link href="/assessments" onClick={closeMenu} className="flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all">
+                    <span className="text-lg">📊</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Assessment</span>
+                  </Link>
+                  <Link href="/challenges" onClick={closeMenu} className="flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all">
+                    <span className="text-lg">🎯</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Challenges</span>
+                  </Link>
+                  <Link href="/coach" onClick={closeMenu} className="flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all">
+                    <span className="text-lg">🤖</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">AI Coach</span>
+                  </Link>
+                </div>
               </div>
 
               <nav className="p-3 grid grid-cols-3 gap-2" aria-label="Main navigation">
