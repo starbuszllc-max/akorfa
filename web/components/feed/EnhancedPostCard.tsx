@@ -32,6 +32,8 @@ interface PostProps {
     like_count: number;
     comment_count: number;
     created_at: string;
+    mediaUrls?: any[];
+    mediaTypes?: any[];
     profiles: {
       username: string | null;
       avatar_url: string | null;
@@ -493,6 +495,39 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
           {post.content}
         </p>
       </div>
+
+      {post.mediaUrls && Array.isArray(post.mediaUrls) && post.mediaUrls.length > 0 && (
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {post.mediaUrls.map((url: any, idx: number) => {
+            const mediaType = post.mediaTypes?.[idx] || 'image';
+            const isVideo = mediaType === 'video' || (typeof url === 'string' && url.includes('.mp4'));
+            
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.05 }}
+                className="rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-700 aspect-square"
+              >
+                {isVideo ? (
+                  <video
+                    src={url}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={url}
+                    alt={`Post media ${idx + 1}`}
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                  />
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
       <div className="mt-1 pt-2 border-b border-gray-200 dark:border-slate-700/50 flex items-center gap-4 pb-3">
         <motion.button 
