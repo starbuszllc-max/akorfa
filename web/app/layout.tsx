@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-gray-50 dark:bg-slate-900 amoled:bg-black text-gray-900 dark:text-gray-100 flex flex-col transition-colors duration-200">
         <ThemeProvider>
           <EnhancedHeader />
-          <main className="flex-1 pb-16">
+          <main className="flex-1 pb-16 safe-area-top">
             {children}
           </main>
           <Footer />
