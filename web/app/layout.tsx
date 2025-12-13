@@ -6,6 +6,7 @@ import EnhancedHeader from '../components/ui/EnhancedHeader';
 import Footer from '../components/ui/Footer';
 import InstallPrompt from '../components/pwa/InstallPrompt';
 import BottomNavBar from '../components/ui/BottomNavBar';
+import MobileQuickAccessFAB from '../components/ui/MobileQuickAccessFAB';
 
 export const metadata = {
   title: 'Akorfa',
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-gray-50 dark:bg-slate-900 amoled:bg-black text-gray-900 dark:text-gray-100 flex flex-col transition-colors duration-200">
         <ThemeProvider>
           <EnhancedHeader />
+          <MobileQuickAccessFAB />
           <main className="flex-1 pb-16">
             {children}
           </main>
