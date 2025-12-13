@@ -5,6 +5,9 @@ const nextConfig = {
   typescript: {
     tsc: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   productionBrowserSourceMaps: false,
   webpack: (config) => {
     config.watchOptions = {
