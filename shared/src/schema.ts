@@ -1,4 +1,5 @@
-import { pgTable, uuid, text, decimal, jsonb, timestamp, integer, boolean, unique, date } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, decimal, jsonb, timestamp, integer, boolean, unique, date, foreignKey } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const profiles = pgTable('profiles', {
   id: uuid('id').primaryKey(),
@@ -55,7 +56,7 @@ export const comments = pgTable('comments', {
   id: uuid('id').defaultRandom().primaryKey(),
   postId: uuid('post_id').references(() => posts.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').references(() => profiles.id, { onDelete: 'cascade' }),
-  parentId: uuid('parent_id').references(() => comments.id, { onDelete: 'cascade' }).default(null),
+  parentId: uuid('parent_id'),
   content: text('content').notNull(),
   mediaUrl: text('media_url'),
   mediaType: text('media_type'),
