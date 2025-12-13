@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'You have an active loan. Repay it first.' }, { status: 400 });
     }
 
-    const { score, tier, creditLimit } = await calculateCreditScore(userId);
+    const { score: _, tier, creditLimit } = await calculateCreditScore(userId);
     
     if (amount > creditLimit) {
       return NextResponse.json({ 

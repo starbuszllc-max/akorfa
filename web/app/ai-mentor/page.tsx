@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Brain, Send, Sparkles, BookOpen, Users, Crown, Zap, Loader2 } from 'lucide-react';
+import { Brain, Send, Sparkles, Users, Crown, Zap, Loader2 } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';

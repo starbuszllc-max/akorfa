@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { postScores, posts, wallets, pointsLog } from '@akorfa/shared';
-import { eq, sql, desc } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import OpenAI from 'openai';
-
-const LAYERS = ['environment', 'bio', 'internal', 'cultural', 'social', 'conscious', 'existential'];
 
 function getOpenAIClient() {
   return new OpenAI();

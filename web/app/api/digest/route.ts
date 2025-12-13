@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { dailyDigests, userEvents, profiles, posts, challengeParticipants } from '@akorfa/shared';
-import { eq, desc, and, gte, sql } from 'drizzle-orm';
+import { eq, desc, and, gte } from 'drizzle-orm';
 import OpenAI from 'openai';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
