@@ -35,6 +35,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [isMuteButtonVisible, setIsMuteButtonVisible] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [likedVideos, setLikedVideos] = useState<Set<string>>(new Set());
   const [savedVideos, setSavedVideos] = useState<Set<string>>(new Set());
   const [repostedVideos, setRepostedVideos] = useState<Set<string>>(new Set());
@@ -62,6 +63,13 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   useEffect(() => {
     pausedVideosRef.current = pausedVideos;
   }, [pausedVideos]);
+
+  useEffect(() => {
+    const soundPref = localStorage.getItem('akorfa_sound_enabled');
+    if (soundPref !== null) {
+      setSoundEnabled(JSON.parse(soundPref));
+    }
+  }, []);
 
   useEffect(() => {
     fetchVideos();
@@ -184,6 +192,15 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
 
   const handleUnmute = useCallback(() => {
     setIsMuted(false);
+    videoRefs.current.forEach((video) => {
+      video.muted = false;
+    });
+  }, []);
+
+  const handleEnableSound = useCallback(() => {
+    setSoundEnabled(true);
+    setIsMuted(false);
+    localStorage.setItem('akorfa_sound_enabled', JSON.stringify(true));
     videoRefs.current.forEach((video) => {
       video.muted = false;
     });
@@ -411,14 +428,37 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full bg-black overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
-      style={{ scrollBehavior: 'smooth', height: '100dvh', minHeight: '100vh' }}
-      onScroll={handleScroll}
-    >
+    <>
+      <AnimatePresence>
+        {!soundEnabled && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleEnableSound}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="bg-white/10 backdrop-blur-md rounded-3xl px-8 py-10 text-center border border-white/20 max-w-xs"
+            >
+              <Volume2 className="w-16 h-16 text-white mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-2">Tap to Enable Sound</h2>
+              <p className="text-white/70 text-sm">Experience videos with sound</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {videos.map((video) => {
+      <div
+        ref={containerRef}
+        className="w-full bg-black overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
+        style={{ scrollBehavior: 'smooth', height: '100dvh', minHeight: '100vh' }}
+        onScroll={handleScroll}
+      >
+
+        {videos.map((video) => {
         const isLiked = likedVideos.has(video.id);
         const isActive = activeVideoId === video.id;
         const isPaused = pausedVideos.has(video.id);
@@ -585,7 +625,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               <span className="text-white text-xs font-bold drop-shadow-lg">Create</span>
             </Link>
 
-            <div className="absolute bottom-32 left-1 right-16 p-2 text-white pointer-events-none">
+            <div className="absolute bottom-36 left-1 right-16 p-2 text-white pointer-events-none">
               <div className="flex items-center gap-2 mb-2">
                 <img
                   src={video.profiles.avatarUrl || '/default-avatar.png'}
@@ -621,23 +661,23 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
         );
       })}
 
-      <VideoCommentModal
-        isOpen={commentModalOpen}
-        onClose={handleCloseComments}
-        postId={selectedVideoId || ''}
-        onCommentAdded={handleCommentAdded}
-      />
+        <VideoCommentModal
+          isOpen={commentModalOpen}
+          onClose={handleCloseComments}
+          postId={selectedVideoId || ''}
+          onCommentAdded={handleCommentAdded}
+        />
 
-      <AnimatePresence>
-        {shareMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShareMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-40"
-            />
+        <AnimatePresence>
+          {shareMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShareMenuOpen(false)}
+                className="fixed inset-0 bg-black/50 z-40"
+              />
             <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
@@ -686,10 +726,11 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                   <span className="text-xs font-medium text-gray-700 dark:text-gray-200 text-center">Repost</span>
                 </button>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }

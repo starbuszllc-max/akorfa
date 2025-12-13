@@ -84,10 +84,10 @@ export default function BottomNavBar() {
                       filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
                     } : undefined}
                   >
-                    <Home className={`w-5 h-5 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
+                    <Home className={`w-6 h-6 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
                   </div>
                   <span 
-                    className={`text-[10px] font-medium mt-1 ${
+                    className={`text-xs font-medium mt-1 ${
                       isVideoPage
                         ? 'text-white font-semibold'
                         : isActive(navItems[0].href)
@@ -134,10 +134,10 @@ export default function BottomNavBar() {
                             filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
                           } : undefined}
                         >
-                          <Icon className={`w-8 h-8 ${isVideoPage ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={4} />
+                          <Icon className={`w-9 h-9 ${isVideoPage ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={4} />
                         </motion.div>
                         <span 
-                          className={`text-[13px] font-bold mt-0.5 ${isVideoPage ? 'text-white font-bold' : 'text-gray-500 dark:text-gray-400'}`}
+                          className={`text-sm font-bold mt-0.5 ${isVideoPage ? 'text-white font-bold' : 'text-gray-500 dark:text-gray-400'}`}
                           style={isVideoPage ? { textShadow: '0 0 2px #000, 0 0 4px #000, 0 0 6px rgba(255,255,255,0.4), 0 1px 3px rgba(0,0,0,0.9)' } : undefined}
                         >
                           {item.label}
@@ -165,10 +165,10 @@ export default function BottomNavBar() {
                           filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
                         } : undefined}
                       >
-                        <Icon className={`w-5 h-5 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
+                        <Icon className={`w-6 h-6 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
                       </div>
                       <span 
-                        className={`text-[10px] font-medium mt-1 ${
+                        className={`text-xs font-medium mt-1 ${
                           isVideoPage
                             ? 'text-white font-semibold'
                             : active
@@ -210,10 +210,10 @@ export default function BottomNavBar() {
                       filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
                     } : undefined}
                   >
-                    <User className={`w-5 h-5 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
+                    <User className={`w-6 h-6 ${isVideoPage ? 'text-white' : ''}`} strokeWidth={isVideoPage ? 2.5 : 2} />
                   </div>
                   <span 
-                    className={`text-[10px] font-medium mt-1 ${
+                    className={`text-xs font-medium mt-1 ${
                       isVideoPage
                         ? 'text-white font-semibold'
                         : isActive(navItems[4].href)
