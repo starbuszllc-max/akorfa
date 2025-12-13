@@ -3,19 +3,21 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, X, LayoutDashboard, Newspaper, BookOpen, Trophy, ClipboardCheck, Zap, Lightbulb, Users, MessageCircle, TrendingUp, Wallet, ShoppingBag, User, LogOut, Sparkles } from 'lucide-react';
+import { Compass, X, LayoutDashboard, Newspaper, BookOpen, Trophy, ClipboardCheck, Zap, Lightbulb, Users, MessageCircle, TrendingUp, Wallet, ShoppingBag, User, LogOut, Sparkles, Camera, Video, Bell } from 'lucide-react';
 
 const navLinks = [
+  { href: '/stories', label: 'Stories', icon: Camera, color: 'text-pink-500' },
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'text-blue-500' },
   { href: '/feed', label: 'Feed', icon: Newspaper, color: 'text-green-500' },
+  { href: '/live', label: 'Live', icon: Video, color: 'text-red-500' },
   { href: '/insight-school', label: 'Learn', icon: BookOpen, color: 'text-purple-500' },
   { href: '/challenges', label: 'Challenges', icon: Trophy, color: 'text-yellow-500' },
-  { href: '/assessments', label: 'Assess', icon: ClipboardCheck, color: 'text-pink-500' },
-  { href: '/insights', label: 'Insights', icon: Zap, color: 'text-orange-500' },
-  { href: '/coach', label: 'Coach', icon: Lightbulb, color: 'text-amber-500' },
+  { href: '/notifications', label: 'Alerts', icon: Bell, color: 'text-orange-500' },
+  { href: '/insights', label: 'Insights', icon: Zap, color: 'text-amber-500' },
+  { href: '/coach', label: 'Coach', icon: Lightbulb, color: 'text-teal-500' },
   { href: '/groups', label: 'Groups', icon: Users, color: 'text-cyan-500' },
   { href: '/messages', label: 'Messages', icon: MessageCircle, color: 'text-indigo-500' },
-  { href: '/leaderboard', label: 'Leaderboard', icon: TrendingUp, color: 'text-emerald-500' },
+  { href: '/leaderboard', label: 'Leaders', icon: TrendingUp, color: 'text-emerald-500' },
   { href: '/wallet', label: 'Wallet', icon: Wallet, color: 'text-violet-500' },
   { href: '/marketplace', label: 'Shop', icon: ShoppingBag, color: 'text-rose-500' },
   { href: '/profile', label: 'Profile', icon: User, color: 'text-slate-500' },
