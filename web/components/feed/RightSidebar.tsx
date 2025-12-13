@@ -166,6 +166,9 @@ export default function RightSidebar() {
       >
         <h3 className="font-semibold text-indigo-900 dark:text-indigo-200 text-sm mb-2">Quick Actions</h3>
         <div className="space-y-2">
+          <Link href="/stories" className="flex items-center gap-2 text-sm text-indigo-700 dark:text-indigo-300 hover:text-indigo-900 dark:hover:text-indigo-100 transition-colors">
+            <span>📚</span> View Stories
+          </Link>
           <Link href="/assessments" className="flex items-center gap-2 text-sm text-indigo-700 dark:text-indigo-300 hover:text-indigo-900 dark:hover:text-indigo-100 transition-colors">
             <span>📊</span> Take an Assessment
           </Link>
