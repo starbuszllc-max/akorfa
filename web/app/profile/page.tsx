@@ -219,8 +219,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5 pb-24 px-4 sm:px-6">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+    <div className="w-full space-y-5 pb-24 px-4 sm:px-6">
+      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="relative h-28 sm:h-36">
           {profile.coverUrl ? (
             <img 
@@ -283,28 +283,28 @@ export default function ProfilePage() {
           </div>
 
           {profile.bio && (
-            <div className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3">
+            <div className="rounded-lg p-3 mb-3">
               <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">About</h3>
               <p className="text-xs text-gray-700 dark:text-gray-300">{profile.bio}</p>
             </div>
           )}
 
           <div className="grid grid-cols-3 gap-3 mb-3">
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-gray-900 dark:text-white">
                 <Zap className="w-5 h-5 text-indigo-500" />
                 {totalXp}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">XP</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-gray-900 dark:text-white">
                 <Trophy className="w-5 h-5 text-amber-500" />
                 {level}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-gray-900 dark:text-white">
                 <Flame className="w-5 h-5 text-orange-500" />
                 {streak}
@@ -314,21 +314,21 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-gray-900 dark:text-white">
                 <Users className="w-5 h-5 text-blue-500" />
                 {followerCount}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Followers</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-gray-900 dark:text-white">
                 <Users className="w-5 h-5 text-purple-500" />
                 {followingCount}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Following</div>
             </div>
-            <div className="text-center p-3 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-xl border border-emerald-200 dark:border-emerald-800">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-xl font-bold text-emerald-600 dark:text-emerald-400">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
@@ -343,7 +343,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="flex border-b border-gray-200 dark:border-slate-700">
           {contentTabs.map((tab) => {
             const Icon = tab.icon;
@@ -462,11 +462,11 @@ export default function ProfilePage() {
 
             {activeTab === 'highlights' && (
               <div>
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-4">
+                <div className="rounded-xl p-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Achievements</h3>
                   <BadgesList userId={userId} />
                 </div>
-                <div className="mt-4 bg-white dark:bg-slate-800 rounded-xl p-4">
+                <div className="mt-4 rounded-xl p-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Goals</h3>
                   {profile.goals && profile.goals.length > 0 ? (
                     <div className="flex flex-wrap gap-2">

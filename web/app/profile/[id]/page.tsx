@@ -202,7 +202,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="w-full space-y-6 px-4 sm:px-6">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -211,7 +211,7 @@ export default function UserProfilePage() {
         Back
       </button>
 
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="h-28 sm:h-36 relative">
           {profile.coverUrl ? (
             <img 
@@ -286,21 +286,21 @@ export default function UserProfilePage() {
           )}
 
           <div className="grid grid-cols-3 gap-3 mb-3">
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
                 <Zap className="w-5 h-5 text-indigo-500" />
                 {profile.totalXp}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">XP</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
                 <Trophy className="w-5 h-5 text-amber-500" />
                 {profile.level}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
                 <Flame className="w-5 h-5 text-orange-500" />
                 {profile.currentStreak}
@@ -310,14 +310,14 @@ export default function UserProfilePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
                 <Users className="w-5 h-5 text-blue-500" />
                 {followerCount}
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Followers</div>
             </div>
-            <div className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="text-center p-3 rounded-xl">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
                 <Users className="w-5 h-5 text-purple-500" />
                 {followingCount}
@@ -330,12 +330,12 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Activity</h2>
         <ActivityHeatmap userId={profileId} />
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Grid3X3 className="w-5 h-5" />
           Posts
@@ -411,13 +411,13 @@ export default function UserProfilePage() {
         )}
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Achievements</h2>
         <BadgesList userId={profileId} />
       </div>
 
       {profile.goals && profile.goals.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Goals</h2>
           <div className="flex flex-wrap gap-2">
             {profile.goals.map((goal: string, i: number) => (
