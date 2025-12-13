@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { marketplaceItems, userItems, wallets } from '@akorfa/shared/src/schema';
+import { marketplaceItems, userItems, wallets } from '@akorfa/shared';
 import { eq, and, sql, desc } from 'drizzle-orm';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

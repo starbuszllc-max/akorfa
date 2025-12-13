@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import { groups, groupMembers } from '@akorfa/shared/src/schema';
+import { groups, groupMembers } from '@akorfa/shared';
 import { eq, desc, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 

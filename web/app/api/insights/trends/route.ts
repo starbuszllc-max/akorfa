@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../../lib/db';
-import { assessments } from '@akorfa/shared/src/schema';
+import { assessments } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
 
 export async function GET(req: Request) {

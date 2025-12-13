@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import { aiMentorSessions } from '@akorfa/shared/src/schema';
+import { aiMentorSessions } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
 import { getOpenAI, hasOpenAIKey } from '../../../lib/openai';
 

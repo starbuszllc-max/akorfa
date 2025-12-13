@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { creditScores, loans, loanRepayments, wallets, profiles } from '@akorfa/shared/src/schema';
+import { creditScores, loans, loanRepayments, wallets, profiles } from '@akorfa/shared';
 import { eq, sql, and, desc } from 'drizzle-orm';
 
 const CREDIT_TIERS = {

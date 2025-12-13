@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { payouts, wallets, pointsLog } from '@akorfa/shared/src/schema';
+import { payouts, wallets, pointsLog } from '@akorfa/shared';
 import { eq, desc, sql } from 'drizzle-orm';
 
 const POINTS_TO_USD = 0.001;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import { referrals, wallets, profiles } from '@akorfa/shared/src/schema';
+import { referrals, wallets, profiles } from '@akorfa/shared';
 import { eq, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 

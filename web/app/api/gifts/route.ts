@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { gifts, wallets, pointsLog } from '@akorfa/shared/src/schema';
+import { gifts, wallets, pointsLog } from '@akorfa/shared';
 import { eq, desc, sql, or } from 'drizzle-orm';
 
 const GIFT_TYPES = {

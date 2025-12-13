@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db, getPool } from '../../../../lib/db';
-import { challenges, challengeParticipants, profiles, userEvents } from '@akorfa/shared/src/schema';
+import { challenges, challengeParticipants, profiles, userEvents } from '@akorfa/shared';
 import { calculateAkorfaScore } from '@akorfa/shared/src/scoring';
 import { eq, sql, and } from 'drizzle-orm';
 

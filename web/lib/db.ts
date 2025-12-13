@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import * as schema from '@akorfa/shared/src/schema';
+import * as schema from '@akorfa/shared';
 
 let pool: Pool | null = null;
 let dbInstance: ReturnType<typeof drizzle> | null = null;

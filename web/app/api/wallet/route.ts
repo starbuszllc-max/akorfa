@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { wallets, pointsLog, profiles, coinTransactions } from '@akorfa/shared/src/schema';
+import { wallets, pointsLog, profiles, coinTransactions } from '@akorfa/shared';
 import { eq, desc, sql } from 'drizzle-orm';
 
 const POINTS_TO_USD_RATE = 0.001;

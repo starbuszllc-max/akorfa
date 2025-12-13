@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { db } from '@/lib/db';
-import { profiles } from '@akorfa/shared/src/schema';
+import { profiles } from '@akorfa/shared';
 import { eq } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';

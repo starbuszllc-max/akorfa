@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getOpenAI, hasOpenAIKey } from '../../../lib/openai';
 import { db } from '../../../lib/db';
-import { profiles, assessments, posts, userEvents, challengeParticipants } from '@akorfa/shared/src/schema';
+import { profiles, assessments, posts, userEvents, challengeParticipants } from '@akorfa/shared';
 import { eq, desc, and, gte } from 'drizzle-orm';
 
 export async function GET(req: Request) {

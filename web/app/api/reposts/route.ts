@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import { posts, profiles } from '@akorfa/shared/src/schema';
+import { posts, profiles } from '@akorfa/shared';
 import { eq, sql } from 'drizzle-orm';
 
 export async function POST(req: Request) {

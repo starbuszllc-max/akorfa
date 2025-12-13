@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/db';
-import { userRoles } from '@akorfa/shared/src/schema';
+import { userRoles } from '@akorfa/shared';
 import { eq, and } from 'drizzle-orm';
 
 const AVAILABLE_ROLES = [

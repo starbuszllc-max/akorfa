@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { postScores, posts, wallets, pointsLog } from '@akorfa/shared/src/schema';
+import { postScores, posts, wallets, pointsLog } from '@akorfa/shared';
 import { eq, sql, desc } from 'drizzle-orm';
 import OpenAI from 'openai';
 

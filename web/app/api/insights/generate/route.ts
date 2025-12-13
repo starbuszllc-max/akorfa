@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getOpenAI, hasOpenAIKey } from '../../../../lib/openai';
 import { db } from '../../../../lib/db';
-import { profiles, assessments, dailyInsights } from '@akorfa/shared/src/schema';
+import { profiles, assessments, dailyInsights } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getOpenAI, hasOpenAIKey } from '../../../lib/openai';
 import { db } from '../../../lib/db';
-import { profiles, assessments, posts, challengeParticipants, userBadges } from '@akorfa/shared/src/schema';
+import { profiles, assessments, posts, challengeParticipants, userBadges } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
 
 async function getUserContext(userId: string) {
