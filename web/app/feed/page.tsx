@@ -99,15 +99,6 @@ export default function FeedPage() {
     return () => observer.disconnect();
   }, [hasMore, loadingMore, loading, fetchPosts]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!loading && !loadingMore) {
-        fetchPosts();
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [loading, loadingMore, fetchPosts]);
 
   const handlePostCreated = (isFirstPost?: boolean) => {
     setRefreshTrigger(prev => prev + 1);
