@@ -1,5 +1,7 @@
 {
-  "extends": ["next/core-web-vitals"],
+  "extends": ["eslint:recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -11,5 +13,12 @@
     "prefer-const": "warn",
     "no-empty": "warn",
     "no-useless-escape": "warn"
-  }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true,
+    "jest": true
+  },
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "*.d.ts"]
 }
