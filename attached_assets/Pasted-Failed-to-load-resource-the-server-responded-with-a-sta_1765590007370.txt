@@ -1,0 +1,74 @@
+Failed to load resource: the server responded with a status of 500 ()Understand this error
+/api/comments:1  Failed to load resource: the server responded with a status of 500 ()Understand this error
+contentScript.js:17637 XHR finished loading: POST "https://us.i.posthog.com/i/v0/e/?ip=1&_=1765589963149&ver=1.160.3&compression=gzip-js".
+method @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+n @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+contentScript.js:17637 XHR finished loading: POST "https://us.i.posthog.com/i/v0/e/?ip=1&_=1765589967125&ver=1.160.3&compression=gzip-js".
+method @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+n @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+setTimeout
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+layout-9a3a2ea0bba99d93.js:1  GET https://ak-fa-web-one.vercel.app/api/notifications?userId=542fd22d-1379-4699-934a-a4c70bf9fc1f 500 (Internal Server Error)
+C @ layout-9a3a2ea0bba99d93.js:1Understand this error
+layout-9a3a2ea0bba99d93.js:1 Fetch failed loading: GET "https://ak-fa-web-one.vercel.app/api/notifications?userId=542fd22d-1379-4699-934a-a4c70bf9fc1f".
+C @ layout-9a3a2ea0bba99d93.js:1
+8729-707018138110a6ee.js:1  POST https://ak-fa-web-one.vercel.app/api/comments 500 (Internal Server Error)
+v @ 8729-707018138110a6ee.js:1
+i8 @ c7879cf7-ce6cc72fe8fad416.js:1
+(anonymous) @ c7879cf7-ce6cc72fe8fad416.js:1
+nz @ c7879cf7-ce6cc72fe8fad416.js:1
+sn @ c7879cf7-ce6cc72fe8fad416.js:1
+cc @ c7879cf7-ce6cc72fe8fad416.js:1
+ci @ c7879cf7-ce6cc72fe8fad416.js:1Understand this error
+8729-707018138110a6ee.js:1 Fetch failed loading: POST "https://ak-fa-web-one.vercel.app/api/comments".
+v @ 8729-707018138110a6ee.js:1
+i8 @ c7879cf7-ce6cc72fe8fad416.js:1
+(anonymous) @ c7879cf7-ce6cc72fe8fad416.js:1
+nz @ c7879cf7-ce6cc72fe8fad416.js:1
+sn @ c7879cf7-ce6cc72fe8fad416.js:1
+cc @ c7879cf7-ce6cc72fe8fad416.js:1
+ci @ c7879cf7-ce6cc72fe8fad416.js:1
+contentScript.js:17637 XHR finished loading: POST "https://us.i.posthog.com/i/v0/e/?ip=1&_=1765589978830&ver=1.160.3&compression=gzip-js".
+method @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+n @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+setTimeout
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+t @ contentScript.js:17637
+contentScript.js:17637 XHR finished loading: POST "https://us.i.posthog.com/i/v0/e/?ip=1&_=1765589982116&ver=1.160.3&compression=gzip-js".
+method @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+n @ contentScript.js:17637
+(anonymous) @ contentScript.js:17637
+setTimeout
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
+value @ contentScript.js:17637
