@@ -502,6 +502,12 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
             const mediaType = post.mediaTypes?.[idx] || 'image';
             const isVideo = mediaType === 'video' || (typeof url === 'string' && url.includes('.mp4'));
             
+            const handleVideoClick = () => {
+              if (isVideo) {
+                router.push(`/live?video=${encodeURIComponent(url)}`);
+              }
+            };
+            
             return (
               <motion.div
                 key={idx}
@@ -509,13 +515,27 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.05 }}
                 className="rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-700 aspect-square"
+                onClick={handleVideoClick}
               >
                 {isVideo ? (
-                  <video
-                    src={url}
-                    controls
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="w-full h-full relative group cursor-pointer">
+                    <video
+                      src={url}
+                      controls
+                      className="w-full h-full object-cover"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleVideoClick();
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <img
                     src={url}
