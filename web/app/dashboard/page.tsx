@@ -159,7 +159,7 @@ export default function DashboardPage() {
   const levelInfo = calculateLevel(totalXp);
 
   return (
-    <div className="max-w-6xl mx-auto px-3 space-y-3 sm:space-y-4">
+    <div className="max-w-6xl mx-auto px-3 pt-1 space-y-3 sm:space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
