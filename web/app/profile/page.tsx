@@ -17,6 +17,8 @@ interface Post {
   likeCount: number;
   commentCount: number;
   createdAt: string;
+  mediaUrls?: string[];
+  mediaTypes?: string[];
 }
 
 export default function ProfilePage() {
@@ -385,32 +387,63 @@ export default function ProfilePage() {
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                   </div>
                 ) : posts.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {posts.map((post) => (
-                      <div
-                        key={post.id}
-                        className="aspect-square bg-gray-100 dark:bg-slate-700 rounded-xl p-3 transition-all overflow-hidden group relative"
-                      >
-                        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-4">
-                          {post.content}
-                        </p>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-100 dark:from-slate-700 to-transparent pt-8 pb-2 px-3">
-                          <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                  <div className="grid grid-cols-3 gap-1">
+                    {posts.map((post) => {
+                      const hasMedia = post.mediaUrls && post.mediaUrls.length > 0;
+                      const firstMedia = hasMedia ? post.mediaUrls![0] : null;
+                      const firstMediaType = post.mediaTypes && post.mediaTypes.length > 0 ? post.mediaTypes[0] : null;
+                      const isVideo = firstMediaType === 'video' || (firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.webm') || firstMedia.includes('.mov')));
+                      
+                      return (
+                        <div
+                          key={post.id}
+                          className="aspect-square bg-gray-100 dark:bg-slate-700 overflow-hidden relative group cursor-pointer"
+                        >
+                          {hasMedia && firstMedia ? (
+                            isVideo ? (
+                              <video
+                                src={firstMedia}
+                                className="w-full h-full object-cover"
+                                muted
+                                playsInline
+                              />
+                            ) : (
+                              <img
+                                src={firstMedia}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            )
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center p-2">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-4 text-center">
+                                {post.content}
+                              </p>
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 text-white text-sm">
                             <span className="flex items-center gap-1">
-                              <Heart className="w-3 h-3" /> {post.likeCount ?? 0}
+                              <Heart className="w-4 h-4 fill-white" /> {post.likeCount ?? 0}
                             </span>
                             <span className="flex items-center gap-1">
-                              <MessageCircle className="w-3 h-3" /> {post.commentCount ?? 0}
+                              <MessageCircle className="w-4 h-4 fill-white" /> {post.commentCount ?? 0}
                             </span>
                           </div>
+                          {isVideo && (
+                            <div className="absolute top-2 right-2 text-white">
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          )}
+                          {post.mediaUrls && post.mediaUrls.length > 1 && (
+                            <div className="absolute top-2 right-2 text-white">
+                              <Grid3X3 className="w-4 h-4" />
+                            </div>
+                          )}
                         </div>
-                        {post.layer && (
-                          <span className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs ${layerColors[post.layer] || 'bg-gray-100 text-gray-600'}`}>
-                            {post.layer}
-                          </span>
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-12">
