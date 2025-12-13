@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User } from 'lucide-react';
+import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
+import UserProfileCard from '@/components/messages/UserProfileCard';
 
 interface Conversation {
   id: string;
@@ -46,6 +47,7 @@ export default function MessagesPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -251,79 +253,105 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden min-h-[70vh] flex">
-        <div className={`w-full md:w-80 border-r border-gray-200 dark:border-slate-700 ${selectedConversation ? 'hidden md:block' : ''}`}>
-          <div className="p-4 border-b border-gray-200 dark:border-slate-700">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Messages</h1>
-          </div>
-          
-          {conversations.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No conversations yet</p>
-              <p className="text-sm mt-2">Start following people and send them a message!</p>
+    <>
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden min-h-[70vh] flex">
+          <div className={`w-full md:w-96 border-r border-gray-200 dark:border-slate-700 flex flex-col ${selectedConversation ? 'hidden md:flex' : ''}`}>
+            <div className="p-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 sticky top-0">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Messages</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{conversations.length} conversations</p>
             </div>
-          ) : (
-            <div className="divide-y divide-gray-200 dark:divide-slate-700">
-              {conversations.map((conv) => (
-                <button
-                  key={conv.id}
-                  onClick={() => selectConversation(conv)}
-                  className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors text-left ${
-                    selectedConversation?.id === conv.id ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''
-                  }`}
-                >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    {conv.otherUser.avatarUrl ? (
-                      <img src={conv.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <User className="w-6 h-6 text-white" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-900 dark:text-white truncate">
-                        {conv.otherUser.username}
-                      </span>
+          
+          <div className="flex-1 overflow-y-auto">
+            {conversations.length === 0 ? (
+              <div className="p-8 text-center text-gray-500 h-full flex items-center justify-center">
+                <div>
+                  <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>No conversations yet</p>
+                  <p className="text-sm mt-2">Start following people and send them a message!</p>
+                </div>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-200 dark:divide-slate-700">
+                {conversations.map((conv) => (
+                  <button
+                    key={conv.id}
+                    onClick={() => selectConversation(conv)}
+                    className={`w-full p-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors text-left border-l-4 ${
+                      selectedConversation?.id === conv.id 
+                        ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-600' 
+                        : 'border-transparent'
+                    }`}
+                  >
+                    <div className="relative flex-shrink-0">
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden ring-2 ring-white dark:ring-slate-800">
+                        {conv.otherUser.avatarUrl ? (
+                          <img src={conv.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <User className="w-7 h-7 text-white" />
+                        )}
+                      </div>
                       {conv.unreadCount > 0 && (
-                        <span className="w-5 h-5 bg-indigo-600 text-white text-xs rounded-full flex items-center justify-center">
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold ring-2 ring-white dark:ring-slate-800">
                           {conv.unreadCount}
-                        </span>
+                        </div>
                       )}
                     </div>
-                    {conv.lastMessage && (
-                      <p className="text-sm text-gray-500 truncate">
-                        {conv.lastMessage.messageType === 'audio' ? '🎵 Voice message' : conv.lastMessage.content}
-                      </p>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-gray-900 dark:text-white truncate text-sm">
+                          {conv.otherUser.username}
+                        </span>
+                        <span className="text-xs text-gray-400 flex-shrink-0 ml-2">
+                          {new Date(conv.lastMessageAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                      {conv.lastMessage && (
+                        <p className={`text-sm truncate ${conv.unreadCount > 0 ? 'font-semibold text-gray-700 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400'}`}>
+                          {conv.lastMessage.messageType === 'audio' ? '🎵 Voice message' : conv.lastMessage.messageType === 'image' ? '📸 Photo' : conv.lastMessage.content}
+                        </p>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={`flex-1 flex flex-col ${!selectedConversation ? 'hidden md:flex' : ''}`}>
           {selectedConversation ? (
             <>
-              <div className="p-4 border-b border-gray-200 dark:border-slate-700 flex items-center gap-3">
-                <button
-                  onClick={() => setSelectedConversation(null)}
-                  className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </button>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden">
-                  {selectedConversation.otherUser.avatarUrl ? (
-                    <img src={selectedConversation.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <User className="w-5 h-5 text-white" />
-                  )}
+              <div className="p-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between bg-gradient-to-r from-white to-indigo-50 dark:from-slate-800 dark:to-slate-700/50 sticky top-0">
+                <div className="flex items-center gap-3 flex-1">
+                  <button
+                    onClick={() => setSelectedConversation(null)}
+                    className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg"
+                  >
+                    <ArrowLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => setShowProfile(true)}
+                    className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-1"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden ring-2 ring-indigo-200 dark:ring-indigo-900">
+                      {selectedConversation.otherUser.avatarUrl ? (
+                        <img src={selectedConversation.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <User className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <div className="text-left">
+                      <p className="font-semibold text-gray-900 dark:text-white">
+                        {selectedConversation.otherUser.username}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Tap to view profile</p>
+                    </div>
+                  </button>
                 </div>
-                <span className="font-medium text-gray-900 dark:text-white">
-                  {selectedConversation.otherUser.username}
-                </span>
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full">
+                  <MoreVertical className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                </button>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -417,5 +445,17 @@ export default function MessagesPage() {
         </div>
       </div>
     </div>
+
+    {showProfile && selectedConversation && (
+      <UserProfileCard
+        user={{
+          id: selectedConversation.otherUser.id,
+          username: selectedConversation.otherUser.username,
+          avatarUrl: selectedConversation.otherUser.avatarUrl
+        }}
+        onClose={() => setShowProfile(false)}
+      />
+    )}
+    </>
   );
 }
