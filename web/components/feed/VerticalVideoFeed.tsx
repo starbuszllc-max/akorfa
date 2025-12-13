@@ -553,7 +553,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 className="flex flex-col items-center gap-1"
               >
                 <MessageCircle 
-                  className="w-10 h-10 text-white" 
+                  className="w-8 h-8 text-white" 
                   strokeWidth={2}
                   style={{
                     filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
@@ -572,7 +572,7 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 className="flex flex-col items-center gap-1"
               >
                 <Send 
-                  className="w-10 h-10 text-white" 
+                  className="w-8 h-8 text-white" 
                   strokeWidth={2}
                   style={{
                     filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
@@ -592,13 +592,13 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
               >
                 <motion.div 
                   whileTap={{ scale: 1.5 }} 
-                  className="w-12 h-12 flex items-center justify-center"
+                  className="w-10 h-10 flex items-center justify-center"
                   style={{
                     filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'
                   }}
                 >
                   <Star 
-                    className={`w-10 h-10 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
+                    className={`w-8 h-8 ${savedVideos.has(video.id) ? 'text-yellow-400 fill-yellow-400' : 'text-white'}`}
                     strokeWidth={2}
                   />
                 </motion.div>
