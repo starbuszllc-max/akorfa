@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import LayeredLikeIcon from '@/components/ui/icons/LayeredLikeIcon';
@@ -114,6 +114,11 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [shareToastMessage, setShareToastMessage] = useState('Link copied to clipboard!');
   const [showShareModal, setShowShareModal] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
+  const [failedMediaIndices, setFailedMediaIndices] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    setFailedMediaIndices(new Set());
+  }, [post.id, post.mediaUrls]);
 
   const username = post.profiles?.username || 'Anonymous';
   const avatarUrl = post.profiles?.avatar_url;
@@ -513,9 +518,11 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
       {(() => {
         const mediaUrls = parseMediaArray(post.mediaUrls);
         const mediaTypes = parseMediaArray(post.mediaTypes);
-        return mediaUrls.length > 0 ? (
+        const visibleMedia = mediaUrls.filter((_, idx) => !failedMediaIndices.has(idx));
+        return visibleMedia.length > 0 ? (
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {mediaUrls.map((url: string, idx: number) => {
+            if (failedMediaIndices.has(idx)) return null;
             const mediaType = mediaTypes[idx] || 'image';
             const isVideo = mediaType === 'video' || url.includes('.mp4');
             
@@ -523,6 +530,10 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
               if (isVideo) {
                 router.push(`/live?video=${encodeURIComponent(url)}`);
               }
+            };
+
+            const handleMediaError = () => {
+              setFailedMediaIndices(prev => new Set(prev).add(idx));
             };
             
             return (
@@ -544,10 +555,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                         e.stopPropagation();
                         handleVideoClick();
                       }}
-                      onError={(e) => {
-                        const target = e.target as HTMLVideoElement;
-                        target.parentElement?.parentElement?.classList.add('hidden');
-                      }}
+                      onError={handleMediaError}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -562,11 +570,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                     src={url}
                     alt={`Post media ${idx + 1}`}
                     className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.parentElement?.classList.add('hidden');
-                    }}
+                    onError={handleMediaError}
                   />
                 )}
               </motion.div>
