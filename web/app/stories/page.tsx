@@ -67,15 +67,15 @@ export default function StoriesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 pt-4">
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link href="/feed">
               <button className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 sm:w-6 h-5 sm:h-6" />
               </button>
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Stories</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Stories</h1>
           </div>
           {user && (
             <button
@@ -88,18 +88,18 @@ export default function StoriesPage() {
         </div>
 
         {showCreator && (
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <StoryCreator userId={user?.id || ''} onClose={() => setShowCreator(false)} onCreated={handleStoryCreated} />
           </div>
         )}
 
         {loading ? (
-          <div className="flex justify-center items-center py-12">
+          <div className="flex justify-center items-center py-8 sm:py-12">
             <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : storyGroups.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">No stories yet</p>
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg mb-4">No stories yet</p>
             {user && (
               <button
                 onClick={() => setShowCreator(true)}
@@ -110,7 +110,7 @@ export default function StoriesPage() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
             {storyGroups.map((group, idx) => (
               <button
                 key={idx}

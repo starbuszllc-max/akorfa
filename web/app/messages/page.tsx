@@ -358,7 +358,7 @@ function MessagesContent() {
       <div className="max-w-6xl mx-auto h-[calc(100vh-140px)] safe-area-top pt-4">
         <div className="h-full flex">
           
-          <div className={`w-full md:w-[380px] flex flex-col ${selectedConversation ? 'hidden md:flex' : ''}`}>
+          <div className={`w-full md:w-[380px] flex flex-col bg-white dark:bg-slate-900 ${selectedConversation ? 'hidden md:flex' : ''}`}>
             <div className="p-4 bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Chats</h1>
