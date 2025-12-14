@@ -544,6 +544,10 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                         e.stopPropagation();
                         handleVideoClick();
                       }}
+                      onError={(e) => {
+                        const target = e.target as HTMLVideoElement;
+                        target.parentElement?.parentElement?.classList.add('hidden');
+                      }}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -558,6 +562,11 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                     src={url}
                     alt={`Post media ${idx + 1}`}
                     className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement?.classList.add('hidden');
+                    }}
                   />
                 )}
               </motion.div>
