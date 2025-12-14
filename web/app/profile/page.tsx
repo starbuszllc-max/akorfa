@@ -220,7 +220,7 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full space-y-5 pb-24 px-4 sm:px-6 pt-4">
-      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div>
         <div className="relative h-28 sm:h-36">
           {profile.coverUrl ? (
             <img 
@@ -343,7 +343,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+      <div className="rounded-2xl shadow-sm overflow-hidden">
         <div className="flex border-b border-gray-200 dark:border-slate-700">
           {contentTabs.map((tab) => {
             const Icon = tab.icon;

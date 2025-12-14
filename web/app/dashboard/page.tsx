@@ -184,7 +184,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+      <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold">
@@ -249,7 +249,7 @@ export default function DashboardPage() {
         </div>
         
         <div className="lg:col-span-2 space-y-3">
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Layer Progress</h2>
             <Link href="/assessments" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
@@ -274,7 +274,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Quick Actions</h2>
           </div>

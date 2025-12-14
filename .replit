@@ -24,7 +24,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd web && npm run dev"
+args = "cd /home/runner/workspace/web && npm run dev"
 waitForPort = 5000
 
 [workflows.workflow.metadata]

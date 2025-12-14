@@ -85,7 +85,7 @@ export default function LeaderboardPage() {
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-indigo-600 text-white shadow-md'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700'
+                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />

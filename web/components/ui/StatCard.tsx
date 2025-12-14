@@ -16,7 +16,7 @@ interface StatCardProps {
 
 export default function StatCard({ title, value, subtitle, icon, trend, className = '' }: StatCardProps) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 p-3 ${className}`}>
+    <div className={`bg-white dark:bg-slate-800 rounded-lg shadow-sm p-3 ${className}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">{title}</p>

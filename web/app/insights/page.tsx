@@ -214,7 +214,7 @@ export default function InsightsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center mb-8 border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center mb-8">
           <Sparkles className="w-12 h-12 text-indigo-600 dark:text-indigo-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Generate Today&apos;s Insight
@@ -243,7 +243,7 @@ export default function InsightsPage() {
       )}
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             <h3 className="font-semibold text-gray-900 dark:text-white">Score Trends</h3>
@@ -266,7 +266,7 @@ export default function InsightsPage() {
           )}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             <h3 className="font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
@@ -297,7 +297,7 @@ export default function InsightsPage() {
       </div>
 
       {insights.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 rounded-xl">
           <div className="p-4 border-b border-gray-200 dark:border-slate-700">
             <h3 className="font-semibold text-gray-900 dark:text-white">Past Insights</h3>
           </div>

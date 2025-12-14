@@ -48,7 +48,7 @@ export default function CoachPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-3 safe-area-top pt-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-slate-700">
+      <div>
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
