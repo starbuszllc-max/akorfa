@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import TipButton from '@/components/tipping/TipButton';
 
 interface Comment {
@@ -61,6 +62,7 @@ function formatTimeAgo(dateString: string): string {
 }
 
 export default function PostCard({ post, currentUserId, onLike, onCommentAdded }: PostProps) {
+  const router = useRouter();
   const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -78,10 +80,12 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
   const avatarUrl = post.profiles?.avatar_url;
   const layerStyle = layerColors[post.layer] || { bg: 'bg-gray-100', text: 'text-gray-700' };
   
-  // Debug: Log media info
-  if (post.media_urls && post.media_urls.length > 0) {
-    console.log('PostCard media:', { media_urls: post.media_urls, media_types: post.media_types });
-  }
+  const handleMediaClick = (url: string, mediaType: string) => {
+    const isVideo = typeof mediaType === 'string' && mediaType.toLowerCase().includes('video');
+    if (isVideo) {
+      router.push(`/live?video=${encodeURIComponent(url)}`);
+    }
+  };
 
   async function fetchComments() {
     setLoadingComments(true);
@@ -211,15 +215,16 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
             const isVideo = typeof mediaType === 'string' && mediaType.toLowerCase().includes('video');
             
             return (
-              <div
+              <button
                 key={idx}
-                className="relative rounded-lg overflow-hidden bg-gray-100 aspect-square group cursor-pointer"
+                onClick={() => handleMediaClick(url, mediaType)}
+                className="relative rounded-lg overflow-hidden bg-gray-100 aspect-square group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50"
+                type="button"
               >
                 {isVideo ? (
                   <video
                     src={url}
                     className="w-full h-full object-cover"
-                    controls
                   />
                 ) : (
                   <img
@@ -231,12 +236,12 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
                 )}
                 {isVideo && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                    <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                     </svg>
                   </div>
                 )}
-              </div>
+              </button>
             );
           })}
         </div>
