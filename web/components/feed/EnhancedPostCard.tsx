@@ -82,6 +82,20 @@ function formatExactTime(dateString: string): string {
   });
 }
 
+function parseMediaArray(value: any): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(v => typeof v === 'string' && v.trim());
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed.filter((v: any) => typeof v === 'string' && v.trim()) : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 export default function EnhancedPostCard({ post, currentUserId, onLike, onCommentAdded }: PostProps) {
   const router = useRouter();
   const [isLiking, setIsLiking] = useState(false);
@@ -496,11 +510,14 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         </p>
       </div>
 
-      {post.mediaUrls && Array.isArray(post.mediaUrls) && post.mediaUrls.length > 0 && (
+      {(() => {
+        const mediaUrls = parseMediaArray(post.mediaUrls);
+        const mediaTypes = parseMediaArray(post.mediaTypes);
+        return mediaUrls.length > 0 ? (
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {post.mediaUrls.map((url: any, idx: number) => {
-            const mediaType = post.mediaTypes?.[idx] || 'image';
-            const isVideo = mediaType === 'video' || (typeof url === 'string' && url.includes('.mp4'));
+          {mediaUrls.map((url: string, idx: number) => {
+            const mediaType = mediaTypes[idx] || 'image';
+            const isVideo = mediaType === 'video' || url.includes('.mp4');
             
             const handleVideoClick = () => {
               if (isVideo) {
@@ -547,7 +564,8 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
             );
           })}
         </div>
-      )}
+        ) : null;
+      })()}
 
       <div className="mt-1 pt-2 border-b border-gray-200 dark:border-slate-700/50 flex items-center gap-4 pb-3">
         <motion.button 
