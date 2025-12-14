@@ -26,7 +26,7 @@ export default function FloatingComposeButton({ onClick, onCameraClick }: Floati
   };
 
   return (
-    <div className="fixed bottom-20 right-6 md:hidden z-40">
+    <div className="fixed bottom-25 right-6 md:hidden z-40">
       <AnimatePresence>
         {isOpen && (
           <>

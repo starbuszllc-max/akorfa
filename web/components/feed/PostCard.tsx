@@ -247,7 +247,7 @@ export default function PostCard({ post, currentUserId, onLike, onCommentAdded }
         </div>
       )}
 
-      <div className="mt-3 pt-2 border-t border-gray-100 flex items-center gap-3">
+      <div className="mt-3 pt-2 border-t border-gray-100 flex items-center gap-2 fixed md:relative bottom-28 left-0 right-0 px-4 md:px-0 bg-white md:bg-transparent z-10 md:z-auto">
         <button 
           ref={likeButtonRef}
           onClick={handleLike}
