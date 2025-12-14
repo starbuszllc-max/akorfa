@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['*.replit.dev', '*.worf.replit.dev', '*.repl.co', '*.kirk.replit.dev', '*.picard.replit.dev', '*.spock.replit.dev', '*.janeway.replit.dev', '127.0.0.1', 'localhost'],
   transpilePackages: ['@akorfa/shared'],
   typescript: {
-    tsc: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
     ignoreDuringBuilds: true,
