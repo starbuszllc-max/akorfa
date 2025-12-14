@@ -59,6 +59,58 @@ export async function GET(req: Request) {
       ? await baseQuery.where(whereClause) 
       : await baseQuery;
 
+    // Normalize mediaUrls and mediaTypes to ensure they are proper arrays
+    const normalizedPosts = allPosts.map(post => {
+      let mediaUrls: string[] = [];
+      let mediaTypes: string[] = [];
+      
+      // Normalize mediaUrls
+      if (post.mediaUrls) {
+        if (Array.isArray(post.mediaUrls)) {
+          mediaUrls = post.mediaUrls.filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
+        } else if (typeof post.mediaUrls === 'string') {
+          try {
+            const parsed = JSON.parse(post.mediaUrls);
+            if (Array.isArray(parsed)) {
+              mediaUrls = parsed.filter((u: any): u is string => typeof u === 'string' && u.trim().length > 0);
+            }
+          } catch {
+            if (post.mediaUrls.startsWith('http')) {
+              mediaUrls = [post.mediaUrls];
+            }
+          }
+        } else if (typeof post.mediaUrls === 'object') {
+          const values = Object.values(post.mediaUrls);
+          mediaUrls = values.filter((u): u is string => typeof u === 'string' && u.trim().length > 0);
+        }
+      }
+      
+      // Normalize mediaTypes
+      if (post.mediaTypes) {
+        if (Array.isArray(post.mediaTypes)) {
+          mediaTypes = post.mediaTypes.filter((t): t is string => typeof t === 'string');
+        } else if (typeof post.mediaTypes === 'string') {
+          try {
+            const parsed = JSON.parse(post.mediaTypes);
+            if (Array.isArray(parsed)) {
+              mediaTypes = parsed.filter((t: any): t is string => typeof t === 'string');
+            }
+          } catch {
+            mediaTypes = [post.mediaTypes];
+          }
+        } else if (typeof post.mediaTypes === 'object') {
+          const values = Object.values(post.mediaTypes);
+          mediaTypes = values.filter((t): t is string => typeof t === 'string');
+        }
+      }
+      
+      return {
+        ...post,
+        mediaUrls,
+        mediaTypes
+      };
+    });
+
     const countQuery = whereClause
       ? db.select({ count: sql<number>`count(*)::int` }).from(posts).where(whereClause)
       : db.select({ count: sql<number>`count(*)::int` }).from(posts);
@@ -66,12 +118,12 @@ export async function GET(req: Request) {
     const totalCount = await countQuery;
 
     return NextResponse.json({
-      posts: allPosts,
+      posts: normalizedPosts,
       pagination: {
         page,
         limit,
         total: totalCount[0]?.count || 0,
-        hasMore: allPosts.length === limit
+        hasMore: normalizedPosts.length === limit
       }
     });
   } catch (err: any) {

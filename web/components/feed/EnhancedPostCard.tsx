@@ -84,9 +84,13 @@ function formatExactTime(dateString: string): string {
 
 function parseMediaArray(value: any): string[] {
   if (!value) return [];
+  
+  // Handle arrays directly (normalized from API)
   if (Array.isArray(value)) {
     return value.filter(v => typeof v === 'string' && v.trim().length > 0);
   }
+  
+  // Fallback: Handle string input (could be JSON stringified)
   if (typeof value === 'string') {
     const trimmed = value.trim();
     if (!trimmed) return [];
@@ -104,6 +108,15 @@ function parseMediaArray(value: any): string[] {
       }
     }
   }
+  
+  // Fallback: Handle object (JSONB might return as object)
+  if (typeof value === 'object' && value !== null) {
+    const keys = Object.keys(value);
+    if (keys.every(k => !isNaN(Number(k)))) {
+      return keys.map(k => value[k]).filter(v => typeof v === 'string' && v.trim().length > 0);
+    }
+  }
+  
   return [];
 }
 
@@ -530,12 +543,13 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         const mediaUrls = parseMediaArray(post.mediaUrls);
         const mediaTypes = parseMediaArray(post.mediaTypes);
         const visibleMedia = mediaUrls.filter((_, idx) => !failedMediaIndices.has(idx));
+        
         return visibleMedia.length > 0 ? (
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {mediaUrls.map((url: string, idx: number) => {
             if (failedMediaIndices.has(idx)) return null;
             const mediaType = mediaTypes[idx] || 'image';
-            const isVideo = mediaType === 'video' || url.includes('.mp4');
+            const isVideo = mediaType === 'video' || url.includes('.mp4') || url.includes('.webm') || url.includes('.mov');
             
             const handleVideoClick = () => {
               if (isVideo) {
@@ -561,6 +575,8 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                     <video
                       src={url}
                       controls
+                      playsInline
+                      preload="metadata"
                       className="w-full h-full object-cover"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -568,7 +584,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                       }}
                       onError={handleMediaError}
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                         <svg className="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
@@ -580,6 +596,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                   <img
                     src={url}
                     alt={`Post media ${idx + 1}`}
+                    loading="lazy"
                     className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
                     onError={handleMediaError}
                   />
