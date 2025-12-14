@@ -31,6 +31,11 @@ export default function FollowButton({
   const checkFollowStatus = async () => {
     try {
       const res = await fetch(`/api/follow?userId=${currentUserId}&type=following`);
+      if (!res.ok) {
+        console.error('Follow status check failed:', res.status);
+        setCheckingStatus(false);
+        return;
+      }
       const data = await res.json();
       const isFollowingUser = data.following?.some((f: any) => f.id === targetUserId);
       setIsFollowing(isFollowingUser || false);
@@ -46,29 +51,25 @@ export default function FollowButton({
     
     setLoading(true);
     try {
-      if (isFollowing) {
-        await fetch('/api/follow', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            followerId: currentUserId,
-            followingId: targetUserId
-          })
-        });
-        setIsFollowing(false);
-        onFollowChange?.(false);
-      } else {
-        await fetch('/api/follow', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            followerId: currentUserId,
-            followingId: targetUserId
-          })
-        });
-        setIsFollowing(true);
-        onFollowChange?.(true);
+      const method = isFollowing ? 'DELETE' : 'POST';
+      const res = await fetch('/api/follow', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          followerId: currentUserId,
+          followingId: targetUserId
+        })
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error('Follow action failed:', error);
+        return;
       }
+
+      const newFollowingState = !isFollowing;
+      setIsFollowing(newFollowingState);
+      onFollowChange?.(newFollowingState);
     } catch (error) {
       console.error('Follow action error:', error);
     } finally {

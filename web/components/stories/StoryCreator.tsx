@@ -122,9 +122,9 @@ export default function StoryCreator({ userId, onClose, onCreated }: StoryCreato
         </button>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-2 md:p-4">
         {mode === 'media' ? (
-          <div className="w-full max-w-md aspect-[9/16] bg-gray-900 rounded-2xl overflow-hidden relative">
+          <div className="w-full h-full md:max-w-md md:aspect-[9/16] bg-gray-900 rounded-2xl overflow-hidden relative flex flex-col">
             {previewUrl ? (
               <>
                 {mediaType === 'video' ? (
@@ -179,14 +179,13 @@ export default function StoryCreator({ userId, onClose, onCreated }: StoryCreato
             />
           </div>
         ) : (
-          <div className="w-full max-w-md aspect-[9/16] bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl overflow-hidden flex items-center justify-center p-6">
+          <div className="w-full h-full md:max-w-md md:aspect-[9/16] bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl overflow-hidden flex items-center justify-center p-4 md:p-6">
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Share your thoughts..."
               maxLength={280}
-              className="w-full h-full bg-transparent text-white text-xl font-medium text-center placeholder-white/50 resize-none focus:outline-none"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              className="w-full h-full bg-transparent text-white text-lg md:text-xl font-medium text-center placeholder-white/50 resize-none focus:outline-none"
             />
           </div>
         )}
