@@ -37,8 +37,8 @@ export default function LayeredHeartIcon({ isActive = false, className = '' }: L
       {/* Top layer: Colored fill */}
       <path
         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-        fill={isActive ? '#FF0000' : '#FF4A6E'}
-        opacity={isActive ? 1 : 0.7}
+        fill={isActive ? '#FF0000' : 'currentColor'}
+        opacity={isActive ? 1 : 1}
         style={{
           transition: 'fill 0.2s cubic-bezier(0.05, 0, 0, 1), opacity 0.2s cubic-bezier(0.05, 0, 0, 1)'
         }}

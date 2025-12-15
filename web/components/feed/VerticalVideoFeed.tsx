@@ -369,13 +369,18 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
     });
 
     try {
-      await fetch('/api/reactions', {
+      const userId = localStorage.getItem('demo_user_id');
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
+      
+      await fetch('/api/reposts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          postId: video.id,
-          reactionType: 'repost',
-          userId: localStorage.getItem('demo_user_id')
+          originalPostId: video.id,
+          userId: userId
         })
       });
     } catch (error) {
@@ -676,14 +681,14 @@ export default function VerticalVideoFeed({ category = 'for-you', userLayerScore
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShareMenuOpen(false)}
-                className="fixed inset-0 bg-black/50 z-40"
+                className="fixed inset-0 bg-black/50 z-50"
               />
             <motion.div
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl p-6 pb-8 max-h-[85vh] overflow-y-auto"
+              className="fixed bottom-0 left-0 right-0 z-[51] bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl p-6 pb-8 max-h-[85vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Share</h3>
