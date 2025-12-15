@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "cd shared && npm run build && cd ../web && npm run build",
+  "installCommand": "npm install --legacy-peer-deps --workspaces --include-workspace-root",
+  "buildCommand": "npm run build -w @akorfa/shared && npm run build -w akorfa-web",
   "outputDirectory": "web/.next"
 }
