@@ -118,7 +118,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-3 md:px-6 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200">
           <img 
-            src="/logo.png" 
+            src="/logo.jpg" 
             alt="Akorfa" 
             className="h-10 md:h-12 w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-200"
           />
