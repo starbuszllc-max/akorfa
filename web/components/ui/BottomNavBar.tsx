@@ -64,7 +64,7 @@ export default function BottomNavBar() {
             className={`fixed bottom-0 left-0 right-0 z-40 ${isVideoPage ? 'bg-transparent' : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-200/50 dark:border-slate-700/50'}`}
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}
           >
-            <div className="flex items-center h-16 w-full">
+            <div className="flex items-center h-14 w-full">
               {/* Home - Left Edge */}
               {navItems[0] && (
                 <Link
@@ -239,7 +239,7 @@ export default function BottomNavBar() {
 
       <ExploreMenu isOpen={isExploreOpen} onClose={handleCloseExplore} />
 
-      <div className="h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
+      <div className="h-14" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }} />
     </>
   );
 }
