@@ -4,18 +4,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   productionBrowserSourceMaps: false,
-  webpack: (config) => {
-    config.watchOptions = {
-      ...config.watchOptions,
-      poll: 1000,
-      aggregateTimeout: 300,
-    };
-    return config;
-  },
+  turbopack: {},
+  allowedDevOrigins: ['*'],
 };
 
 module.exports = nextConfig;

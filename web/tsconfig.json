@@ -7,7 +7,7 @@
     ],
     "module": "ESNext",
     "moduleResolution": "Node",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "strict": true,
     "allowJs": true,
     "esModuleInterop": true,
@@ -19,9 +19,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "paths": {
-      "@akorfa/shared": ["../shared/dist/index"],
-      "@akorfa/shared/*": ["../shared/dist/*"],
-      "@/*": ["./*"]
+      "@akorfa/shared": [
+        "../shared/dist/index"
+      ],
+      "@akorfa/shared/*": [
+        "../shared/dist/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
@@ -33,7 +39,8 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
