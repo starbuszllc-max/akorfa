@@ -1,11 +1,12 @@
 import '../styles/globals.css';
 import '../styles/layered-icons.css';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ThemeProvider } from '../lib/ThemeContext';
 import ConditionalHeader from '../components/ui/ConditionalHeader';
 import Footer from '../components/ui/Footer';
 import InstallPrompt from '../components/pwa/InstallPrompt';
 import BottomNavBar from '../components/ui/BottomNavBar';
+import LoadingScreen from '../components/ui/LoadingScreen';
 
 export const metadata = {
   title: 'Akorfa',
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <ConditionalHeader />
           <main className="flex-1 pb-16">
-            {children}
+            <Suspense fallback={<LoadingScreen />}>
+              {children}
+            </Suspense>
           </main>
           <Footer />
           <BottomNavBar />

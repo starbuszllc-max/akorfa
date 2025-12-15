@@ -120,7 +120,7 @@ export function Header() {
           <img 
             src="/logo.png" 
             alt="Akorfa" 
-            className="h-16 md:h-20 w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-200"
+            className="h-20 md:h-24 w-auto drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-200"
           />
           <div className="hidden sm:block">
             <h1 className="font-bold text-lg md:text-xl bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 dark:from-amber-400 dark:via-amber-300 dark:to-amber-400 bg-clip-text text-transparent">
