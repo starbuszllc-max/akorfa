@@ -103,9 +103,16 @@ export async function GET(req: NextRequest) {
     );
 
     return NextResponse.json({ conversations: enrichedConversations });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Messages GET error:', error);
-    return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+    const errorMessage = error?.message || 'Unknown error';
+    const errorCode = error?.code || 'UNKNOWN';
+    return NextResponse.json({ 
+      error: 'Failed to fetch messages',
+      details: errorMessage,
+      code: errorCode,
+      hint: error?.hint || null
+    }, { status: 500 });
   }
 }
 
@@ -165,8 +172,15 @@ export async function POST(req: NextRequest) {
       message,
       conversationId: conversation.id
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Messages POST error:', error);
-    return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+    const errorMessage = error?.message || 'Unknown error';
+    const errorCode = error?.code || 'UNKNOWN';
+    return NextResponse.json({ 
+      error: 'Failed to send message',
+      details: errorMessage,
+      code: errorCode,
+      hint: error?.hint || null
+    }, { status: 500 });
   }
 }
