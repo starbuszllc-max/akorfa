@@ -115,7 +115,7 @@ export function Header() {
 
   return (
     <header className="w-full bg-gradient-to-r from-white via-amber-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 transition-colors duration-200 border-b border-amber-200/30 dark:border-amber-900/20">
-      <div className="max-w-7xl mx-auto px-3 md:px-6 py-6 md:py-8 flex items-end justify-between gap-4">
+      <div className="max-w-7xl mx-auto py-6 md:py-8 flex items-end justify-between gap-4" style={{ paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px' }}>
         <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200">
           <img 
             src="/logo.png" 
