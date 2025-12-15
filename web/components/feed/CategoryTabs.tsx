@@ -63,26 +63,15 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-10 left-0 right-0 z-40 px-3"
+            className="fixed top-10 left-0 right-0 z-40 px-3 flex justify-center"
           >
-            <div className="flex items-center gap-1">
-              <Link
-                href="/discover"
-                className="flex-shrink-0 p-2.5 rounded-full"
-              >
-                <Search 
-                  className="w-7 h-7 text-white" 
-                  strokeWidth={2.5}
-                  style={{filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'}} 
-                />
-              </Link>
-
-              <div className="flex-1 flex gap-0 overflow-x-auto hide-scrollbar rounded-full px-1 py-1.5">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0 overflow-x-auto hide-scrollbar rounded-full px-2 py-1.5">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => onCategoryChange(category.id)}
-                    className="relative px-2 py-2 rounded-full whitespace-nowrap transition-all flex-shrink-0"
+                    className="relative px-3 py-2 rounded-full whitespace-nowrap transition-all flex-shrink-0"
                   >
                     {activeCategory === category.id && (
                       <motion.div
@@ -105,6 +94,17 @@ export default function CategoryTabs({ activeCategory, onCategoryChange, variant
                   </button>
                 ))}
               </div>
+
+              <Link
+                href="/discover"
+                className="flex-shrink-0 p-2.5 rounded-full"
+              >
+                <Search 
+                  className="w-7 h-7 text-white" 
+                  strokeWidth={2.5}
+                  style={{filter: 'drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0,0,0,0.8)) drop-shadow(0 0 4px rgba(255,255,255,0.5))'}} 
+                />
+              </Link>
 
               <div className="flex-shrink-0 relative">
                 <Link
