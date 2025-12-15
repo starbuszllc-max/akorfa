@@ -117,7 +117,7 @@ export default function EnhancedHeader() {
     : null;
 
   return (
-    <div className="fixed right-3 z-50 flex flex-col items-end gap-0.5" style={{ top: 'max(12px, env(safe-area-inset-top, 12px))' }}>
+    <div className="fixed right-0 z-50 flex flex-col items-end gap-0.5" style={{ top: 'max(12px, env(safe-area-inset-top, 12px))', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px' }}>
       {!isDiscoverPage && (
         <Link
           href="/discover"
