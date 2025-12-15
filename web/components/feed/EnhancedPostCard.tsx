@@ -359,9 +359,9 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
       id={`post-${post.id}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      className="px-3 py-4 md:p-5 transition-all duration-200 bg-gradient-to-br from-white/95 to-white/90 dark:from-slate-800/80 dark:to-slate-900/80 rounded-2xl border border-amber-200/30 dark:border-amber-600/20 shadow-lg hover:shadow-2xl hover:shadow-amber-500/20 dark:hover:shadow-amber-600/30 backdrop-blur-sm"
+      className="transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md border-b border-gray-200 dark:border-slate-700"
     >
       {showShareToast && (
         <motion.div
@@ -545,78 +545,80 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         const visibleMedia = mediaUrls.filter((_, idx) => !failedMediaIndices.has(idx));
         
         return visibleMedia.length > 0 ? (
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {mediaUrls.map((url: string, idx: number) => {
-            if (failedMediaIndices.has(idx)) return null;
-            const mediaType = mediaTypes[idx] || 'image';
-            const isVideo = mediaType === 'video' || url.includes('.mp4') || url.includes('.webm') || url.includes('.mov');
-            
-            const handleVideoClick = () => {
-              if (isVideo) {
-                router.push(`/live?video=${encodeURIComponent(url)}`);
-              }
-            };
+        <div className="-mx-3 md:-mx-5 mt-4 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+            {mediaUrls.map((url: string, idx: number) => {
+              if (failedMediaIndices.has(idx)) return null;
+              const mediaType = mediaTypes[idx] || 'image';
+              const isVideo = mediaType === 'video' || url.includes('.mp4') || url.includes('.webm') || url.includes('.mov');
+              
+              const handleVideoClick = () => {
+                if (isVideo) {
+                  router.push(`/live?video=${encodeURIComponent(url)}`);
+                }
+              };
 
-            const handleMediaError = () => {
-              setFailedMediaIndices(prev => new Set(prev).add(idx));
-            };
-            
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: idx * 0.05 }}
-                className="group relative rounded-2xl overflow-hidden aspect-square cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 dark:from-black dark:to-slate-900 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-amber-500/20"
-                onClick={handleVideoClick}
-              >
-                {isVideo ? (
-                  <div className="w-full h-full relative">
-                    <video
-                      src={url}
-                      controls
-                      playsInline
-                      preload="metadata"
-                      className="w-full h-full object-cover"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleVideoClick();
-                      }}
-                      onError={handleMediaError}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                      <div className="scale-75 group-hover:scale-100 transition-transform duration-300">
-                        <svg className="w-16 h-16 text-amber-400 drop-shadow-xl" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                        </svg>
+              const handleMediaError = () => {
+                setFailedMediaIndices(prev => new Set(prev).add(idx));
+              };
+              
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="group relative overflow-hidden aspect-square cursor-pointer bg-slate-900 dark:bg-black transition-all duration-300"
+                  onClick={handleVideoClick}
+                >
+                  {isVideo ? (
+                    <div className="w-full h-full relative">
+                      <video
+                        src={url}
+                        controls
+                        playsInline
+                        preload="metadata"
+                        className="w-full h-full object-cover"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleVideoClick();
+                        }}
+                        onError={handleMediaError}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                        <div className="scale-75 group-hover:scale-100 transition-transform duration-300">
+                          <svg className="w-16 h-16 text-amber-400 drop-shadow-xl" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    <>
+                      <img
+                        src={url}
+                        alt={`Post media ${idx + 1}`}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-300"
+                        onError={handleMediaError}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                    </>
+                  )}
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="px-2.5 py-1.5 bg-black/70 backdrop-blur-sm text-xs font-semibold text-amber-400">
+                      {isVideo ? '▶ Video' : '🖼 Image'}
+                    </div>
                   </div>
-                ) : (
-                  <>
-                    <img
-                      src={url}
-                      alt={`Post media ${idx + 1}`}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={handleMediaError}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                  </>
-                )}
-                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="px-2.5 py-1.5 bg-black/70 backdrop-blur-sm rounded-lg text-xs font-semibold text-amber-400 border border-amber-500/30">
-                    {isVideo ? '▶ Video' : '🖼 Image'}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
         ) : null;
       })()}
 
-      <div className="mt-4 pt-3 border-b border-amber-500/20 dark:border-amber-600/30 flex items-center gap-4 pb-3">
+      <div className="px-3 py-4 md:px-5 md:py-3 border-t border-gray-200 dark:border-slate-700 flex items-center gap-4">
         <motion.button 
           onClick={handleLike}
           disabled={!currentUserId || isLiking || hasLiked}
