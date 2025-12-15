@@ -41,8 +41,11 @@ export default function FeedPage() {
   const [showMobileComposer, setShowMobileComposer] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showProfileUnlockedModal, setShowProfileUnlockedModal] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef(1);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   const fetchPosts = useCallback(async (append = false) => {
     if (append) {
@@ -101,6 +104,24 @@ export default function FeedPage() {
 
     return () => observer.disconnect();
   }, [hasMore, loadingMore, loading, fetchPosts]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    const contentElement = mainContentRef.current?.closest('.overflow-y-auto') || mainContentRef.current?.parentElement;
+    if (contentElement) {
+      contentElement.addEventListener('scroll', handleScroll);
+      return () => contentElement.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
 
   const handlePostCreated = (isFirstPost?: boolean) => {
@@ -178,7 +199,7 @@ export default function FeedPage() {
       <AnimatedBackground />
       
       <PullToRefresh onRefresh={handlePullRefresh}>
-        <main className="w-full lg:max-w-6xl lg:mx-auto px-0 lg:px-4 py-6 safe-area-top">
+        <main ref={mainContentRef} className="w-full lg:max-w-6xl lg:mx-auto px-0 lg:px-4 py-6 safe-area-top">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
             <motion.div
@@ -279,10 +300,21 @@ export default function FeedPage() {
       </main>
     </PullToRefresh>
 
-    <FloatingComposeButton 
-      onClick={() => setShowMobileComposer(true)} 
-      onCameraClick={() => setShowCamera(true)} 
-    />
+    <AnimatePresence>
+      {!isScrolling && (
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        >
+          <FloatingComposeButton 
+            onClick={() => setShowMobileComposer(true)} 
+            onCameraClick={() => setShowCamera(true)} 
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
 
     <AnimatePresence>
       {showMobileComposer && (
