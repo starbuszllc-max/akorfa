@@ -10,7 +10,10 @@ export function Header() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');
@@ -19,6 +22,37 @@ export function Header() {
     }
     setLoading(false);
   }, []);
+
+  const handleScroll = useCallback(() => {
+    if (!ticking.current) {
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        const scrollDelta = currentScrollY - lastScrollY.current;
+
+        if (currentScrollY <= 10) {
+          setIsCollapsed(false);
+        } else if (scrollDelta > 24) {
+          setIsCollapsed(true);
+          lastScrollY.current = currentScrollY;
+        } else if (scrollDelta < -24) {
+          setIsCollapsed(false);
+          lastScrollY.current = currentScrollY;
+        }
+
+        ticking.current = false;
+      });
+      ticking.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
 
   function handleLogout() {
     localStorage.removeItem('demo_user_id');
@@ -114,8 +148,8 @@ export function Header() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="w-full bg-gradient-to-r from-white via-amber-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 transition-colors duration-200 border-b border-amber-200/30 dark:border-amber-900/20" style={{ height: '84px' }}>
-      <div className="max-w-7xl mx-auto flex items-end justify-between gap-4" style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px', height: '100%' }}>
+    <header className="w-full bg-gradient-to-r from-white via-amber-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-amber-200/30 dark:border-amber-900/20" style={{ height: isCollapsed ? '20px' : '84px', overflow: 'hidden', transition: 'height 0.3s ease-in-out' }}>
+      <div className="max-w-7xl mx-auto flex items-end justify-between gap-4" style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px', height: isCollapsed ? '20px' : '84px', opacity: isCollapsed ? 0 : 1, transition: 'opacity 0.3s ease-in-out', pointerEvents: isCollapsed ? 'none' : 'auto' }}>
         <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200" style={{ marginTop: 'auto', paddingLeft: '12px', paddingBottom: '2px' }}>
           <img 
             src="/logo.png" 
