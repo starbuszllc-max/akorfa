@@ -1,6 +1,6 @@
 'use client';
 
-import { X } from 'lucide-react';
+import { X, MessageCircle, UserPlus, Ban, Flag } from 'lucide-react';
 import Link from 'next/link';
 
 interface UserProfile {
@@ -17,21 +17,21 @@ interface UserProfileCardProps {
 
 export default function UserProfileCard({ user, onClose }: UserProfileCardProps) {
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-2xl w-full md:max-w-sm shadow-xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 p-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-800">
-          <h2 className="font-semibold text-gray-900 dark:text-white">Profile</h2>
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-end md:items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-[#111111] rounded-t-3xl md:rounded-2xl w-full md:max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto border border-[#C9A962]/20">
+        <div className="sticky top-0 p-4 border-b border-[#C9A962]/20 flex items-center justify-between bg-[#000000]">
+          <h2 className="font-semibold text-[#C9A962]">Profile</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+            className="p-2 hover:bg-[#C9A962]/20 rounded-full transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-[#C9A962]" />
           </button>
         </div>
 
         <div className="p-6 text-center">
           <div className="mb-6">
-            <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-indigo-200 dark:ring-indigo-800 bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-[#C9A962]/30 bg-gradient-to-br from-[#C9A962] to-[#000000] flex items-center justify-center">
               {user.avatarUrl ? (
                 <img src={user.avatarUrl} alt={user.username} className="w-full h-full object-cover" />
               ) : (
@@ -40,21 +40,37 @@ export default function UserProfileCard({ user, onClose }: UserProfileCardProps)
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{user.username}</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">{user.username}</h1>
           {user.fullName && (
-            <p className="text-gray-600 dark:text-gray-400 mb-6">{user.fullName}</p>
+            <p className="text-gray-400 mb-6">{user.fullName}</p>
           )}
 
           <div className="space-y-3">
             <Link
               href={`/profile/${user.id}`}
-              className="w-full px-4 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-gradient-to-r from-[#C9A962] to-[#a88a4a] text-black rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             >
-              <span>👤</span> View Full Profile
+              <span>View Full Profile</span>
             </Link>
+            
+            <div className="grid grid-cols-3 gap-2">
+              <button className="p-3 bg-[#1a1a1a] hover:bg-[#C9A962]/20 rounded-xl transition-colors flex flex-col items-center gap-1 border border-[#C9A962]/20">
+                <MessageCircle className="w-5 h-5 text-[#C9A962]" />
+                <span className="text-xs text-gray-400">Message</span>
+              </button>
+              <button className="p-3 bg-[#1a1a1a] hover:bg-[#C9A962]/20 rounded-xl transition-colors flex flex-col items-center gap-1 border border-[#C9A962]/20">
+                <UserPlus className="w-5 h-5 text-[#C9A962]" />
+                <span className="text-xs text-gray-400">Follow</span>
+              </button>
+              <button className="p-3 bg-[#1a1a1a] hover:bg-red-900/30 rounded-xl transition-colors flex flex-col items-center gap-1 border border-[#C9A962]/20">
+                <Ban className="w-5 h-5 text-red-500" />
+                <span className="text-xs text-gray-400">Block</span>
+              </button>
+            </div>
+            
             <button
               onClick={onClose}
-              className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+              className="w-full px-4 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-[#C9A962]/10 transition-colors border border-[#C9A962]/20"
             >
               Close
             </button>
