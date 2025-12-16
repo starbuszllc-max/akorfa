@@ -148,8 +148,8 @@ export function Header() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="w-full bg-gradient-to-r from-white via-green-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-green-200/30 dark:border-green-900/20" style={{ height: isCollapsed ? '20px' : '84px', overflow: 'hidden', transition: 'height 0.3s ease-in-out' }}>
-      <div className="max-w-7xl mx-auto flex items-end justify-between gap-4" style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px', height: isCollapsed ? '20px' : '84px', opacity: isCollapsed ? 0 : 1, transition: 'opacity 0.3s ease-in-out', pointerEvents: isCollapsed ? 'none' : 'auto' }}>
+    <header className="w-full bg-gradient-to-r from-white via-green-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-green-200/30 dark:border-green-900/20" style={{ height: isCollapsed ? '44px' : '84px', overflow: 'hidden', transition: 'height 0.3s ease-in-out' }}>
+      <div className="max-w-7xl mx-auto flex items-end justify-between gap-4" style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px', height: isCollapsed ? '44px' : '84px', opacity: isCollapsed ? 0.2 : 1, transition: 'opacity 0.3s ease-in-out', pointerEvents: isCollapsed ? 'none' : 'auto' }}>
         <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200" style={{ marginTop: 'auto', paddingLeft: '12px', paddingBottom: '2px' }}>
           <img 
             src="/logo.png" 
