@@ -58,6 +58,9 @@ export function Header() {
   };
 
   useEffect(() => {
+    let isTouchScrolling = false;
+    let touchStartY = 0;
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
@@ -72,6 +75,7 @@ export function Header() {
       
       // Mark that we're scrolling
       isScrolling.current = true;
+      isTouchScrolling = true;
       
       // Clear previous pause timeout
       if (scrollPauseTimeout.current) {
@@ -81,25 +85,41 @@ export function Header() {
       // After scroll pause, show full header
       scrollPauseTimeout.current = setTimeout(() => {
         isScrolling.current = false;
+        isTouchScrolling = false;
         setShowFullHeader(true);
       }, 2000); // 2 seconds of no scrolling
     };
     
-    const handleTap = () => {
-      // On any tap/touch, show full header
-      setShowFullHeader(true);
-      isScrolling.current = false;
-      if (scrollPauseTimeout.current) {
-        clearTimeout(scrollPauseTimeout.current);
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      isTouchScrolling = false;
+    };
+    
+    const handleTouchMove = () => {
+      isTouchScrolling = true;
+    };
+    
+    const handleTouchEnd = () => {
+      // Only expand header if this was a tap, not a scroll
+      if (!isTouchScrolling && !isScrolling.current) {
+        setShowFullHeader(true);
+        if (scrollPauseTimeout.current) {
+          clearTimeout(scrollPauseTimeout.current);
+        }
       }
+      isTouchScrolling = false;
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchstart', handleTap, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchstart', handleTap);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       if (scrollPauseTimeout.current) {
         clearTimeout(scrollPauseTimeout.current);
       }
