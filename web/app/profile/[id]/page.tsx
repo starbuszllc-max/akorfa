@@ -224,9 +224,9 @@ export default function UserProfilePage() {
             <span className="text-sm font-medium">Back</span>
           </button>
         </div>
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 relative">
           <div className="flex items-end gap-4 -mt-16 mb-5">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden bg-gradient-to-br from-purple-500 to-green-600 flex items-center justify-center shrink-0 shadow-lg">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden bg-gradient-to-br from-purple-500 to-green-600 flex items-center justify-center shrink-0 shadow-lg relative z-10">
               {profile.avatarUrl ? (
                 <img src={profile.avatarUrl} alt={profile.username} className="w-full h-full object-cover" />
               ) : (
