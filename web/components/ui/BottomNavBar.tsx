@@ -23,7 +23,7 @@ export default function BottomNavBar() {
   const [mounted, setMounted] = useState(false);
   const exploreButtonRef = useRef<HTMLButtonElement>(null);
   
-  const isVideoPage = pathname === '/';
+  const isVideoPage = pathname === '/' || pathname === '/create';
 
   const handleCloseExplore = useCallback(() => {
     setIsExploreOpen(false);
