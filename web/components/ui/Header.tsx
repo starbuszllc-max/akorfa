@@ -173,8 +173,8 @@ export function Header() {
           </Link>
         )}
 
-        {isCollapsed && user && (
-          <div className="hidden md:flex items-center gap-3 flex-1 justify-center">
+        {isCollapsed && (
+          <div className="flex items-center gap-3 flex-1 justify-center">
             <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-lg">
               <Zap className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
               <span className="text-xs font-bold text-green-700 dark:text-green-300">{Math.round(score)}</span>
