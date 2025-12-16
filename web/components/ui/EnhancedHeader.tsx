@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { Bell, Star, Flame, Search, TrendingUp, Target, Brain, Heart, Users, Leaf, Sparkles, Zap, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
@@ -34,18 +34,44 @@ export default function EnhancedHeader() {
   const [streak, setStreak] = useState(0);
   const [layerScores, setLayerScores] = useState<LayerScore[]>([]);
   const [loading, setLoading] = useState(true);
-  const [manualExpand, setManualExpand] = useState(false);
+  const [manualCollapse, setManualCollapse] = useState(false);
+  const [scrollPaused, setScrollPaused] = useState(false);
   
   const isScrolledUp = useScrollVisibility({ threshold: 30 });
-  const isExpanded = isScrolledUp || manualExpand;
+  const scrollPauseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  // Always show expanded header unless user manually collapses it
+  const isExpanded = (isScrolledUp || scrollPaused || !manualCollapse);
 
   const isExcludedPage = EXCLUDED_PATHS.some(path => pathname?.startsWith(path));
   const isNotificationPage = pathname === '/notifications';
   const isDiscoverPage = pathname === '/discover';
 
+  // Detect scroll pause - show expanded header when user stops scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollPauseTimeout.current) {
+        clearTimeout(scrollPauseTimeout.current);
+      }
+      setScrollPaused(false);
+      
+      scrollPauseTimeout.current = setTimeout(() => {
+        setScrollPaused(true);
+      }, 1500); // Show expanded after 1.5 seconds of no scrolling
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollPauseTimeout.current) {
+        clearTimeout(scrollPauseTimeout.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (isScrolledUp) {
-      setManualExpand(false);
+      setManualCollapse(false);
     }
   }, [isScrolledUp]);
 
@@ -225,7 +251,7 @@ export default function EnhancedHeader() {
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: 20 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            onClick={() => setManualExpand(true)}
+            onClick={() => setManualCollapse(true)}
             className="flex items-center gap-2 px-3 py-2 bg-black/40 backdrop-blur-md rounded-full hover:bg-black/60 transition-colors shadow-lg"
           >
             {userId && (
