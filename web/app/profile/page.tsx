@@ -219,8 +219,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="w-full space-y-6 pb-24 pt-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm">
+    <div className="w-full space-y-0 pb-24 pt-0">
+      <div className="w-full overflow-hidden">
         <div className="relative h-40 sm:h-48">
           {profile.coverUrl ? (
             <img 
@@ -283,48 +283,48 @@ export default function ProfilePage() {
           </div>
 
           {profile.bio && (
-            <div className="rounded-xl p-4 mb-4 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-600">
+            <div className="p-4 mb-4 bg-transparent">
               <p className="text-sm text-gray-700 dark:text-gray-300">{profile.bio}</p>
             </div>
           )}
 
           <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
-            <div className="rounded-xl p-3 bg-gradient-to-br from-green-50 to-green-50/50 dark:from-green-900/20 dark:to-green-900/10 border border-green-200/50 dark:border-green-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-green-700 dark:text-green-300">
                 <Zap className="w-4 h-4" />
                 {totalXp}
               </div>
               <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1 text-center">XP</div>
             </div>
-            <div className="rounded-xl p-3 bg-gradient-to-br from-green-50 to-green-50/50 dark:from-green-900/20 dark:to-green-900/10 border border-green-200/50 dark:border-green-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-green-700 dark:text-green-300">
                 <Trophy className="w-4 h-4" />
                 {level}
               </div>
               <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1 text-center">Level</div>
             </div>
-            <div className="rounded-xl p-3 bg-gradient-to-br from-orange-50 to-orange-50/50 dark:from-orange-900/20 dark:to-orange-900/10 border border-orange-200/50 dark:border-orange-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-orange-700 dark:text-orange-300">
                 <Flame className="w-4 h-4" />
                 {streak}
               </div>
               <div className="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1 text-center">Streak</div>
             </div>
-            <div className="rounded-xl p-3 bg-gradient-to-br from-blue-50 to-blue-50/50 dark:from-blue-900/20 dark:to-blue-900/10 border border-blue-200/50 dark:border-blue-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-blue-700 dark:text-blue-300">
                 <Users className="w-4 h-4" />
                 {followerCount}
               </div>
               <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1 text-center">Followers</div>
             </div>
-            <div className="rounded-xl p-3 bg-gradient-to-br from-purple-50 to-purple-50/50 dark:from-purple-900/20 dark:to-purple-900/10 border border-purple-200/50 dark:border-purple-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-purple-700 dark:text-purple-300">
                 <Users className="w-4 h-4" />
                 {followingCount}
               </div>
               <div className="text-xs text-purple-600 dark:text-purple-400 font-medium mt-1 text-center">Following</div>
             </div>
-            <div className="rounded-xl p-3 bg-gradient-to-br from-emerald-50 to-emerald-50/50 dark:from-emerald-900/20 dark:to-emerald-900/10 border border-emerald-200/50 dark:border-emerald-800/30">
+            <div className="p-3 bg-transparent">
               <div className="flex items-center justify-center gap-1 text-lg font-bold text-emerald-700 dark:text-emerald-300">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
@@ -339,8 +339,8 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden">
-        <div className="flex border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
+      <div className="w-full overflow-hidden">
+        <div className="flex bg-transparent">
           {contentTabs.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -461,11 +461,11 @@ export default function ProfilePage() {
 
             {activeTab === 'highlights' && (
               <div className="space-y-5">
-                <div className="rounded-xl p-5 bg-gradient-to-br from-gray-50 to-gray-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border border-gray-200 dark:border-slate-600">
+                <div className="p-5 bg-transparent">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-lg">Achievements</h3>
                   <BadgesList userId={userId} />
                 </div>
-                <div className="rounded-xl p-5 bg-gradient-to-br from-gray-50 to-gray-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border border-gray-200 dark:border-slate-600">
+                <div className="p-5 bg-transparent">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-lg">Goals</h3>
                   {profile.goals && profile.goals.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -484,11 +484,11 @@ export default function ProfilePage() {
 
             {activeTab === 'insights' && (
               <div className="space-y-5">
-                <div className="rounded-xl p-5 bg-gradient-to-br from-gray-50 to-gray-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border border-gray-200 dark:border-slate-600">
+                <div className="p-5 bg-transparent">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4 text-lg">Activity Overview</h3>
                   <ActivityHeatmap userId={userId} />
                 </div>
-                <div className="bg-gradient-to-br from-green-50 via-purple-50 to-pink-50 dark:from-green-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl p-5 border border-green-200/50 dark:border-green-800/30">
+                <div className="bg-transparent p-5">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-purple-100 dark:from-green-800/50 dark:to-purple-800/50 flex items-center justify-center flex-shrink-0">
                       <Lightbulb className="w-6 h-6 text-green-600 dark:text-green-400" />
