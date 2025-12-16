@@ -139,6 +139,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [showShareModal, setShowShareModal] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
   const [failedMediaIndices, setFailedMediaIndices] = useState<Set<number>>(new Set());
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     setFailedMediaIndices(new Set());
@@ -552,9 +553,11 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
               const mediaType = mediaTypes[idx] || 'image';
               const isVideo = mediaType === 'video' || url.includes('.mp4') || url.includes('.webm') || url.includes('.mov');
               
-              const handleVideoClick = () => {
+              const handleMediaClick = () => {
                 if (isVideo) {
                   router.push(`/live?video=${encodeURIComponent(url)}`);
+                } else {
+                  setPreviewImage(url);
                 }
               };
 
@@ -569,7 +572,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                   animate={{ opacity: 1 }}
                   transition={{ delay: idx * 0.05 }}
                   className="group relative overflow-hidden aspect-square cursor-pointer bg-slate-900 dark:bg-black transition-all duration-300"
-                  onClick={handleVideoClick}
+                  onClick={handleMediaClick}
                 >
                   {isVideo ? (
                     <div className="w-full h-full relative">
@@ -581,11 +584,11 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                         className="w-full h-full object-cover"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleVideoClick();
+                          handleMediaClick();
                         }}
                         onError={handleMediaError}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center pointer-events-none">
                         <div className="scale-75 group-hover:scale-100 transition-transform duration-300">
                           <svg className="w-16 h-16 text-green-400 drop-shadow-xl" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
@@ -605,11 +608,6 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
                     </>
                   )}
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="px-2.5 py-1.5 bg-black/70 backdrop-blur-sm text-xs font-semibold text-green-400">
-                      {isVideo ? '▶ Video' : '🖼 Image'}
-                    </div>
-                  </div>
                 </motion.div>
               );
             })}
@@ -783,6 +781,46 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
               </div>
             )}
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {previewImage && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewImage(null)}
+              className="fixed inset-0 bg-black/90 z-50 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              onClick={() => setPreviewImage(null)}
+            >
+              <motion.div
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center"
+              >
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="max-w-full max-h-full object-contain"
+                />
+                <button
+                  onClick={() => setPreviewImage(null)}
+                  className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black/80 rounded-full text-white transition-colors z-10"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.article>
