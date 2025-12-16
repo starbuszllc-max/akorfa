@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Flame, Zap, Trophy, Settings, ChevronRight, Camera, Grid3X3, Star, Lightbulb, MessageCircle, Heart, Users } from 'lucide-react';
+import { User, Flame, Zap, Trophy, Settings, ChevronRight, Camera, Grid3X3, Star, Lightbulb, MessageCircle, Heart, Users, X } from 'lucide-react';
 import { BadgesList, LevelDisplay } from '../../components/badges';
 import { ActivityHeatmap } from '../../components/heatmap';
 import ProfilePictureUpload from '@/components/media/ProfilePictureUpload';
@@ -32,6 +32,7 @@ export default function ProfilePage() {
   const [postsLoaded, setPostsLoaded] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const contentTabs = [
@@ -288,50 +289,50 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-green-700 dark:text-green-300">
-                <Zap className="w-4 h-4" />
+          <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 mb-3">
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-green-700 dark:text-green-300">
+                <Zap className="w-3 h-3" />
                 {totalXp}
               </div>
-              <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1 text-center">XP</div>
+              <div className="text-[10px] text-green-600 dark:text-green-400 font-medium mt-0.5 text-center">XP</div>
             </div>
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-green-700 dark:text-green-300">
-                <Trophy className="w-4 h-4" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-green-700 dark:text-green-300">
+                <Trophy className="w-3 h-3" />
                 {level}
               </div>
-              <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1 text-center">Level</div>
+              <div className="text-[10px] text-green-600 dark:text-green-400 font-medium mt-0.5 text-center">Level</div>
             </div>
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-orange-700 dark:text-orange-300">
-                <Flame className="w-4 h-4" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-orange-700 dark:text-orange-300">
+                <Flame className="w-3 h-3" />
                 {streak}
               </div>
-              <div className="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1 text-center">Streak</div>
+              <div className="text-[10px] text-orange-600 dark:text-orange-400 font-medium mt-0.5 text-center">Streak</div>
             </div>
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-blue-700 dark:text-blue-300">
-                <Users className="w-4 h-4" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-blue-700 dark:text-blue-300">
+                <Users className="w-3 h-3" />
                 {followerCount}
               </div>
-              <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1 text-center">Followers</div>
+              <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5 text-center">Followers</div>
             </div>
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-purple-700 dark:text-purple-300">
-                <Users className="w-4 h-4" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-purple-700 dark:text-purple-300">
+                <Users className="w-3 h-3" />
                 {followingCount}
               </div>
-              <div className="text-xs text-purple-600 dark:text-purple-400 font-medium mt-1 text-center">Following</div>
+              <div className="text-[10px] text-purple-600 dark:text-purple-400 font-medium mt-0.5 text-center">Following</div>
             </div>
-            <div className="p-3 bg-transparent">
-              <div className="flex items-center justify-center gap-1 text-lg font-bold text-emerald-700 dark:text-emerald-300">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-emerald-700 dark:text-emerald-300">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
                 </svg>
                 {profile.credits || 0}
               </div>
-              <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1 text-center">Credits</div>
+              <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 text-center">Credits</div>
             </div>
           </div>
 
@@ -383,20 +384,22 @@ export default function ProfilePage() {
                     <div className="animate-spin rounded-full h-8 w-8 border-2 border-green-600 border-t-transparent"></div>
                   </div>
                 ) : posts.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                    {posts.map((post) => {
-                      const hasMedia = post.mediaUrls && post.mediaUrls.length > 0;
-                      const firstMedia = hasMedia ? post.mediaUrls![0] : null;
-                      const firstMediaType = post.mediaTypes && post.mediaTypes.length > 0 ? post.mediaTypes[0] : null;
-                      const isVideo = firstMediaType === 'video' || (firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.webm') || firstMedia.includes('.mov')));
-                      
-                      return (
-                        <motion.div
-                          key={post.id}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="aspect-square bg-gray-100 dark:bg-slate-700 overflow-hidden relative group cursor-pointer rounded-lg"
-                        >
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                      {posts.map((post) => {
+                        const hasMedia = post.mediaUrls && post.mediaUrls.length > 0;
+                        const firstMedia = hasMedia ? post.mediaUrls![0] : null;
+                        const firstMediaType = post.mediaTypes && post.mediaTypes.length > 0 ? post.mediaTypes[0] : null;
+                        const isVideo = firstMediaType === 'video' || (firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.webm') || firstMedia.includes('.mov')));
+                        
+                        return (
+                          <motion.div
+                            key={post.id}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            onClick={() => setSelectedPost(post)}
+                            className="aspect-square bg-gray-100 dark:bg-slate-700 overflow-hidden relative group cursor-pointer rounded-lg"
+                          >
                           {hasMedia && firstMedia ? (
                             isVideo ? (
                               <video
@@ -439,10 +442,60 @@ export default function ProfilePage() {
                               <Grid3X3 className="w-4 h-4" />
                             </div>
                           )}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {selectedPost && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedPost(null)}
+                        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+                      >
+                        <motion.div
+                          initial={{ scale: 0.9 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0.9 }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="relative max-w-2xl max-h-[90vh] w-full flex flex-col"
+                        >
+                          {selectedPost.mediaUrls && selectedPost.mediaUrls.length > 0 ? (
+                            selectedPost.mediaTypes?.[0] === 'video' || selectedPost.mediaUrls[0].includes('.mp4') ? (
+                              <video
+                                src={selectedPost.mediaUrls[0]}
+                                className="w-full h-full object-contain rounded-lg"
+                                controls
+                                autoPlay
+                                playsInline
+                              />
+                            ) : (
+                              <img
+                                src={selectedPost.mediaUrls[0]}
+                                alt=""
+                                className="w-full h-full object-contain rounded-lg"
+                              />
+                            )
+                          ) : (
+                            <div className="w-full aspect-square bg-gradient-to-br from-gray-200 dark:from-slate-600 to-gray-300 dark:to-slate-700 rounded-lg flex items-center justify-center p-6">
+                              <p className="text-gray-600 dark:text-gray-300 text-center font-medium text-lg">
+                                {selectedPost.content}
+                              </p>
+                            </div>
+                          )}
+                          
+                          <button
+                            onClick={() => setSelectedPost(null)}
+                            className="absolute bottom-4 left-1/2 -translate-x-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
+                          >
+                            <X className="w-6 h-6" />
+                          </button>
                         </motion.div>
-                      );
-                    })}
-                  </div>
+                      </motion.div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-16">
                     <Grid3X3 className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
