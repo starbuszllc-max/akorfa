@@ -15,12 +15,13 @@ export function Header() {
   const [profile, setProfile] = useState<any>(null);
   const [score, setScore] = useState(0);
   const [balance, setBalance] = useState(0);
-  const [forceExpanded, setForceExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const scrollPauseTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastScrollY = React.useRef(0);
   const pathname = usePathname();
 
-  // Collapse after scrolling past threshold, but can be overridden by forceExpanded
-  const isCollapsed = scrollY > 100 && !forceExpanded;
+  // Show collapsed header if scrolled past threshold and not explicitly expanded
+  const isCollapsed = scrollY > 100 && !isExpanded;
 
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');
@@ -58,32 +59,41 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
-      setForceExpanded(false); // Collapse while scrolling
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
       
-      // Clear previous timeout
+      // If scrolled past threshold, collapse the header
+      if (currentScrollY > 100) {
+        setIsExpanded(false);
+      }
+      
+      // Clear previous pause timeout
       if (scrollPauseTimeout.current) {
         clearTimeout(scrollPauseTimeout.current);
       }
       
-      // Expand after scroll pause
+      // Expand after scroll pause (1.5 seconds of no scrolling)
       scrollPauseTimeout.current = setTimeout(() => {
-        setForceExpanded(true);
+        setIsExpanded(true);
       }, 1500);
+      
+      lastScrollY.current = currentScrollY;
     };
     
-    const handleTap = () => {
-      setForceExpanded(true);
+    const handleTap = (e: Event) => {
+      // Only expand on direct tap/click, not on link clicks
+      if ((e as any).target?.closest('a, button[class*="logout"], button[class*="menu"]')) {
+        return;
+      }
+      setIsExpanded(true);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('touchstart', handleTap, { passive: true });
-    window.addEventListener('click', handleTap, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('touchstart', handleTap);
-      window.removeEventListener('click', handleTap);
       if (scrollPauseTimeout.current) {
         clearTimeout(scrollPauseTimeout.current);
       }
