@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { newsArticles, newsSources } from '@akorfa/shared';
-import { desc, eq, and, sql } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { follows, wallets, profiles } from '@akorfa/shared';
+import { follows, wallets } from '@akorfa/shared';
 import { eq, and, sql, desc } from 'drizzle-orm';
 
 const CREATOR_LEVELS = {

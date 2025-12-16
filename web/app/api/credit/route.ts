@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'You have an active loan. Repay it first.' }, { status: 400 });
     }
 
-    const { score: _, tier, creditLimit } = await calculateCreditScore(userId);
+    const { tier, creditLimit } = await calculateCreditScore(userId);
     
     if (amount > creditLimit) {
       return NextResponse.json({ 
@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
       status: 'active'
     }).returning();
 
-    let [wallet] = await db.select().from(wallets).where(eq(wallets.userId, userId));
+    const [wallet] = await db.select().from(wallets).where(eq(wallets.userId, userId));
     
     if (wallet) {
       await db.update(wallets)
