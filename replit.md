@@ -31,6 +31,15 @@ The platform uses Supabase Auth for real email/password authentication. Users ca
 ### Media Storage
 Media uploads (photos and videos) are stored in Supabase Storage for cloud-based persistence. The upload API handles file validation and returns public URLs that are saved with posts. Users can attach up to 4 media files per post. **Important**: An "uploads" bucket must be created in the Supabase dashboard with public access enabled for media URLs to work.
 
+### Messenger Stories/Status (Dec 2024)
+The messages page includes WhatsApp-style Status/Stories functionality:
+- **Status Section**: Shows at the top of the chat list with story rings for users who have posted stories
+- **Story Rings**: Green gradient for unviewed stories, gray for viewed stories
+- **Timestamp-based Tracking**: If a user posts NEW stories after you've viewed, the ring re-highlights green
+- **Add Status**: Logged-in users can create new 24-hour temporary stories
+- **Auto-refresh**: Stories refresh every 30 seconds
+- **Persistence**: Viewed story timestamps persist in localStorage per user
+
 **Media Display Fix (Dec 2024):** The EnhancedPostCard component includes a `parseMediaArray` helper that safely handles both array and JSON-stringified formats for mediaUrls/mediaTypes fields. This ensures media displays correctly regardless of how the data is stored/returned from the database. Failed media loads are tracked in React state and gracefully hidden.
 
 ### Data Model
