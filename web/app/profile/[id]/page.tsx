@@ -204,17 +204,9 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="w-full space-y-6 px-4 sm:px-6">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
-
-      <div className="rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="h-28 sm:h-36 relative">
+    <div className="w-full space-y-0 pb-24 pt-0">
+      <div className="w-full overflow-hidden">
+        <div className="relative h-40 sm:h-48">
           {profile.coverUrl ? (
             <img 
               src={profile.coverUrl} 
@@ -222,130 +214,106 @@ export default function UserProfilePage() {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-r from-green-500 to-purple-600"></div>
+            <div className="w-full h-full bg-gradient-to-r from-green-500 via-purple-500 to-pink-500"></div>
           )}
+          <button
+            onClick={() => router.back()}
+            className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 bg-black/30 hover:bg-black/50 text-white rounded-full transition-colors backdrop-blur-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
         </div>
         <div className="px-6 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 mb-4">
-            <div className="flex items-end gap-4">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white dark:border-slate-700 overflow-hidden bg-gradient-to-br from-purple-500 to-green-600 flex items-center justify-center shrink-0">
-                {profile.avatarUrl ? (
-                  <img src={profile.avatarUrl} alt={profile.username} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-2xl sm:text-3xl text-white font-bold">
-                    {(profile.fullName || profile.username).charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div className="pb-2 flex-1 min-w-0">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
-                  {profile.fullName || profile.username}
-                </h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base truncate">@{profile.username}</p>
-              </div>
+          <div className="flex items-end gap-4 -mt-16 mb-5">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white dark:border-slate-800 overflow-hidden bg-gradient-to-br from-purple-500 to-green-600 flex items-center justify-center shrink-0 shadow-lg">
+              {profile.avatarUrl ? (
+                <img src={profile.avatarUrl} alt={profile.username} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-3xl sm:text-4xl text-white font-bold">
+                  {(profile.fullName || profile.username).charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
-            
-            {!isOwnProfile && currentUserId && (
-              <div className="flex gap-2 flex-wrap">
-                {isFollowing ? (
-                  <button
-                    onClick={handleUnfollow}
-                    className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
-                  >
-                    <UserMinus className="w-4 h-4" />
-                    Unfollow
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleFollow}
-                    className="flex items-center gap-1.5 px-3 py-2 text-sm bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-all"
-                  >
-                    <UserPlus className="w-4 h-4" />
-                    Follow
-                  </button>
-                )}
-                <button
-                  onClick={() => router.push(`/messages?user=${profileId}`)}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-
-            {isOwnProfile && (
-              <Link
-                href="/profile"
-                className="px-3 py-2 text-sm text-green-600 dark:text-green-400 hover:underline"
-              >
-                Edit Profile
-              </Link>
-            )}
+            <div className="pb-1 flex-1 min-w-0">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
+                {profile.fullName || profile.username}
+              </h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">@{profile.username}</p>
+            </div>
           </div>
-
-          {profile.bio && (
-            <p className="text-gray-700 dark:text-gray-300 mb-4">{profile.bio}</p>
+          
+          {!isOwnProfile && currentUserId && (
+            <div className="flex gap-2 mb-5">
+              {isFollowing ? (
+                <button
+                  onClick={handleUnfollow}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
+                >
+                  <UserMinus className="w-4 h-4" />
+                  Unfollow
+                </button>
+              ) : (
+                <button
+                  onClick={handleFollow}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl font-medium hover:from-green-700 hover:to-green-600 transition-all shadow-md"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Follow
+                </button>
+              )}
+              <button
+                onClick={() => router.push(`/messages?user=${profileId}`)}
+                className="flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </button>
+            </div>
           )}
 
           {isOwnProfile && (
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              <div className="text-center p-3 rounded-xl">
-                <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                  <Zap className="w-5 h-5 text-green-500" />
-                  {profile.totalXp}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">XP</div>
-              </div>
-              <div className="text-center p-3 rounded-xl">
-                <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                  <Trophy className="w-5 h-5 text-green-500" />
-                  {profile.level}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
-              </div>
-              <div className="text-center p-3 rounded-xl">
-                <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                  <Flame className="w-5 h-5 text-orange-500" />
-                  {profile.currentStreak}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Streak</div>
-              </div>
+            <Link
+              href="/profile"
+              className="block w-full text-center px-3 py-2.5 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 transition-all mb-5"
+            >
+              Edit Profile
+            </Link>
+          )}
+
+          {profile.bio && (
+            <div className="p-4 mb-4 bg-transparent">
+              <p className="text-sm text-gray-700 dark:text-gray-300">{profile.bio}</p>
             </div>
           )}
 
-          {!isOwnProfile && (
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div className="text-center p-3 rounded-xl">
-                <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                  <Trophy className="w-5 h-5 text-green-500" />
-                  {profile.level}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Level</div>
+          <div className="grid grid-cols-4 gap-2 mb-3">
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-green-700 dark:text-green-300">
+                <Trophy className="w-3 h-3" />
+                {profile.level}
               </div>
-              <div className="text-center p-3 rounded-xl">
-                <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                  <Flame className="w-5 h-5 text-orange-500" />
-                  {profile.currentStreak}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Streak</div>
-              </div>
+              <div className="text-[10px] text-green-600 dark:text-green-400 font-medium mt-0.5 text-center">Level</div>
             </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="text-center p-3 rounded-xl">
-              <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                <Users className="w-5 h-5 text-blue-500" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-orange-700 dark:text-orange-300">
+                <Flame className="w-3 h-3" />
+                {profile.currentStreak}
+              </div>
+              <div className="text-[10px] text-orange-600 dark:text-orange-400 font-medium mt-0.5 text-center">Streak</div>
+            </div>
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-blue-700 dark:text-blue-300">
+                <Users className="w-3 h-3" />
                 {followerCount}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Followers</div>
+              <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5 text-center">Followers</div>
             </div>
-            <div className="text-center p-3 rounded-xl">
-              <div className="flex items-center justify-center gap-1 text-2xl font-bold text-gray-900 dark:text-white">
-                <Users className="w-5 h-5 text-purple-500" />
+            <div className="p-1.5 bg-transparent">
+              <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-purple-700 dark:text-purple-300">
+                <Users className="w-3 h-3" />
                 {followingCount}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Following</div>
+              <div className="text-[10px] text-purple-600 dark:text-purple-400 font-medium mt-0.5 text-center">Following</div>
             </div>
           </div>
 
@@ -353,12 +321,12 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="w-full px-6 mt-4">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Activity</h2>
         <ActivityHeatmap userId={profileId} />
       </div>
 
-      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="w-full px-6 mt-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Grid3X3 className="w-5 h-5" />
           Posts
@@ -369,7 +337,7 @@ export default function UserProfilePage() {
           </div>
         ) : posts.length > 0 ? (
           <>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
               {posts.map((post) => {
                 const hasMedia = post.mediaUrls && post.mediaUrls.length > 0;
                 const firstMedia = hasMedia ? post.mediaUrls![0] : null;
@@ -493,13 +461,13 @@ export default function UserProfilePage() {
         )}
       </div>
 
-      <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="w-full px-6 mt-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Achievements</h2>
         <BadgesList userId={profileId} />
       </div>
 
       {profile.goals && profile.goals.length > 0 && (
-        <div className="rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="w-full px-6 mt-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Goals</h2>
           <div className="flex flex-wrap gap-2">
             {profile.goals.map((goal: string, i: number) => (

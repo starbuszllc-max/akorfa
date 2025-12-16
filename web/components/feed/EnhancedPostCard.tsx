@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import LayeredLikeIcon from '@/components/ui/icons/LayeredLikeIcon';
+import ProfilePreviewPopup from './ProfilePreviewPopup';
 
 interface Comment {
   id: string;
@@ -141,6 +142,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [commentError, setCommentError] = useState<string | null>(null);
   const [failedMediaIndices, setFailedMediaIndices] = useState<Set<number>>(new Set());
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [showProfilePreview, setShowProfilePreview] = useState(false);
 
   useEffect(() => {
     setFailedMediaIndices(new Set());
@@ -218,8 +220,10 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
     setNewComment(`@${comment.profiles?.username || 'Anonymous'} `);
   }
 
-  function navigateToProfile(userId: string | null) {
-    if (userId) {
+  function handleProfileClick(userId: string | null) {
+    if (userId && userId !== currentUserId) {
+      setShowProfilePreview(true);
+    } else if (userId) {
       router.push(`/profile/${userId}`);
     }
   }
@@ -464,11 +468,22 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
         )}
       </AnimatePresence>
 
+      {post.user_id && (
+        <ProfilePreviewPopup
+          userId={post.user_id}
+          username={username}
+          avatarUrl={avatarUrl}
+          isOpen={showProfilePreview}
+          onClose={() => setShowProfilePreview(false)}
+          currentUserId={currentUserId}
+        />
+      )}
+
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div 
             className={`relative p-0.5 rounded-full bg-gradient-to-br ${layerStyle.gradient} cursor-pointer`}
-            onClick={() => navigateToProfile(post.user_id)}
+            onClick={() => handleProfileClick(post.user_id)}
           >
             {avatarUrl ? (
               <img 
@@ -485,7 +500,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
           <div>
             <div 
               className="font-semibold text-gray-900 dark:text-white text-sm cursor-pointer hover:underline"
-              onClick={() => navigateToProfile(post.user_id)}
+              onClick={() => handleProfileClick(post.user_id)}
             >
               {username}
             </div>
@@ -747,7 +762,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                   >
                     <div 
                       className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-slate-600 dark:to-slate-700 flex items-center justify-center text-white text-xs font-medium shrink-0 cursor-pointer overflow-hidden"
-                      onClick={() => navigateToProfile(comment.userId)}
+                      onClick={() => comment.userId && router.push(`/profile/${comment.userId}`)}
                     >
                       {comment.profiles?.avatarUrl ? (
                         <img src={comment.profiles.avatarUrl} alt="" className="w-full h-full object-cover" />
@@ -759,7 +774,7 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                       <div className="flex items-center gap-2 mb-1">
                         <span 
                           className="text-sm font-medium text-gray-800 dark:text-gray-200 cursor-pointer hover:underline"
-                          onClick={() => navigateToProfile(comment.userId)}
+                          onClick={() => comment.userId && router.push(`/profile/${comment.userId}`)}
                         >
                           {comment.profiles?.username || 'Anonymous'}
                         </span>
