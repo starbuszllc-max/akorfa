@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Zap, TrendingUp } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import NotificationBell from '@/components/notifications/NotificationBell';
 
@@ -10,14 +11,53 @@ export function Header() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [profile, setProfile] = useState<any>(null);
+  const [score, setScore] = useState(0);
+  const [balance, setBalance] = useState(0);
   const pathname = usePathname();
+
+  const isCollapsed = scrollY > 100;
 
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');
     if (demoUserId) {
       setUser({ id: demoUserId, demo: true });
+      fetchProfileData(demoUserId);
     }
     setLoading(false);
+  }, []);
+
+  const fetchProfileData = async (userId: string) => {
+    try {
+      const [profileRes, assessmentRes] = await Promise.all([
+        fetch(`/api/profiles?userId=${userId}`),
+        fetch(`/api/assessments?userId=${userId}`)
+      ]);
+      if (profileRes.ok) {
+        const data = await profileRes.json();
+        setProfile(data.profile);
+        setScore(data.profile?.akorfaScore || 0);
+      }
+      if (assessmentRes.ok) {
+        const assessData = await assessmentRes.json();
+        if (assessData.assessments && assessData.assessments.length > 0) {
+          const scores = assessData.assessments[0].layerScores || assessData.assessments[0].layer_scores || {};
+          const avg = Object.values(scores).length > 0 ? Math.round(Object.values(scores).reduce((sum: any, v: any) => sum + v, 0) / Object.values(scores).length) : 0;
+          setBalance(avg);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   function handleLogout() {
@@ -114,21 +154,38 @@ export function Header() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="w-full bg-gradient-to-r from-white via-green-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-green-200/30 dark:border-green-900/20" style={{ height: '84px' }}>
-      <div className="max-w-7xl mx-auto flex items-end justify-between gap-4" style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px', height: '84px' }}>
-        <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200" style={{ marginTop: 'auto', paddingLeft: '12px', paddingBottom: '2px' }}>
+    <header className={`w-full bg-gradient-to-r from-white via-green-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-green-200/30 dark:border-green-900/20 transition-all duration-300 ease-out`} style={{ height: isCollapsed ? '48px' : '84px' }}>
+      <div className={`max-w-7xl mx-auto flex items-center justify-between gap-4 transition-all duration-300 ${isCollapsed ? 'px-4' : ''}`} style={{ paddingTop: '0px', paddingBottom: '0px', paddingLeft: isCollapsed ? '16px' : '0px', paddingRight: '5px', height: isCollapsed ? '48px' : '84px', display: 'flex', alignItems: 'center' }}>
+        <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200" style={{ paddingLeft: '12px' }}>
           <img 
             src="/logo.png" 
             alt="Akorfa" 
-            className="h-12 md:h-16 w-auto"
+            className={`w-auto transition-all duration-300 ${isCollapsed ? 'h-8' : 'h-12 md:h-16'}`}
           />
-          <div className="hidden sm:block">
-            <h1 className="font-bold text-lg md:text-xl bg-gradient-to-r from-green-700 via-green-600 to-green-700 dark:from-green-400 dark:via-green-300 dark:to-green-400 bg-clip-text text-transparent">
-              Akorfa
-            </h1>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Human Stack</p>
-          </div>
+          {!isCollapsed && (
+            <div className="hidden sm:block">
+              <h1 className="font-bold text-lg md:text-xl bg-gradient-to-r from-green-700 via-green-600 to-green-700 dark:from-green-400 dark:via-green-300 dark:to-green-400 bg-clip-text text-transparent">
+                Akorfa
+              </h1>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Human Stack</p>
+            </div>
+          )}
         </Link>
+
+        {isCollapsed && user && (
+          <div className="hidden md:flex items-center gap-3 flex-1 justify-center">
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-lg">
+              <Zap className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
+              <span className="text-xs font-bold text-green-700 dark:text-green-300">{Math.round(score)}</span>
+              <span className="text-[10px] text-green-600 dark:text-green-400">Score</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+              <TrendingUp className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span className="text-xs font-bold text-blue-700 dark:text-blue-300">{balance}%</span>
+              <span className="text-[10px] text-blue-600 dark:text-blue-400">Balance</span>
+            </div>
+          </div>
+        )}
         
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
@@ -146,7 +203,7 @@ export function Header() {
           </button>
         </div>
 
-        <nav className="hidden md:flex items-center gap-0.5">
+        <nav className={`${isCollapsed ? 'hidden' : 'hidden md:flex'} items-center gap-0.5`}>
           {navLinks.map((link) => (
             <Link 
               key={link.href}
