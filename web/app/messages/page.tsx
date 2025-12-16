@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User, MoreVertical, Check, CheckCheck, Phone, Video, Search, Smile, Paperclip, Camera, X, Trash2, VolumeX, Ban, Flag, Copy, Reply } from 'lucide-react';
+import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User, MoreVertical, Check, CheckCheck, Phone, Video, Search, Smile, Paperclip, Camera, X, Trash2, VolumeX, Ban, Flag, Copy, Reply, Plus } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import UserProfileCard from '@/components/messages/UserProfileCard';
+import StoryViewer from '@/components/stories/StoryViewer';
+import StoryCreator from '@/components/stories/StoryCreator';
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react').then(mod => mod.default), { ssr: false });
 
@@ -41,6 +43,27 @@ interface Message {
   };
 }
 
+interface Story {
+  id: string;
+  content: string | null;
+  mediaUrl: string | null;
+  mediaType: string | null;
+  layer: string | null;
+  viewCount: number;
+  expiresAt: string;
+  createdAt: string;
+}
+
+interface StoryGroup {
+  user: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
+    fullName: string | null;
+  };
+  stories: Story[];
+}
+
 function MessagesContent() {
   const searchParams = useSearchParams();
   const targetUserId = searchParams.get('user');
@@ -64,6 +87,12 @@ function MessagesContent() {
   const [uploading, setUploading] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   
+  const [storyGroups, setStoryGroups] = useState<StoryGroup[]>([]);
+  const [selectedStoryGroup, setSelectedStoryGroup] = useState<StoryGroup | null>(null);
+  const [showStoryCreator, setShowStoryCreator] = useState(false);
+  const [storiesLoading, setStoriesLoading] = useState(true);
+  const [viewedStoryTimestamps, setViewedStoryTimestamps] = useState<Record<string, string>>({});
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -79,10 +108,93 @@ function MessagesContent() {
     setUserId(uid);
     if (uid) {
       fetchConversations(uid);
+      fetchStories();
+      const savedViewedStories = localStorage.getItem(`viewed_story_timestamps_${uid}`);
+      if (savedViewedStories) {
+        try {
+          setViewedStoryTimestamps(JSON.parse(savedViewedStories));
+        } catch (e) {
+          console.error('Failed to parse viewed stories:', e);
+        }
+      }
     } else {
       setLoading(false);
+      setStoriesLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (userId) {
+        fetchStories();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [userId]);
+
+  const fetchStories = async () => {
+    try {
+      const res = await fetch('/api/stories');
+      if (res.ok) {
+        const data = await res.json();
+        setStoryGroups(data.stories || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch stories:', error);
+    } finally {
+      setStoriesLoading(false);
+    }
+  };
+
+  const handleStoryCreated = () => {
+    setShowStoryCreator(false);
+    fetchStories();
+  };
+
+  const handleNextStoryGroup = () => {
+    if (selectedStoryGroup && selectedStoryGroup.stories.length > 0) {
+      const latestStoryTime = selectedStoryGroup.stories.reduce((latest, story) => {
+        return story.createdAt > latest ? story.createdAt : latest;
+      }, selectedStoryGroup.stories[0].createdAt);
+      markStoryAsViewed(selectedStoryGroup.user.id, latestStoryTime);
+      const currentIndex = storyGroups.findIndex(g => g.user.id === selectedStoryGroup.user.id);
+      if (currentIndex < storyGroups.length - 1) {
+        setSelectedStoryGroup(storyGroups[currentIndex + 1]);
+      } else {
+        setSelectedStoryGroup(null);
+      }
+    }
+  };
+
+  const markStoryAsViewed = (storyUserId: string, latestStoryTime: string) => {
+    setViewedStoryTimestamps(prev => {
+      const updated = { ...prev, [storyUserId]: latestStoryTime };
+      if (userId) {
+        localStorage.setItem(`viewed_story_timestamps_${userId}`, JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
+
+  const hasUnviewedStories = (group: StoryGroup): boolean => {
+    if (!group.stories.length) return false;
+    const latestStoryTime = group.stories.reduce((latest, story) => {
+      return story.createdAt > latest ? story.createdAt : latest;
+    }, group.stories[0].createdAt);
+    const viewedAt = viewedStoryTimestamps[group.user.id];
+    if (!viewedAt) return true;
+    return latestStoryTime > viewedAt;
+  };
+
+  const handleCloseStoryViewer = () => {
+    if (selectedStoryGroup && selectedStoryGroup.stories.length > 0) {
+      const latestStoryTime = selectedStoryGroup.stories.reduce((latest, story) => {
+        return story.createdAt > latest ? story.createdAt : latest;
+      }, selectedStoryGroup.stories[0].createdAt);
+      markStoryAsViewed(selectedStoryGroup.user.id, latestStoryTime);
+    }
+    setSelectedStoryGroup(null);
+  };
 
   useEffect(() => {
     if (targetUserId && userId && conversations.length >= 0 && !loading) {
@@ -505,6 +617,79 @@ function MessagesContent() {
                 />
               </div>
             </div>
+
+            <div className="border-b border-gray-200 dark:border-[#16a34a]/20 bg-gray-50 dark:bg-[#0a0a0a]">
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Status</h2>
+                  <span className="text-xs text-gray-500">24h</span>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                  {userId && (
+                    <button
+                      onClick={() => setShowStoryCreator(true)}
+                      className="flex-shrink-0 flex flex-col items-center"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-[#1a1a1a] border-2 border-dashed border-[#16a34a] flex items-center justify-center relative">
+                        <Plus className="w-6 h-6 text-[#16a34a]" />
+                      </div>
+                      <span className="text-[10px] text-gray-600 dark:text-gray-400 mt-1 truncate w-14 text-center">
+                        Add Status
+                      </span>
+                    </button>
+                  )}
+
+                  {storiesLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <div key={i} className="flex-shrink-0 flex flex-col items-center">
+                        <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-[#1a1a1a] animate-pulse" />
+                        <div className="w-10 h-2 bg-gray-200 dark:bg-[#1a1a1a] rounded mt-1 animate-pulse" />
+                      </div>
+                    ))
+                  ) : (
+                    storyGroups.map((group) => {
+                      const hasNewStories = hasUnviewedStories(group);
+                      return (
+                        <button
+                          key={group.user.id}
+                          onClick={() => setSelectedStoryGroup(group)}
+                          className="flex-shrink-0 flex flex-col items-center"
+                        >
+                          <div className={`w-14 h-14 rounded-full p-0.5 ${
+                            hasNewStories 
+                              ? 'bg-gradient-to-br from-[#16a34a] via-green-500 to-emerald-400' 
+                              : 'bg-gray-300 dark:bg-gray-600'
+                          }`}>
+                            <div className="w-full h-full rounded-full bg-white dark:bg-[#0a0a0a] p-0.5">
+                              {group.user.avatarUrl ? (
+                                <img
+                                  src={group.user.avatarUrl}
+                                  alt={group.user.username}
+                                  className="w-full h-full rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full rounded-full bg-gray-200 dark:bg-[#1a1a1a] flex items-center justify-center">
+                                  <User className="w-6 h-6 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-gray-600 dark:text-gray-400 mt-1 truncate w-14 text-center">
+                            {group.user.username}
+                          </span>
+                        </button>
+                      );
+                    })
+                  )}
+
+                  {!storiesLoading && storyGroups.length === 0 && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 py-2 px-2">
+                      No status updates yet
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           
             <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0a0a0a]">
               {filteredConversations.length === 0 ? (
@@ -915,6 +1100,22 @@ function MessagesContent() {
             avatarUrl: selectedConversation.otherUser.avatarUrl
           }}
           onClose={() => setShowProfile(false)}
+        />
+      )}
+
+      {selectedStoryGroup && (
+        <StoryViewer
+          group={selectedStoryGroup}
+          onClose={handleCloseStoryViewer}
+          onNext={handleNextStoryGroup}
+        />
+      )}
+
+      {showStoryCreator && userId && (
+        <StoryCreator
+          userId={userId}
+          onClose={() => setShowStoryCreator(false)}
+          onCreated={handleStoryCreated}
         />
       )}
     </>
