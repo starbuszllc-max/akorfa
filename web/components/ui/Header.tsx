@@ -156,7 +156,7 @@ export function Header() {
 
   return (
     <header className={`w-full bg-gradient-to-r from-white via-green-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 shadow-md sticky top-0 z-50 border-b border-green-200/30 dark:border-green-900/20 transition-all duration-300 ease-out`} style={{ height: isCollapsed ? '48px' : '84px' }}>
-      <div className={`max-w-7xl mx-auto flex items-end justify-between gap-4 transition-all duration-300 ${isCollapsed ? 'px-4' : ''}`} style={{ paddingTop: isCollapsed ? '0px' : '8px', paddingBottom: isCollapsed ? '0px' : '12px', paddingLeft: isCollapsed ? '16px' : '0px', paddingRight: '5px', height: isCollapsed ? '48px' : '84px', display: 'flex', alignItems: 'flex-end' }}>
+      <div className={`max-w-7xl mx-auto flex items-end justify-between gap-4 transition-all duration-300 ${isCollapsed ? 'px-4' : ''}`} style={{ paddingTop: isCollapsed ? '0px' : '0px', paddingBottom: isCollapsed ? '0px' : '8px', paddingLeft: isCollapsed ? '16px' : '0px', paddingRight: '5px', height: isCollapsed ? '48px' : '84px', display: 'flex', alignItems: 'flex-end' }}>
         {!isCollapsed && (
           <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition-opacity duration-200" style={{ paddingLeft: '12px' }}>
             <img 
