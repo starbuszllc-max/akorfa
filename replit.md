@@ -31,6 +31,24 @@ The platform uses Supabase Auth for real email/password authentication. Users ca
 ### Media Storage
 Media uploads (photos and videos) are stored in Supabase Storage for cloud-based persistence. The upload API handles file validation and returns public URLs that are saved with posts. Users can attach up to 4 media files per post. **Important**: An "uploads" bucket must be created in the Supabase dashboard with public access enabled for media URLs to work.
 
+### UI/UX Design Patterns (Dec 2024)
+The platform follows modern, minimalist design principles:
+- **Borderless Components**: Cards and sections use transparent backgrounds without visible borders
+- **Green Gradient Accents**: Consistent use of #16a34a (green-600) as primary accent color
+- **Glassmorphism Effects**: Subtle backdrop blur and transparency for overlays
+- **Mobile-First Responsive**: Responsive breakpoints for all components
+
+**Profile System:**
+- Public profiles stretch full-width with edge-to-edge cover images
+- ProfilePreviewPopup shows on tap in feed (not direct navigation) with follow/unfollow buttons
+- Compact stat cards using 4-column grid (Level, Streak, Followers, Following)
+- Privacy-conscious: Public profiles show only Level, Streak, and social counts
+
+**Messenger Camera Integration:**
+- Camera icon in header opens CameraCapture component
+- Attachment menu includes both "Photos & Videos" (file picker) and "Camera" (live capture)
+- CameraCapture handles upload internally before sending media URLs
+
 ### Messenger Stories/Status (Dec 2024)
 The messages page includes WhatsApp-style Status/Stories functionality:
 - **Status Section**: Shows at the top of the chat list with story rings for users who have posted stories
