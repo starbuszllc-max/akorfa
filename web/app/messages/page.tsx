@@ -456,17 +456,17 @@ function MessagesContent() {
         <div className="h-full flex rounded-xl overflow-hidden shadow-xl border border-gray-200 dark:border-slate-700">
           
           <div className={`w-full md:w-[380px] flex flex-col bg-white dark:bg-[#111111] ${selectedConversation ? 'hidden md:flex' : ''}`}>
-            <div className="p-4 bg-[#000000] border-b border-[#16a34a]/20">
+            <div className="p-4 bg-gray-50 dark:bg-[#000000] border-b border-gray-200 dark:border-[#16a34a]/20">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold text-[#16a34a]">Chats</h1>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 hover:bg-[#16a34a]/20 rounded-full transition-colors">
+                  <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors">
                     <Camera className="w-5 h-5 text-[#16a34a]" />
                   </button>
                   <div className="relative" ref={optionsMenuRef}>
                     <button 
                       onClick={() => setShowOptionsMenu(!showOptionsMenu)}
-                      className="p-2 hover:bg-[#16a34a]/20 rounded-full transition-colors"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors"
                     >
                       <MoreVertical className="w-5 h-5 text-[#16a34a]" />
                     </button>
@@ -501,19 +501,19 @@ function MessagesContent() {
                   placeholder="Search conversations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-[#1a1a1a] border border-[#16a34a]/30 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[green-600] text-white placeholder-gray-400"
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#16a34a]/30 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#16a34a] text-gray-900 dark:text-white placeholder-gray-400"
                 />
               </div>
             </div>
           
-            <div className="flex-1 overflow-y-auto bg-[#0a0a0a]">
+            <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0a0a0a]">
               {filteredConversations.length === 0 ? (
                 <div className="p-8 text-center text-gray-500 h-full flex items-center justify-center">
                   <div>
-                    <div className="w-16 h-16 bg-[#1a1a1a] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#16a34a]/30">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-[#1a1a1a] rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-200 dark:border-[#16a34a]/30">
                       <MessageCircle className="w-8 h-8 text-[#16a34a]" />
                     </div>
-                    <p className="font-medium text-gray-300">No conversations yet</p>
+                    <p className="font-medium text-gray-700 dark:text-gray-300">No conversations yet</p>
                     <p className="text-sm mt-2 text-gray-500">Start following people and send them a message!</p>
                   </div>
                 </div>
@@ -523,25 +523,25 @@ function MessagesContent() {
                     <button
                       key={conv.id}
                       onClick={() => selectConversation(conv)}
-                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-[#1a1a1a] transition-colors text-left border-b border-[#16a34a]/10 ${
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors text-left border-b border-gray-100 dark:border-[#16a34a]/10 ${
                         selectedConversation?.id === conv.id 
-                          ? 'bg-[#16a34a]/10 border-l-4 border-l-[green-600]' 
+                          ? 'bg-green-50 dark:bg-[#16a34a]/10 border-l-4 border-l-[#16a34a]' 
                           : ''
                       }`}
                     >
                       <div className="relative flex-shrink-0">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#16a34a] to-[#000000] flex items-center justify-center overflow-hidden ring-2 ring-[green-600]/30">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#16a34a] to-[#000000] flex items-center justify-center overflow-hidden ring-2 ring-[#16a34a]/30">
                           {conv.otherUser.avatarUrl ? (
                             <img src={conv.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <User className="w-7 h-7 text-white" />
                           )}
                         </div>
-                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#16a34a] rounded-full border-2 border-[#0a0a0a]" />
+                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-[#16a34a] rounded-full border-2 border-white dark:border-[#0a0a0a]" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-white truncate">
+                          <span className="font-semibold text-gray-900 dark:text-white truncate">
                             {conv.otherUser.username}
                           </span>
                           <span className={`text-xs flex-shrink-0 ml-2 ${conv.unreadCount > 0 ? 'text-[#16a34a] font-semibold' : 'text-gray-500'}`}>
@@ -553,12 +553,12 @@ function MessagesContent() {
                             <CheckCheck className="w-4 h-4 text-[#16a34a] flex-shrink-0" />
                           )}
                           {conv.lastMessage && (
-                            <p className={`text-sm truncate flex-1 ${conv.unreadCount > 0 ? 'font-semibold text-gray-200' : 'text-gray-400'}`}>
+                            <p className={`text-sm truncate flex-1 ${conv.unreadCount > 0 ? 'font-semibold text-gray-800 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400'}`}>
                               {conv.lastMessage.messageType === 'audio' ? '🎵 Voice message' : conv.lastMessage.messageType === 'image' ? '📸 Photo' : conv.lastMessage.content}
                             </p>
                           )}
                           {conv.unreadCount > 0 && (
-                            <span className="w-5 h-5 bg-[#16a34a] text-black text-xs rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                            <span className="w-5 h-5 bg-[#16a34a] text-white text-xs rounded-full flex items-center justify-center font-bold flex-shrink-0">
                               {conv.unreadCount}
                             </span>
                           )}
@@ -571,14 +571,14 @@ function MessagesContent() {
             </div>
           </div>
 
-          <div className={`flex-1 flex flex-col bg-[#0f0f0f] ${!selectedConversation ? 'hidden md:flex' : ''}`}>
+          <div className={`flex-1 flex flex-col bg-gray-100 dark:bg-[#0f0f0f] ${!selectedConversation ? 'hidden md:flex' : ''}`}>
             {selectedConversation ? (
               <>
-                <div className="px-4 py-3 bg-[#000000] border-b border-[#16a34a]/20 flex items-center justify-between">
+                <div className="px-4 py-3 bg-white dark:bg-[#000000] border-b border-gray-200 dark:border-[#16a34a]/20 flex items-center justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <button
                       onClick={() => setSelectedConversation(null)}
-                      className="md:hidden p-2 hover:bg-[#16a34a]/20 rounded-full"
+                      className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full"
                     >
                       <ArrowLeft className="w-5 h-5 text-[#16a34a]" />
                     </button>
@@ -587,17 +587,17 @@ function MessagesContent() {
                       className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                     >
                       <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#16a34a] to-[#000000] flex items-center justify-center overflow-hidden ring-2 ring-[green-600]/50">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#16a34a] to-[#000000] flex items-center justify-center overflow-hidden ring-2 ring-[#16a34a]/50">
                           {selectedConversation.otherUser.avatarUrl ? (
                             <img src={selectedConversation.otherUser.avatarUrl} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <User className="w-5 h-5 text-white" />
                           )}
                         </div>
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#16a34a] rounded-full border-2 border-[#000000]" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#16a34a] rounded-full border-2 border-white dark:border-[#000000]" />
                       </div>
                       <div className="text-left">
-                        <p className="font-semibold text-white text-sm">
+                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
                           {selectedConversation.otherUser.username}
                         </p>
                         <p className="text-xs text-[#16a34a]">online</p>
@@ -605,16 +605,16 @@ function MessagesContent() {
                     </button>
                   </div>
                   <div className="flex items-center gap-1">
-                    <button className="p-2 hover:bg-[#16a34a]/20 rounded-full transition-colors">
+                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors">
                       <Video className="w-5 h-5 text-[#16a34a]" />
                     </button>
-                    <button className="p-2 hover:bg-[#16a34a]/20 rounded-full transition-colors">
+                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors">
                       <Phone className="w-5 h-5 text-[#16a34a]" />
                     </button>
                     <div className="relative">
                       <button 
                         onClick={() => setShowChatMenu(!showChatMenu)}
-                        className="p-2 hover:bg-[#16a34a]/20 rounded-full transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors"
                       >
                         <MoreVertical className="w-5 h-5 text-[#16a34a]" />
                       </button>
@@ -651,23 +651,28 @@ function MessagesContent() {
                 </div>
 
                 <div 
-                  className="flex-1 overflow-y-auto px-4 py-2"
+                  className="flex-1 overflow-y-auto px-4 py-2 bg-gray-50 dark:bg-transparent"
                   style={{
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.95), rgba(0,0,0,0.95)), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A962' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2316a34a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
                   }}
                 >
+                  <style jsx>{`
+                    .dark div[style] {
+                      background-image: linear-gradient(rgba(0,0,0,0.95), rgba(0,0,0,0.95)), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2316a34a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !important;
+                    }
+                  `}</style>
                   {messages.length === 0 && selectedConversation.id === 'new' && (
                     <div className="flex items-center justify-center h-full">
-                      <div className="text-center bg-[#1a1a1a]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-[#16a34a]/20">
-                        <div className="w-16 h-16 bg-gradient-to-br from-[#16a34a] to-[#000000] rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-[green-600]/30">
+                      <div className="text-center bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-[#16a34a]/20">
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#16a34a] to-[#000000] rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-[#16a34a]/30">
                           {selectedConversation.otherUser.avatarUrl ? (
                             <img src={selectedConversation.otherUser.avatarUrl} alt="" className="w-full h-full object-cover rounded-full" />
                           ) : (
                             <User className="w-8 h-8 text-white" />
                           )}
                         </div>
-                        <p className="font-semibold text-white">{selectedConversation.otherUser.username}</p>
-                        <p className="text-sm text-gray-400 mt-1">Start a conversation</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">{selectedConversation.otherUser.username}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Start a conversation</p>
                       </div>
                     </div>
                   )}
@@ -682,7 +687,7 @@ function MessagesContent() {
                       <div key={msg.id}>
                         {showDate && (
                           <div className="flex justify-center my-4">
-                            <span className="px-4 py-1.5 bg-[#1a1a1a]/90 backdrop-blur-sm rounded-full text-xs text-[#16a34a] shadow-sm border border-[#16a34a]/20">
+                            <span className="px-4 py-1.5 bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-sm rounded-full text-xs text-[#16a34a] shadow-sm border border-gray-200 dark:border-[#16a34a]/20">
                               {formatDateSeparator(msg.createdAt)}
                             </span>
                           </div>
@@ -693,7 +698,7 @@ function MessagesContent() {
                             className={`relative max-w-[75%] px-3 py-2 shadow-md ${
                               isMe
                                 ? 'bg-gradient-to-br from-[#16a34a] to-[#15803d] rounded-2xl rounded-tr-sm'
-                                : 'bg-[#1a1a1a] border border-[#16a34a]/20 rounded-2xl rounded-tl-sm'
+                                : 'bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#16a34a]/20 rounded-2xl rounded-tl-sm'
                             }`}
                             onClick={() => setSelectedMessageId(selectedMessageId === msg.id ? null : msg.id)}
                           >
@@ -705,7 +710,7 @@ function MessagesContent() {
                                 <div className="flex-1">
                                   <audio src={msg.mediaUrl} controls className="w-full h-8" />
                                   {msg.audioDuration && (
-                                    <span className={`text-xs ${isMe ? 'text-black/60' : 'text-gray-400'}`}>{formatTime(msg.audioDuration)}</span>
+                                    <span className={`text-xs ${isMe ? 'text-white/60' : 'text-gray-500 dark:text-gray-400'}`}>{formatTime(msg.audioDuration)}</span>
                                   )}
                                 </div>
                               </div>
@@ -723,35 +728,35 @@ function MessagesContent() {
                                 />
                               </div>
                             ) : (
-                              <p className={`text-[15px] leading-relaxed ${isMe ? 'text-black' : 'text-white'}`}>
+                              <p className={`text-[15px] leading-relaxed ${isMe ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
                                 {msg.content}
                               </p>
                             )}
                             <div className={`flex items-center gap-1 mt-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
-                              <span className={`text-[11px] ${isMe ? 'text-black/60' : 'text-gray-500'}`}>
+                              <span className={`text-[11px] ${isMe ? 'text-white/60' : 'text-gray-500'}`}>
                                 {formatMessageTime(msg.createdAt)}
                               </span>
                               {isMe && (
                                 msg.isRead ? (
-                                  <CheckCheck className="w-4 h-4 text-black/70" />
+                                  <CheckCheck className="w-4 h-4 text-white/70" />
                                 ) : (
-                                  <Check className="w-4 h-4 text-black/50" />
+                                  <Check className="w-4 h-4 text-white/50" />
                                 )
                               )}
                             </div>
                             
                             {selectedMessageId === msg.id && (
-                              <div className={`absolute ${isMe ? 'right-full mr-2' : 'left-full ml-2'} top-0 flex items-center gap-1 bg-[#1a1a1a] rounded-lg p-1 border border-[#16a34a]/20 shadow-lg`}>
+                              <div className={`absolute ${isMe ? 'right-full mr-2' : 'left-full ml-2'} top-0 flex items-center gap-1 bg-white dark:bg-[#1a1a1a] rounded-lg p-1 border border-gray-200 dark:border-[#16a34a]/20 shadow-lg`}>
                                 <button 
                                   onClick={(e) => { e.stopPropagation(); copyMessageText(msg.content); }}
-                                  className="p-2 hover:bg-[#16a34a]/20 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-lg transition-colors"
                                   title="Copy"
                                 >
                                   <Copy className="w-4 h-4 text-[#16a34a]" />
                                 </button>
                                 <button 
                                   onClick={(e) => e.stopPropagation()}
-                                  className="p-2 hover:bg-[#16a34a]/20 rounded-lg transition-colors"
+                                  className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-lg transition-colors"
                                   title="Reply"
                                 >
                                   <Reply className="w-4 h-4 text-[#16a34a]" />
@@ -767,7 +772,7 @@ function MessagesContent() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <form onSubmit={sendMessage} className="p-3 bg-[#000000] border-t border-[#16a34a]/20">
+                <form onSubmit={sendMessage} className="p-3 bg-white dark:bg-[#000000] border-t border-gray-200 dark:border-[#16a34a]/20">
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -779,9 +784,9 @@ function MessagesContent() {
                   <div className="flex items-center gap-2">
                     {isRecording ? (
                       <>
-                        <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-red-900/30 rounded-full border border-red-500/30">
+                        <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/30 rounded-full border border-red-200 dark:border-red-500/30">
                           <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                          <span className="text-red-400 font-medium">
+                          <span className="text-red-600 dark:text-red-400 font-medium">
                             Recording... {formatTime(recordingTime)}
                           </span>
                         </div>
@@ -799,7 +804,7 @@ function MessagesContent() {
                           <button
                             type="button"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                            className={`p-2 rounded-full transition-colors ${showEmojiPicker ? 'bg-[#16a34a]/30 text-[#16a34a]' : 'text-gray-400 hover:bg-[#16a34a]/20 hover:text-[#16a34a]'}`}
+                            className={`p-2 rounded-full transition-colors ${showEmojiPicker ? 'bg-[#16a34a]/30 text-[#16a34a]' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 hover:text-[#16a34a]'}`}
                           >
                             <Smile className="w-6 h-6" />
                           </button>
@@ -818,16 +823,16 @@ function MessagesContent() {
                           <button
                             type="button"
                             onClick={() => setShowAttachMenu(!showAttachMenu)}
-                            className={`p-2 rounded-full transition-colors ${showAttachMenu ? 'bg-[#16a34a]/30 text-[#16a34a]' : 'text-gray-400 hover:bg-[#16a34a]/20 hover:text-[#16a34a]'}`}
+                            className={`p-2 rounded-full transition-colors ${showAttachMenu ? 'bg-[#16a34a]/30 text-[#16a34a]' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 hover:text-[#16a34a]'}`}
                           >
                             {uploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Paperclip className="w-6 h-6" />}
                           </button>
                           {showAttachMenu && (
-                            <div className="absolute bottom-14 left-0 w-48 bg-[#1a1a1a] rounded-xl shadow-2xl border border-[#16a34a]/20 py-2 z-50">
+                            <div className="absolute bottom-14 left-0 w-48 bg-white dark:bg-[#1a1a1a] rounded-xl shadow-2xl border border-gray-200 dark:border-[#16a34a]/20 py-2 z-50">
                               <button 
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-full px-4 py-3 text-left hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-200"
+                                className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-700 dark:text-gray-200"
                               >
                                 <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
                                   <ImageIcon className="w-5 h-5 text-white" />
@@ -837,7 +842,7 @@ function MessagesContent() {
                               <button 
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-full px-4 py-3 text-left hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-200"
+                                className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-700 dark:text-gray-200"
                               >
                                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
                                   <Camera className="w-5 h-5 text-white" />
@@ -855,7 +860,7 @@ function MessagesContent() {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Type a message"
-                            className="w-full px-4 py-3 bg-[#1a1a1a] border border-[#16a34a]/30 rounded-full focus:outline-none focus:ring-2 focus:ring-[green-600] text-white text-[15px] placeholder-gray-500"
+                            className="w-full px-4 py-3 bg-gray-100 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#16a34a]/30 rounded-full focus:outline-none focus:ring-2 focus:ring-[#16a34a] text-gray-900 dark:text-white text-[15px] placeholder-gray-500"
                           />
                         </div>
                         
@@ -863,7 +868,7 @@ function MessagesContent() {
                           <button
                             type="submit"
                             disabled={sending}
-                            className="w-12 h-12 bg-gradient-to-br from-[#16a34a] to-[#15803d] text-black rounded-full flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg disabled:opacity-50"
+                            className="w-12 h-12 bg-gradient-to-br from-[#16a34a] to-[#15803d] text-white rounded-full flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg disabled:opacity-50"
                           >
                             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                           </button>
@@ -871,7 +876,7 @@ function MessagesContent() {
                           <button
                             type="button"
                             onClick={startRecording}
-                            className="w-12 h-12 bg-gradient-to-br from-[#16a34a] to-[#15803d] text-black rounded-full flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg"
+                            className="w-12 h-12 bg-gradient-to-br from-[#16a34a] to-[#15803d] text-white rounded-full flex items-center justify-center hover:opacity-90 transition-opacity shadow-lg"
                           >
                             <Mic className="w-5 h-5" />
                           </button>
@@ -882,17 +887,17 @@ function MessagesContent() {
                 </form>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center bg-[#0a0a0a]">
+              <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#0a0a0a]">
                 <div className="text-center max-w-md px-8">
                   <div className="w-[200px] h-[200px] mx-auto mb-8 opacity-80">
                     <svg viewBox="0 0 303 172" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                      <path d="M229.565 160.229C262.212 149.245 286.931 118.241 283.39 73.4194C278.009 5.31929 212.365 -11.5738 171.472 8.48673C115.998 37.0182 41.706 24.5765 22.1979 69.8712C2.68967 115.166 24.4655 135.141 65.0847 160.229" stroke="green-600" strokeWidth="2"/>
-                      <path d="M151.5 122C180.495 122 204 98.495 204 69.5C204 40.505 180.495 17 151.5 17C122.505 17 99 40.505 99 69.5C99 98.495 122.505 122 151.5 122Z" fill="green-600" fillOpacity="0.1"/>
-                      <path d="M151.5 89C162.27 89 171 80.2696 171 69.5C171 58.7304 162.27 50 151.5 50C140.73 50 132 58.7304 132 69.5C132 80.2696 140.73 89 151.5 89Z" fill="green-600"/>
+                      <path d="M229.565 160.229C262.212 149.245 286.931 118.241 283.39 73.4194C278.009 5.31929 212.365 -11.5738 171.472 8.48673C115.998 37.0182 41.706 24.5765 22.1979 69.8712C2.68967 115.166 24.4655 135.141 65.0847 160.229" stroke="#16a34a" strokeWidth="2"/>
+                      <path d="M151.5 122C180.495 122 204 98.495 204 69.5C204 40.505 180.495 17 151.5 17C122.505 17 99 40.505 99 69.5C99 98.495 122.505 122 151.5 122Z" fill="#16a34a" fillOpacity="0.1"/>
+                      <path d="M151.5 89C162.27 89 171 80.2696 171 69.5C171 58.7304 162.27 50 151.5 50C140.73 50 132 58.7304 132 69.5C132 80.2696 140.73 89 151.5 89Z" fill="#16a34a"/>
                     </svg>
                   </div>
                   <h2 className="text-3xl font-light text-[#16a34a] mb-4">Akorfa Messages</h2>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                     Send and receive messages with other Akorfa users. Select a conversation or start a new one from someone's profile.
                   </p>
                 </div>
