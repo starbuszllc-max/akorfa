@@ -197,8 +197,6 @@ export default function FeedPage() {
 
   return (
     <>
-      <AnimatedBackground />
-      
       <PullToRefresh onRefresh={handlePullRefresh}>
         <main ref={mainContentRef} className="w-full lg:max-w-6xl lg:mx-auto px-0 lg:px-4 py-6 safe-area-top">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -231,7 +229,7 @@ export default function FeedPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 dark:border-slate-700"
+                  className="text-center py-12"
                 >
                   <div className="text-5xl mb-4">📝</div>
                   <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">No posts yet</h3>
@@ -386,7 +384,7 @@ export default function FeedPage() {
                 />
               )
             ) : (
-              <div className="w-full aspect-square bg-gradient-to-br from-gray-200 dark:from-slate-600 to-gray-300 dark:to-slate-700 rounded-lg flex items-center justify-center p-6">
+              <div className="w-full aspect-square flex items-center justify-center p-6">
                 <p className="text-gray-600 dark:text-gray-300 text-center font-medium text-lg">
                   {selectedPost.content}
                 </p>
