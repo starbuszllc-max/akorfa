@@ -42,8 +42,9 @@ export function Header() {
       if (assessmentRes.ok) {
         const assessData = await assessmentRes.json();
         if (assessData.assessments && assessData.assessments.length > 0) {
-          const scores = assessData.assessments[0].layerScores || assessData.assessments[0].layer_scores || {};
-          const avg = Object.values(scores).length > 0 ? Math.round(Object.values(scores).reduce((sum: any, v: any) => sum + v, 0) / Object.values(scores).length) : 0;
+          const scores = (assessData.assessments[0].layerScores || assessData.assessments[0].layer_scores || {}) as Record<string, number>;
+          const values = Object.values(scores);
+          const avg = values.length > 0 ? Math.round(values.reduce((sum, v) => sum + v, 0) / values.length) : 0;
           setBalance(avg);
         }
       }
