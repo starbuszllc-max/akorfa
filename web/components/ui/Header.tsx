@@ -82,11 +82,14 @@ export function Header() {
         clearTimeout(scrollPauseTimeout.current);
       }
       
-      // After scroll pause, show full header
+      // After scroll pause, show full header ONLY if near top
       scrollPauseTimeout.current = setTimeout(() => {
         isScrolling.current = false;
         isTouchScrolling = false;
-        setShowFullHeader(true);
+        // Only expand to full header if scrolled back near the top
+        if (window.scrollY < 100) {
+          setShowFullHeader(true);
+        }
       }, 2000); // 2 seconds of no scrolling
     };
     
@@ -100,8 +103,8 @@ export function Header() {
     };
     
     const handleTouchEnd = () => {
-      // Only expand header if this was a tap, not a scroll
-      if (!isTouchScrolling && !isScrolling.current) {
+      // Only expand header if this was a tap (not scroll) AND near the top of page
+      if (!isTouchScrolling && !isScrolling.current && window.scrollY < 100) {
         setShowFullHeader(true);
         if (scrollPauseTimeout.current) {
           clearTimeout(scrollPauseTimeout.current);
