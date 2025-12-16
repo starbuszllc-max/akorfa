@@ -271,25 +271,12 @@ textarea:focus {
 
 /* Post Card Styling */
 .post-card {
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-bottom: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
   transition: all 0.3s ease;
-}
-
-.post-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-.dark .post-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-.amoled .post-card:hover {
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
 }
 
 /* Button & Icon Visibility */
