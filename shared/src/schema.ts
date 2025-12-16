@@ -59,6 +59,9 @@ export const comments = pgTable('comments', {
   parentId: uuid('parent_id'),
   content: text('content').notNull(),
   isHelpful: boolean('is_helpful').default(false),
+  likeCount: integer('like_count').default(0),
+  isTopComment: boolean('is_top_comment').default(false),
+  coinReward: integer('coin_reward').default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
 
@@ -69,6 +72,16 @@ export const reactions = pgTable('reactions', {
   reactionType: text('reaction_type'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
 });
+
+export const commentReactions = pgTable('comment_reactions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  commentId: uuid('comment_id').references(() => comments.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').references(() => profiles.id, { onDelete: 'cascade' }),
+  reactionType: text('reaction_type').default('like'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+}, (table) => ({
+  uniqueCommentReaction: unique().on(table.commentId, table.userId)
+}));
 
 export const userEvents = pgTable('user_events', {
   id: uuid('id').defaultRandom().primaryKey(),
