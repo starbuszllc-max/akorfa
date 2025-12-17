@@ -459,78 +459,80 @@ export default function TikTokCamera({ onClose, onComplete, userId }: TikTokCame
       </AnimatePresence>
 
       <motion.div
-        className="flex-1 relative overflow-hidden"
+        className="flex-1 relative overflow-hidden flex items-center justify-center bg-black"
         onPanEnd={(_, info) => handleFilterSwipe(info)}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.2}
       >
-        {capturedMedia ? (
-          mode === 'photo' ? (
-            <img src={capturedMedia} alt="Captured" className="w-full h-full object-cover" />
+        <div className="w-full max-w-sm aspect-[9/16] relative overflow-hidden bg-black">
+          {capturedMedia ? (
+            mode === 'photo' ? (
+              <img src={capturedMedia} alt="Captured" className="w-full h-full object-cover" />
+            ) : (
+              <video src={capturedMedia} className="w-full h-full object-cover" controls />
+            )
           ) : (
-            <video src={capturedMedia} className="w-full h-full object-cover" controls />
-          )
-        ) : (
-          <motion.video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-full object-contain bg-black"
-            animate={{ 
-              rotateY: isFlipping ? 90 : 0,
-              scale: isFlipping ? 0.9 : 1
-            }}
-            transition={{ duration: 0.15 }}
-            style={{
-              filter: currentFilter.style !== 'none' ? currentFilter.style : undefined,
-              ...getBeautyStyle()
-            }}
-          />
-        )}
-        <canvas ref={canvasRef} className="hidden" />
+            <motion.video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="w-full h-full object-cover bg-black"
+              animate={{ 
+                rotateY: isFlipping ? 90 : 0,
+                scale: isFlipping ? 0.9 : 1
+              }}
+              transition={{ duration: 0.15 }}
+              style={{
+                filter: currentFilter.style !== 'none' ? currentFilter.style : undefined,
+                ...getBeautyStyle()
+              }}
+            />
+          )}
+          <canvas ref={canvasRef} className="hidden" />
 
-        <AnimatePresence>
-          {countdown > 0 && (
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.5, opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center bg-black/40"
-            >
-              <motion.span
-                key={countdown}
+          <AnimatePresence>
+            {countdown > 0 && (
+              <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 2, opacity: 0 }}
-                className="text-white text-9xl font-bold"
+                exit={{ scale: 1.5, opacity: 0 }}
+                className="absolute inset-0 flex items-center justify-center bg-black/40"
               >
-                {countdown}
-              </motion.span>
-            </motion.div>
+                <motion.span
+                  key={countdown}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 2, opacity: 0 }}
+                  className="text-white text-9xl font-bold"
+                >
+                  {countdown}
+                </motion.span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {!capturedMedia && (
+            <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-1">
+              {FILTERS.map((filter, index) => (
+                <button
+                  key={filter.id}
+                  onClick={() => setSelectedFilter(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    selectedFilter === index ? 'w-4 bg-white' : 'bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
           )}
-        </AnimatePresence>
 
-        {!capturedMedia && (
-          <div className="absolute bottom-4 left-4 right-4 flex justify-center gap-1">
-            {FILTERS.map((filter, index) => (
-              <button
-                key={filter.id}
-                onClick={() => setSelectedFilter(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  selectedFilter === index ? 'w-4 bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        {!capturedMedia && selectedFilter > 0 && (
-          <div className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5">
-            <span className="text-white text-sm font-medium">{currentFilter.name}</span>
-          </div>
-        )}
+          {!capturedMedia && selectedFilter > 0 && (
+            <div className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5">
+              <span className="text-white text-sm font-medium">{currentFilter.name}</span>
+            </div>
+          )}
+        </div>
       </motion.div>
 
       {mode === 'video' && (
