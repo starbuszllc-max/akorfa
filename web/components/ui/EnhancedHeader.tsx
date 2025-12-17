@@ -136,7 +136,7 @@ export default function EnhancedHeader() {
     : null;
 
   return (
-    <div className="fixed right-0 z-50" style={{ top: 'max(12px, env(safe-area-inset-top, 12px))', paddingRight: '5px' }}>
+    <div className="fixed right-0 z-50" style={{ top: '100px', paddingRight: '5px' }}>
       <AnimatePresence mode="wait">
         {isExpanded ? (
           <motion.div
