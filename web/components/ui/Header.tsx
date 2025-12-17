@@ -58,71 +58,46 @@ export function Header() {
   };
 
   useEffect(() => {
-    let isTouchScrolling = false;
-    let touchStartY = 0;
+    let lastScrollY = 0;
+    let scrollDirection: 'up' | 'down' | null = null;
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
       
-      // When scrolling past threshold, hide full header (show compact)
-      if (currentScrollY > 100) {
-        setShowFullHeader(false);
-      } else {
-        // Back at top, show full header
-        setShowFullHeader(true);
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY) {
+        scrollDirection = 'down';
+      } else if (currentScrollY < lastScrollY) {
+        scrollDirection = 'up';
       }
       
-      // Mark that we're scrolling
-      isScrolling.current = true;
-      isTouchScrolling = true;
+      lastScrollY = currentScrollY;
+      setScrollY(currentScrollY);
+      
+      // Always show full header when at top or scrolling up
+      if (currentScrollY < 50 || scrollDirection === 'up') {
+        setShowFullHeader(true);
+      } else if (scrollDirection === 'down' && currentScrollY > 200) {
+        // Only collapse when scrolling DOWN and past 200px threshold
+        setShowFullHeader(false);
+      }
       
       // Clear previous pause timeout
       if (scrollPauseTimeout.current) {
         clearTimeout(scrollPauseTimeout.current);
       }
       
-      // After scroll pause, show full header ONLY if near top
+      // After 1.5s of no scrolling, expand header back
       scrollPauseTimeout.current = setTimeout(() => {
-        isScrolling.current = false;
-        isTouchScrolling = false;
-        // Only expand to full header if scrolled back near the top
-        if (window.scrollY < 100) {
-          setShowFullHeader(true);
-        }
-      }, 2000); // 2 seconds of no scrolling
-    };
-    
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      isTouchScrolling = false;
-    };
-    
-    const handleTouchMove = () => {
-      isTouchScrolling = true;
-    };
-    
-    const handleTouchEnd = () => {
-      // Only expand header if this was a tap (not scroll) AND near the top of page
-      if (!isTouchScrolling && !isScrolling.current && window.scrollY < 100) {
         setShowFullHeader(true);
-        if (scrollPauseTimeout.current) {
-          clearTimeout(scrollPauseTimeout.current);
-        }
-      }
-      isTouchScrolling = false;
+        scrollDirection = null;
+      }, 1500);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
       if (scrollPauseTimeout.current) {
         clearTimeout(scrollPauseTimeout.current);
       }
