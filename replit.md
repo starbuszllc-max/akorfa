@@ -49,6 +49,16 @@ The platform follows modern, minimalist design principles:
 - Attachment menu includes both "Photos & Videos" (file picker) and "Camera" (live capture)
 - CameraCapture handles upload internally before sending media URLs
 
+**TikTok-Style Camera (Dec 2024):**
+- Full-screen portrait camera feed with 9:16 aspect ratio
+- Camera constraints: 1080x1920 ideal resolution, 30fps ideal with 60fps max
+- Modern glassmorphism UI with backdrop blur on controls
+- Smooth Framer Motion animations with tap feedback
+- Minimal interface: flip camera, beauty filter, text overlay, music controls
+- Timer panel for delayed capture (off, 3s, 10s)
+- Flash toggle with torch support on compatible devices
+- Filter swipe with visual indicators and filter name display
+
 ### Messenger Stories/Status (Dec 2024)
 The messages page includes WhatsApp-style Status/Stories functionality:
 - **Status Section**: Shows at the top of the chat list with story rings for users who have posted stories
