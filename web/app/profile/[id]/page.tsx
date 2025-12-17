@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User, Flame, Zap, Trophy, ArrowLeft, UserPlus, UserMinus, MessageCircle, Users, Grid3X3, Heart, X } from 'lucide-react';
 import { BadgesList, LevelDisplay } from '../../../components/badges';
 import { ActivityHeatmap } from '../../../components/heatmap';
+import FollowersList from '../../../components/profile/FollowersList';
 
 interface ProfileData {
   id: string;
@@ -47,6 +48,8 @@ export default function UserProfilePage() {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [currentUserId] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('demo_user_id') : null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showFollowersList, setShowFollowersList] = useState(false);
+  const [showFollowingList, setShowFollowingList] = useState(false);
   const isOwnProfile = currentUserId === profileId;
 
   const layerColors: Record<string, string> = {
@@ -301,25 +304,49 @@ export default function UserProfilePage() {
               </div>
               <div className="text-[10px] text-orange-600 dark:text-orange-400 font-medium mt-0.5 text-center">Streak</div>
             </div>
-            <div className="p-1.5 bg-transparent">
+            <button
+              onClick={() => setShowFollowersList(true)}
+              className="p-1.5 bg-transparent hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer"
+            >
               <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-blue-700 dark:text-blue-300">
                 <Users className="w-3 h-3" />
                 {followerCount}
               </div>
               <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5 text-center">Followers</div>
-            </div>
-            <div className="p-1.5 bg-transparent">
+            </button>
+            <button
+              onClick={() => setShowFollowingList(true)}
+              className="p-1.5 bg-transparent hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors cursor-pointer"
+            >
               <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-purple-700 dark:text-purple-300">
                 <Users className="w-3 h-3" />
                 {followingCount}
               </div>
               <div className="text-[10px] text-purple-600 dark:text-purple-400 font-medium mt-0.5 text-center">Following</div>
-            </div>
+            </button>
           </div>
 
           {isOwnProfile && <LevelDisplay score={Number(profile.akorfaScore || 0)} />}
         </div>
       </div>
+
+      <FollowersList
+        userId={profileId}
+        type="followers"
+        isOpen={showFollowersList}
+        onClose={() => setShowFollowersList(false)}
+        currentUserId={currentUserId}
+        isPublicProfile={!isOwnProfile}
+      />
+
+      <FollowersList
+        userId={profileId}
+        type="following"
+        isOpen={showFollowingList}
+        onClose={() => setShowFollowingList(false)}
+        currentUserId={currentUserId}
+        isPublicProfile={false}
+      />
 
       <div className="w-full px-6 mt-4">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Activity</h2>

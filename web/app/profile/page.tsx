@@ -7,6 +7,7 @@ import { User, Flame, Zap, Trophy, Settings, ChevronRight, Camera, Grid3X3, Star
 import { BadgesList, LevelDisplay } from '../../components/badges';
 import { ActivityHeatmap } from '../../components/heatmap';
 import ProfilePictureUpload from '@/components/media/ProfilePictureUpload';
+import FollowersList from '@/components/profile/FollowersList';
 
 type ContentTab = 'posts' | 'highlights' | 'insights';
 
@@ -33,6 +34,8 @@ export default function ProfilePage() {
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showFollowersList, setShowFollowersList] = useState(false);
+  const [showFollowingList, setShowFollowingList] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const contentTabs = [
@@ -311,20 +314,26 @@ export default function ProfilePage() {
               </div>
               <div className="text-[10px] text-orange-600 dark:text-orange-400 font-medium mt-0.5 text-center">Streak</div>
             </div>
-            <div className="p-1.5 bg-transparent">
+            <button
+              onClick={() => setShowFollowersList(true)}
+              className="p-1.5 bg-transparent hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer"
+            >
               <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-blue-700 dark:text-blue-300">
                 <Users className="w-3 h-3" />
                 {followerCount}
               </div>
               <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5 text-center">Followers</div>
-            </div>
-            <div className="p-1.5 bg-transparent">
+            </button>
+            <button
+              onClick={() => setShowFollowingList(true)}
+              className="p-1.5 bg-transparent hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors cursor-pointer"
+            >
               <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-purple-700 dark:text-purple-300">
                 <Users className="w-3 h-3" />
                 {followingCount}
               </div>
               <div className="text-[10px] text-purple-600 dark:text-purple-400 font-medium mt-0.5 text-center">Following</div>
-            </div>
+            </button>
             <div className="p-1.5 bg-transparent">
               <div className="flex items-center justify-center gap-0.5 text-sm font-bold text-emerald-700 dark:text-emerald-300">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -339,6 +348,24 @@ export default function ProfilePage() {
           <LevelDisplay score={Number(profile.akorfaScore || 0)} />
         </div>
       </div>
+
+      <FollowersList
+        userId={userId!}
+        type="followers"
+        isOpen={showFollowersList}
+        onClose={() => setShowFollowersList(false)}
+        currentUserId={userId}
+        isPublicProfile={false}
+      />
+
+      <FollowersList
+        userId={userId!}
+        type="following"
+        isOpen={showFollowingList}
+        onClose={() => setShowFollowingList(false)}
+        currentUserId={userId}
+        isPublicProfile={false}
+      />
 
       <div className="w-full overflow-hidden">
         <div className="flex bg-transparent">
