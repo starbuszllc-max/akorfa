@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Zap, TrendingUp } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import { HeaderContext } from '@/lib/HeaderContext';
 
 export function Header() {
   const [user, setUser] = useState<any>(null);
@@ -19,9 +20,20 @@ export function Header() {
   const scrollPauseTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const isScrolling = React.useRef(false);
   const pathname = usePathname();
+  const headerContextValue = useContext(HeaderContext);
 
   // Show full header when expanded, collapsed (compact) when scrolling down
   const isCollapsed = scrollY > 100 && !showFullHeader;
+
+  // Update header context whenever state changes
+  useEffect(() => {
+    if (headerContextValue) {
+      const event = new CustomEvent('headerStateChanged', {
+        detail: { isCollapsed, height: isCollapsed ? 48 : 84 }
+      });
+      window.dispatchEvent(event);
+    }
+  }, [isCollapsed]);
 
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');
