@@ -222,7 +222,7 @@ export function Header() {
           </Link>
         )}
 
-        <div className={`flex items-center gap-2 transition-opacity duration-300 absolute bottom-0.5 left-1/2 -translate-x-1/2 ${isCollapsed ? 'flex' : 'hidden'}`}>
+        <div className={`flex items-center gap-2 transition-opacity duration-300 absolute bottom-0 left-1/2 -translate-x-1/2 ${isCollapsed ? 'flex' : 'hidden'}`}>
           <div className="flex items-center gap-1 px-1.5 py-1 bg-green-50 dark:bg-green-900/30 rounded-md whitespace-nowrap">
             <Zap className="w-2.5 h-2.5 text-green-600 dark:text-green-400 flex-shrink-0" />
             <span className="text-[10px] font-bold text-green-700 dark:text-green-300">{Math.round(score)}</span>
