@@ -20,10 +20,11 @@ export function Header() {
   const isScrolling = React.useRef(false);
   const pathname = usePathname();
 
-  // Show compact header on all pages EXCEPT homepage (where it can collapse/expand with scroll)
-  // On non-homepage pages, always show compact header (never expand to full header)
+  // Show compact header on all pages EXCEPT homepage
+  // Non-homepage: always show compact (never expand)
+  // Homepage: compact header can show/hide based on scroll
   const isHomepage = pathname === '/';
-  const isCollapsed = !isHomepage || (isHomepage && scrollY > 100 && !showFullHeader);
+  const isCollapsed = !isHomepage ? true : (scrollY > 100 && !showFullHeader);
 
   useEffect(() => {
     const demoUserId = localStorage.getItem('demo_user_id');

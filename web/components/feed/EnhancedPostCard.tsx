@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MoreVertical, Trash2, Bell } from 'lucide-react';
+import { MoreVertical, Trash2, Bell, Edit2, Sparkles, X } from 'lucide-react';
 import LayeredLikeIcon from '@/components/ui/icons/LayeredLikeIcon';
 import ProfilePreviewPopup from './ProfilePreviewPopup';
 
@@ -147,6 +147,10 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [showProfilePreview, setShowProfilePreview] = useState(false);
   const [showPostMenu, setShowPostMenu] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editContent, setEditContent] = useState(post.content);
+  const [editingPost, setEditingPost] = useState(false);
+  const [showAddStory, setShowAddStory] = useState(false);
 
   useEffect(() => {
     setFailedMediaIndices(new Set());
@@ -319,6 +323,73 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
     setShareToastMessage(notificationsEnabled ? 'Notifications disabled' : 'Priority notifications enabled');
     setShowShareToast(true);
     setTimeout(() => setShowShareToast(false), 2500);
+  }
+
+  async function handleEditPost() {
+    if (!editContent.trim()) {
+      setShareToastMessage('Post content cannot be empty');
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+      return;
+    }
+    setEditingPost(true);
+    try {
+      const res = await fetch(`/api/posts/${post.id}?user_id=${currentUserId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUserId, content: editContent })
+      });
+      if (res.ok) {
+        setShowEditModal(false);
+        setShowPostMenu(false);
+        setShareToastMessage('Post updated');
+        setShowShareToast(true);
+        setTimeout(() => setShowShareToast(false), 2500);
+        window.location.reload();
+      } else {
+        const error = await res.json();
+        setShareToastMessage(error.error || 'Failed to update post');
+        setShowShareToast(true);
+        setTimeout(() => setShowShareToast(false), 2500);
+      }
+    } catch (err) {
+      console.error('Error updating post:', err);
+      setShareToastMessage('Error updating post');
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+    } finally {
+      setEditingPost(false);
+    }
+  }
+
+  async function handleAddToStory() {
+    if (!currentUserId) {
+      setShareToastMessage('Must be logged in to add stories');
+      setShowShareToast(true);
+      setTimeout(() => setShowShareToast(false), 2500);
+      return;
+    }
+    try {
+      const res = await fetch('/api/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUserId,
+          content: post.content,
+          layer: post.layer,
+          expiresIn: 86400000
+        })
+      });
+      if (res.ok) {
+        setShowAddStory(false);
+        setShowPostMenu(false);
+        setShareToastMessage('Added to your temporary story!');
+        setShowShareToast(true);
+        setTimeout(() => setShowShareToast(false), 2500);
+      }
+    } catch (err) {
+      console.error('Error adding to story:', err);
+    }
   }
 
   async function handleShareOption(option: 'feed' | 'story' | 'community' | 'external' | 'copy') {
@@ -611,9 +682,30 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
                     <Bell className="w-4 h-4" />
                     {notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
                   </button>
+                  <button
+                    onClick={() => {
+                      setShowAddStory(true);
+                      setShowPostMenu(false);
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Add to story
+                  </button>
                   {currentUserId === post.user_id && (
                     <>
                       <div className="border-t border-gray-200 dark:border-slate-700 my-1" />
+                      <button
+                        onClick={() => {
+                          setShowEditModal(true);
+                          setEditContent(post.content);
+                          setShowPostMenu(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Edit post
+                      </button>
                       <button
                         onClick={() => {
                           handleDeletePost();
@@ -786,6 +878,96 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
           <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">Sign in to interact</span>
         )}
       </div>
+
+      <AnimatePresence>
+        {showEditModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowEditModal(false)}
+              className="fixed inset-0 bg-black/50 z-40"
+            />
+            <motion.div
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl p-6 pb-8 max-h-[85vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Edit post</h3>
+                <button
+                  onClick={() => setShowEditModal(false)}
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                maxLength={500}
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-2xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:text-white transition-all resize-none"
+                rows={6}
+                placeholder="Edit your post..."
+              />
+              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                {editContent.length}/500
+              </div>
+              <button
+                onClick={handleEditPost}
+                disabled={editingPost}
+                className="w-full mt-6 py-3 bg-blue-500 text-white rounded-2xl font-semibold hover:bg-blue-600 disabled:opacity-50 transition-colors"
+              >
+                {editingPost ? 'Saving...' : 'Save changes'}
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAddStory && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAddStory(false)}
+              className="fixed inset-0 bg-black/50 z-40"
+            />
+            <motion.div
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl p-6 pb-8"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Add to story</h3>
+                <button
+                  onClick={() => setShowAddStory(false)}
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">This will expire in 24 hours</p>
+              <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-xl mb-6 max-h-32 overflow-y-auto">
+                <p className="text-sm text-gray-800 dark:text-gray-200">{post.content}</p>
+              </div>
+              <button
+                onClick={handleAddToStory}
+                className="w-full py-3 bg-purple-500 text-white rounded-2xl font-semibold hover:bg-purple-600 transition-colors"
+              >
+                Add to story
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showComments && (
