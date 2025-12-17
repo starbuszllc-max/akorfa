@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getOpenAI, hasOpenAIKey } from '../../../../lib/openai';
+import { getAIClient, hasOpenAIKey } from '../../../../lib/openai';
 import { db } from '../../../../lib/db';
 import { profiles, assessments, dailyInsights } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
@@ -36,8 +36,8 @@ export async function POST(req: Request) {
 
     let insight;
     
-    if (hasOpenAIKey()) {
-      const openai = getOpenAI();
+    const aiClient = getAIClient();
+    if (aiClient) {
       const systemPrompt = `You are an insightful wellness coach. Generate a personalized daily insight for someone on their self-discovery journey.
 
 User Context:
@@ -60,8 +60,8 @@ Generate a JSON response:
 
 Make it personal, warm, and motivating. Reference their goals if possible. The deepExplanation should feel like a wise friend explaining complex concepts in simple terms that anyone can understand.`;
 
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+      const response = await aiClient.chat.completions.create({
+        model: hasOpenAIKey() ? 'gpt-4o-mini' : 'grok-beta',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Generate my personalized daily insight.' }

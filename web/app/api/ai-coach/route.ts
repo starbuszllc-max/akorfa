@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getOpenAI, hasOpenAIKey } from '../../../lib/openai';
+import { getAIClient, hasOpenAIKey, hasGrokKey } from '../../../lib/openai';
 import { db } from '@/lib/db';
 import { profiles, assessments, posts, challengeParticipants, userBadges } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
@@ -53,9 +53,10 @@ export async function POST(req: Request) {
 
     const context = await getUserContext(user_id);
 
-    if (!hasOpenAIKey()) {
+    const aiClient = getAIClient();
+    if (!aiClient) {
       return NextResponse.json({ 
-        message: `Hello! I'm your AI coach. I can see you're on your personal growth journey. Your Akorfa score is currently ${context.profile?.akorfaScore || 0}. To get personalized insights, make sure the OpenAI integration is configured. In the meantime, I'd suggest focusing on your lowest-scoring layer for the biggest impact!`,
+        message: `Hello! I'm your AI coach. I can see you're on your personal growth journey. Your Akorfa score is currently ${context.profile?.akorfaScore || 0}. To get personalized insights, please configure either OpenAI or Grok in your environment variables. In the meantime, I'd suggest focusing on your lowest-scoring layer for the biggest impact!`,
         context: {
           score: context.profile?.akorfaScore,
           layerScores: context.profile?.layerScores,
@@ -63,8 +64,6 @@ export async function POST(req: Request) {
         }
       });
     }
-
-    const openai = getOpenAI();
 
     const systemPrompt = `You are an empathetic and insightful AI Personal Growth Coach for the Akorfa platform. Akorfa focuses on human development through the Seven Layers framework:
 
@@ -103,8 +102,8 @@ Your role:
       { role: 'user', content: message }
     ];
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+    const response = await aiClient.chat.completions.create({
+      model: hasOpenAIKey() ? 'gpt-4o-mini' : 'grok-beta',
       messages,
       max_tokens: 1024
     });

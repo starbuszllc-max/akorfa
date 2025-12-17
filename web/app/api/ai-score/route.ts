@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { postScores, posts, wallets, pointsLog } from '@akorfa/shared';
 import { eq, sql } from 'drizzle-orm';
-import { getOpenAI, hasOpenAIKey } from '@/lib/openai';
-
-function getOpenAIClient() {
-  return getOpenAI();
-}
+import { getAIClient, hasOpenAIKey } from '@/lib/openai';
 
 export async function GET(req: NextRequest) {
   try {
