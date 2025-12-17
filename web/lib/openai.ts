@@ -1,7 +1,8 @@
 import OpenAI from 'openai';
+import Groq from 'groq-sdk';
 
 let openaiInstance: OpenAI | null = null;
-let grokInstance: OpenAI | null = null;
+let groqInstance: Groq | null = null;
 
 export function getOpenAI(): OpenAI {
   if (!openaiInstance) {
@@ -13,35 +14,32 @@ export function getOpenAI(): OpenAI {
   return openaiInstance;
 }
 
-export function getGrok(): OpenAI {
-  if (!grokInstance) {
-    if (!process.env.GROK_API_KEY) {
-      throw new Error('GROK_API_KEY environment variable is required');
+export function getGroq(): Groq {
+  if (!groqInstance) {
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error('GROQ_API_KEY environment variable is required');
     }
-    grokInstance = new OpenAI({
-      apiKey: process.env.GROK_API_KEY,
-      baseURL: 'https://api.x.ai/v1'
-    });
+    groqInstance = new Groq({ apiKey: process.env.GROQ_API_KEY });
   }
-  return grokInstance;
+  return groqInstance;
 }
 
 export function hasOpenAIKey(): boolean {
   return !!process.env.OPENAI_API_KEY;
 }
 
-export function hasGrokKey(): boolean {
-  return !!process.env.GROK_API_KEY;
+export function hasGroqKey(): boolean {
+  return !!process.env.GROQ_API_KEY;
 }
 
-export function getAvailableAIProvider(): 'openai' | 'grok' | null {
+export function getAvailableAIProvider(): 'openai' | 'groq' | null {
   if (hasOpenAIKey()) return 'openai';
-  if (hasGrokKey()) return 'grok';
+  if (hasGroqKey()) return 'groq';
   return null;
 }
 
-export function getAIClient(): OpenAI | null {
+export function getAIClient(): OpenAI | Groq | null {
   if (hasOpenAIKey()) return getOpenAI();
-  if (hasGrokKey()) return getGrok();
+  if (hasGroqKey()) return getGroq();
   return null;
 }

@@ -61,7 +61,7 @@ Generate a JSON response:
 Make it personal, warm, and motivating. Reference their goals if possible. The deepExplanation should feel like a wise friend explaining complex concepts in simple terms that anyone can understand.`;
 
       const response = await aiClient.chat.completions.create({
-        model: hasOpenAIKey() ? 'gpt-4o-mini' : 'grok-beta',
+        model: hasOpenAIKey() ? 'gpt-4o-mini' : 'mixtral-8x7b-32768',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Generate my personalized daily insight.' }

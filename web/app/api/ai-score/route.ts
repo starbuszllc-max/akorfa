@@ -47,14 +47,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ score: existingScore, cached: true });
     }
 
-    if (!hasOpenAIKey()) {
+    const aiClient = getAIClient();
+    if (!aiClient) {
       return NextResponse.json({ 
         score: { 
           postId, 
           qualityScore: 50, 
           layerImpact: {}, 
           isHelpful: false, 
-          aiAnalysis: 'OpenAI integration not configured', 
+          aiAnalysis: 'No AI provider configured', 
           bonusPoints: 0 
         }, 
         analyzed: false 
@@ -83,11 +84,10 @@ Example response:
 
 Return ONLY valid JSON.`;
 
-    const openai = getOpenAIClient();
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+    const response = await aiClient.chat.completions.create({
+      model: hasOpenAIKey() ? 'gpt-4o-mini' : 'mixtral-8x7b-32768',
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' }
+      ...(hasOpenAIKey() && { response_format: { type: 'json_object' } })
     });
 
     const result = JSON.parse(response.choices[0].message.content || '{}');
