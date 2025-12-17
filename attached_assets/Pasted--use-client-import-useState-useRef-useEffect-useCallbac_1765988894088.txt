@@ -1,0 +1,848 @@
+'use client';
+
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  X, Camera, Video, RotateCcw, Check, Sparkles, Image as ImageIcon,
+  Type, Music, Sticker, Wand2, Zap, ZapOff, Timer, Play, Pause,
+  Volume2, VolumeX, Scissors, Undo2, Redo2, Search, Upload, 
+  Bold, Italic, AlignLeft, AlignCenter, AlignRight, Palette,
+  Circle, Sun, Moon, RefreshCw
+} from 'lucide-react';
+
+// ==================== FREE AI MODELS ====================
+// No install needed - loaded dynamically from CDN
+const loadTensorFlow = () => {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js';
+  document.head.appendChild(script);
+  return new Promise((resolve) => script.onload = resolve);
+};
+
+const loadFaceMesh = () => {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@latest/dist/face-landmarks-detection.js';
+  document.head.appendChild(script);
+  return new Promise((resolve) => script.onload = resolve);
+};
+
+// ==================== ALL-IN-ONE CAMERA ====================
+export default function AllInOneCamera({ onClose, onCapture, userId }: any) {
+  // ===== CORE STATES =====
+  const [mode, setMode] = useState<'photo' | 'video'>('photo');
+  const [capturedMedia, setCapturedMedia] = useState<string | null>(null);
+  const [capturedBlob, setCapturedBlob] = useState<Blob | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
+  const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  
+  // ===== AI FEATURES =====
+  const [activeAIFeatures, setActiveAIFeatures] = useState({
+    faceFilters: false,
+    backgroundRemoval: false,
+    styleTransfer: false,
+    autoCaptions: false,
+    beatDetection: false
+  });
+  const [selectedFaceFilter, setSelectedFaceFilter] = useState<string>('');
+  const [selectedBackground, setSelectedBackground] = useState<string>('');
+  const [currentStyle, setCurrentStyle] = useState<string>('normal');
+  
+  // ===== ENHANCEMENTS =====
+  const [flashEnabled, setFlashEnabled] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [countdown, setCountdown] = useState(0);
+  const [beautyLevel, setBeautyLevel] = useState(0);
+  const [selectedFilter, setSelectedFilter] = useState('none');
+  const [speed, setSpeed] = useState(1);
+  
+  // ===== EDITING =====
+  const [showEditor, setShowEditor] = useState(false);
+  const [textOverlays, setTextOverlays] = useState<any[]>([]);
+  const [stickers, setStickers] = useState<any[]>([]);
+  const [selectedMusic, setSelectedMusic] = useState<any>(null);
+  const [showTextEditor, setShowTextEditor] = useState(false);
+  const [showStickerPicker, setShowStickerPicker] = useState(false);
+  const [showMusicPicker, setShowMusicPicker] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  
+  // ===== VIDEO SEGMENTS =====
+  const [segments, setSegments] = useState<any[]>([]);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const maxDuration = 60;
+  
+  // ===== REfs =====
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const processingCanvasRef = useRef<HTMLCanvasElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const isClosingRef = useRef(false);
+  const animationFrameRef = useRef<number>();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  
+  // ===== FILTERS & EFFECTS =====
+  const FILTERS = [
+    { id: 'none', name: 'Normal', style: 'none', thumbnail: 'bg-gray-600' },
+    { id: 'vivid', name: 'Vivid', style: 'saturate(1.4) contrast(1.1)', thumbnail: 'bg-pink-500' },
+    { id: 'warm', name: 'Warm', style: 'sepia(0.3) saturate(1.2) brightness(1.05)', thumbnail: 'bg-orange-500' },
+    { id: 'cool', name: 'Cool', style: 'hue-rotate(-15deg) saturate(1.1) brightness(1.05)', thumbnail: 'bg-blue-500' },
+    { id: 'vintage', name: 'Vintage', style: 'sepia(0.5) contrast(1.1) brightness(0.95)', thumbnail: 'bg-green-700' },
+    { id: 'noir', name: 'B&W', style: 'grayscale(1) contrast(1.2)', thumbnail: 'bg-gray-800' },
+  ];
+  
+  const FACE_FILTERS = [
+    { id: 'dog', emoji: '🐶', name: 'Dog Ears' },
+    { id: 'cat', emoji: '😺', name: 'Cat Ears' },
+    { id: 'glasses', emoji: '👓', name: 'Glasses' },
+    { id: 'crown', emoji: '👑', name: 'Crown' },
+    { id: 'heart', emoji: '💖', name: 'Heart Eyes' },
+    { id: 'sparkle', emoji: '✨', name: 'Sparkle' },
+  ];
+  
+  const BACKGROUNDS = [
+    { id: 'beach', emoji: '🏖️', name: 'Beach' },
+    { id: 'space', emoji: '🚀', name: 'Space' },
+    { id: 'city', emoji: '🏙️', name: 'City' },
+    { id: 'blur', emoji: '🌀', name: 'Blur' },
+    { id: 'gradient', emoji: '🌈', name: 'Gradient' },
+  ];
+  
+  const STYLES = [
+    { id: 'normal', name: 'Normal' },
+    { id: 'anime', name: 'Anime' },
+    { id: 'oil', name: 'Oil Painting' },
+    { id: 'sketch', name: 'Sketch' },
+    { id: 'pixel', name: 'Pixel Art' },
+  ];
+  
+  // ===== LAYERS (from your original) =====
+  const LAYERS = [
+    { id: 'environment', label: 'Environment', emoji: '🌍', color: 'from-emerald-500 to-green-600' },
+    { id: 'bio', label: 'Biological', emoji: '🧬', color: 'from-rose-500 to-pink-600' },
+    { id: 'internal', label: 'Internal', emoji: '🧠', color: 'from-purple-500 to-violet-600' },
+    { id: 'cultural', label: 'Cultural', emoji: '🎭', color: 'from-green-500 to-orange-600' },
+    { id: 'social', label: 'Social', emoji: '👥', color: 'from-blue-500 to-cyan-600' },
+    { id: 'conscious', label: 'Conscious', emoji: '💭', color: 'from-green-500 to-blue-600' },
+    { id: 'existential', label: 'Existential', emoji: '✨', color: 'from-violet-500 to-purple-600' },
+  ];
+  const [selectedLayer, setSelectedLayer] = useState('social');
+  const [showLayerPicker, setShowLayerPicker] = useState(false);
+  const [showDestination, setShowDestination] = useState(false);
+  
+  // ===== CAMERA FUNCTIONS =====
+  const stopAllTracks = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) videoRef.current.srcObject = null;
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+  }, []);
+  
+  const startCamera = useCallback(async () => {
+    if (isClosingRef.current) return;
+    
+    try {
+      stopAllTracks();
+      
+      const constraints = {
+        video: { 
+          facingMode,
+          width: { ideal: 1080, min: 480 },
+          height: { ideal: 1920, min: 640 },
+          aspectRatio: { ideal: 9/16 }
+        },
+        audio: mode === 'video'
+      };
+      
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      
+      if (isClosingRef.current) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      
+      streamRef.current = mediaStream;
+      if (videoRef.current) videoRef.current.srcObject = mediaStream;
+      setError(null);
+      
+      // Start AI processing if enabled
+      if (activeAIFeatures.faceFilters || activeAIFeatures.backgroundRemoval) {
+        startAIProcessing();
+      }
+    } catch (err) {
+      console.error('Camera error:', err);
+      setError('Unable to access camera. Please check permissions.');
+    }
+  }, [facingMode, mode, activeAIFeatures]);
+  
+  // ===== AI PROCESSING (100% FREE in browser) =====
+  const startAIProcessing = () => {
+    if (!videoRef.current || !processingCanvasRef.current) return;
+    
+    const processFrame = async () => {
+      if (!videoRef.current || !processingCanvasRef.current || capturedMedia) {
+        return;
+      }
+      
+      const canvas = processingCanvasRef.current;
+      const video = videoRef.current;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) return;
+      
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      
+      // Draw video frame
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Apply CSS filter
+      const filter = FILTERS.find(f => f.id === selectedFilter);
+      if (filter && filter.style !== 'none') {
+        ctx.filter = filter.style;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.filter = 'none';
+      }
+      
+      // Apply beauty filter
+      if (beautyLevel > 0) {
+        ctx.filter = `blur(${beautyLevel * 0.3}px) brightness(${1 + beautyLevel * 0.03})`;
+        ctx.drawImage(canvas, 0, 0);
+        ctx.filter = 'none';
+      }
+      
+      // Apply background removal (simulated)
+      if (activeAIFeatures.backgroundRemoval && selectedBackground) {
+        ctx.globalCompositeOperation = 'destination-over';
+        // Simulated background
+        if (selectedBackground === 'blur') {
+          ctx.filter = 'blur(10px)';
+          ctx.drawImage(canvas, 0, 0);
+          ctx.filter = 'none';
+        } else {
+          const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+          gradient.addColorStop(0, '#667eea');
+          gradient.addColorStop(1, '#764ba2');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      
+      // Draw face filters (simulated)
+      if (activeAIFeatures.faceFilters && selectedFaceFilter) {
+        // Simulated face detection area
+        const faceX = canvas.width / 2;
+        const faceY = canvas.height / 3;
+        
+        ctx.font = 'bold 48px Arial';
+        ctx.textAlign = 'center';
+        
+        if (selectedFaceFilter === 'dog') {
+          ctx.fillText('🐶', faceX - 50, faceY - 80);
+          ctx.fillText('🐶', faceX + 50, faceY - 80);
+        } else if (selectedFaceFilter === 'cat') {
+          ctx.fillText('😺', faceX - 50, faceY - 80);
+          ctx.fillText('😺', faceX + 50, faceY - 80);
+        } else if (selectedFaceFilter === 'glasses') {
+          ctx.fillText('👓', faceX, faceY);
+        } else if (selectedFaceFilter === 'crown') {
+          ctx.fillText('👑', faceX, faceY - 100);
+        }
+      }
+      
+      // Update video with processed frame
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+        videoRef.current.src = canvas.toDataURL('image/jpeg');
+      }
+      
+      animationFrameRef.current = requestAnimationFrame(processFrame);
+    };
+    
+    processFrame();
+  };
+  
+  // ===== CAPTURE FUNCTIONS =====
+  const takePhoto = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.drawImage(video, 0, 0);
+    
+    // Apply effects to captured photo
+    if (selectedFilter !== 'none') {
+      const filter = FILTERS.find(f => f.id === selectedFilter);
+      if (filter && filter.style !== 'none') {
+        ctx.filter = filter.style;
+        ctx.drawImage(video, 0, 0);
+        ctx.filter = 'none';
+      }
+    }
+    
+    canvas.toBlob((blob) => {
+      if (blob) {
+        setCapturedBlob(blob);
+        setCapturedMedia(URL.createObjectURL(blob));
+        setShowLayerPicker(true);
+      }
+    }, 'image/jpeg', 0.9);
+  };
+  
+  const startRecording = () => {
+    if (!streamRef.current) return;
+    
+    chunksRef.current = [];
+    const options = { mimeType: 'video/webm;codecs=vp9,opus' };
+    
+    try {
+      const mediaRecorder = new MediaRecorder(streamRef.current, options);
+      
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'video/webm' });
+        setCapturedBlob(blob);
+        setCapturedMedia(URL.createObjectURL(blob));
+        setShowLayerPicker(true);
+      };
+      
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setIsRecording(true);
+      
+      // Recording timer
+      const startTime = Date.now();
+      const timer = setInterval(() => {
+        setRecordingTime(prev => {
+          const newTime = prev + 0.1;
+          if (newTime >= maxDuration) {
+            clearInterval(timer);
+            stopRecording();
+            return maxDuration;
+          }
+          return newTime;
+        });
+      }, 100);
+      
+      mediaRecorder.onstop = () => {
+        clearInterval(timer);
+        setIsRecording(false);
+        setRecordingTime(0);
+      };
+    } catch (e) {
+      console.error('Recording error:', e);
+    }
+  };
+  
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+  
+  // ===== EDITING FUNCTIONS =====
+  const applyTextOverlay = (text: string, style: any) => {
+    setTextOverlays(prev => [...prev, {
+      id: Date.now().toString(),
+      text,
+      x: 50,
+      y: 30 + (prev.length * 15),
+      ...style
+    }]);
+  };
+  
+  const addSticker = (sticker: string) => {
+    setStickers(prev => [...prev, {
+      id: Date.now().toString(),
+      type: 'emoji',
+      content: sticker,
+      x: 30 + (prev.length * 15),
+      y: 70
+    }]);
+  };
+  
+  // ===== EFFECTS =====
+  useEffect(() => {
+    startCamera();
+    
+    return () => {
+      isClosingRef.current = true;
+      stopAllTracks();
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (!capturedMedia) {
+      startCamera();
+    }
+  }, [facingMode, mode, capturedMedia]);
+  
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+        if (countdown === 1) {
+          mode === 'photo' ? takePhoto() : startRecording();
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+  
+  // ===== RENDER =====
+  const renderCameraView = () => (
+    <div className="flex-1 relative">
+      {!capturedMedia ? (
+        <>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full h-full object-cover"
+            style={{
+              filter: FILTERS.find(f => f.id === selectedFilter)?.style !== 'none' 
+                ? FILTERS.find(f => f.id === selectedFilter)?.style 
+                : undefined
+            }}
+          />
+          <canvas ref={processingCanvasRef} className="hidden" />
+          
+          {/* AI Features Overlay */}
+          {(activeAIFeatures.faceFilters || activeAIFeatures.backgroundRemoval) && (
+            <div className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
+              AI Active 🚀
+            </div>
+          )}
+        </>
+      ) : (
+        mode === 'photo' ? (
+          <img src={capturedMedia} alt="Captured" className="w-full h-full object-cover" />
+        ) : (
+          <video src={capturedMedia} controls className="w-full h-full object-cover" />
+        )
+      )}
+      
+      <canvas ref={canvasRef} className="hidden" />
+      
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+          <div className="text-center text-white p-6">
+            <p className="mb-4">{error}</p>
+            <button onClick={startCamera} className="px-4 py-2 bg-green-600 rounded-lg">
+              Try Again
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+  
+  const renderControls = () => (
+    <div className="absolute bottom-0 left-0 right-0 p-6" 
+         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
+      
+      {/* Mode Selection */}
+      <div className="flex justify-center gap-8 mb-6">
+        <button
+          onClick={() => setMode('photo')}
+          className={`px-4 py-2 rounded-full text-sm font-medium ${
+            mode === 'photo' ? 'bg-white text-black' : 'text-white/70'
+          }`}
+        >
+          Photo
+        </button>
+        <button
+          onClick={() => setMode('video')}
+          className={`px-4 py-2 rounded-full text-sm font-medium ${
+            mode === 'video' ? 'bg-white text-black' : 'text-white/70'
+          }`}
+        >
+          Video
+        </button>
+      </div>
+      
+      {/* Capture Button */}
+      <div className="flex justify-center">
+        {mode === 'photo' ? (
+          <button
+            onClick={() => timer > 0 ? setCountdown(timer) : takePhoto()}
+            className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-white" />
+          </button>
+        ) : (
+          <button
+            onClick={isRecording ? stopRecording : () => timer > 0 ? setCountdown(timer) : startRecording()}
+            className={`w-20 h-20 rounded-full border-4 border-white flex items-center justify-center ${
+              isRecording ? 'bg-red-500' : ''
+            }`}
+          >
+            {isRecording ? (
+              <div className="w-8 h-8 rounded bg-white" />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-red-500" />
+            )}
+          </button>
+        )}
+      </div>
+      
+      {/* Countdown Display */}
+      {countdown > 0 && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-white text-9xl font-bold">{countdown}</div>
+        </div>
+      )}
+    </div>
+  );
+  
+  const renderAIEffectsPanel = () => (
+    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20">
+      {/* Face Filters */}
+      <div className="relative group">
+        <button
+          onClick={() => setActiveAIFeatures(prev => ({ ...prev, faceFilters: !prev.faceFilters }))}
+          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            activeAIFeatures.faceFilters ? 'bg-pink-500' : 'bg-black/50'
+          } text-white`}
+        >
+          😷
+        </button>
+        {activeAIFeatures.faceFilters && (
+          <div className="absolute right-14 top-0 bg-black/80 backdrop-blur-md rounded-2xl p-3 w-48">
+            <p className="text-white text-xs mb-2">Face Filters</p>
+            <div className="grid grid-cols-3 gap-2">
+              {FACE_FILTERS.map(filter => (
+                <button
+                  key={filter.id}
+                  onClick={() => setSelectedFaceFilter(filter.id)}
+                  className={`p-2 rounded-lg ${
+                    selectedFaceFilter === filter.id ? 'bg-pink-500' : 'bg-white/20'
+                  } text-white text-2xl`}
+                >
+                  {filter.emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Background Removal */}
+      <div className="relative group">
+        <button
+          onClick={() => setActiveAIFeatures(prev => ({ ...prev, backgroundRemoval: !prev.backgroundRemoval }))}
+          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            activeAIFeatures.backgroundRemoval ? 'bg-green-500' : 'bg-black/50'
+          } text-white`}
+        >
+          🖼️
+        </button>
+        {activeAIFeatures.backgroundRemoval && (
+          <div className="absolute right-14 top-0 bg-black/80 backdrop-blur-md rounded-2xl p-3 w-48">
+            <p className="text-white text-xs mb-2">Background</p>
+            <div className="grid grid-cols-3 gap-2">
+              {BACKGROUNDS.map(bg => (
+                <button
+                  key={bg.id}
+                  onClick={() => setSelectedBackground(bg.id)}
+                  className={`p-2 rounded-lg ${
+                    selectedBackground === bg.id ? 'bg-green-500' : 'bg-white/20'
+                  } text-white text-2xl`}
+                >
+                  {bg.emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Regular Filters */}
+      <div className="relative group">
+        <button
+          onClick={() => setShowLayerPicker(true)}
+          className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white"
+        >
+          🎨
+        </button>
+      </div>
+      
+      {/* Timer */}
+      <div className="relative group">
+        <button
+          onClick={() => setTimer(prev => prev === 3 ? 0 : 3)}
+          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            timer > 0 ? 'bg-yellow-500' : 'bg-black/50'
+          } text-white`}
+        >
+          <Timer className="w-5 h-5" />
+        </button>
+      </div>
+      
+      {/* Flash */}
+      <div className="relative group">
+        <button
+          onClick={() => setFlashEnabled(!flashEnabled)}
+          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            flashEnabled ? 'bg-yellow-500' : 'bg-black/50'
+          } text-white`}
+        >
+          {flashEnabled ? <Zap className="w-5 h-5" /> : <ZapOff className="w-5 h-5" />}
+        </button>
+      </div>
+      
+      {/* Flip Camera */}
+      <button
+        onClick={() => {
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+          }
+          setFacingMode(prev => prev === 'user' ? 'environment' : 'user');
+        }}
+        className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white"
+      >
+        <RotateCcw className="w-5 h-5" />
+      </button>
+    </div>
+  );
+  
+  const renderFilterStrip = () => (
+    <div className="absolute bottom-32 left-4 right-4 flex gap-2 overflow-x-auto py-2">
+      {FILTERS.map(filter => (
+        <button
+          key={filter.id}
+          onClick={() => setSelectedFilter(filter.id)}
+          className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium ${
+            selectedFilter === filter.id ? 'bg-white text-black' : 'bg-black/50 text-white'
+          }`}
+        >
+          {filter.name}
+        </button>
+      ))}
+    </div>
+  );
+  
+  const renderLayerPicker = () => (
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      exit={{ y: 100 }}
+      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
+    >
+      <p className="text-white text-center mb-4 text-sm">Tag your layer</p>
+      <div className="flex gap-2 justify-center flex-wrap mb-6">
+        {LAYERS.map((layer) => (
+          <button
+            key={layer.id}
+            onClick={() => setSelectedLayer(layer.id)}
+            className={`px-3 py-2 rounded-full text-sm font-medium ${
+              selectedLayer === layer.id
+                ? `bg-gradient-to-r ${layer.color} text-white`
+                : 'bg-white/20 text-white/80'
+            }`}
+          >
+            {layer.emoji} {layer.label}
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-4 justify-center">
+        <button
+          onClick={() => {
+            setCapturedMedia(null);
+            setCapturedBlob(null);
+            setShowLayerPicker(false);
+          }}
+          className="px-6 py-3 bg-white/20 text-white rounded-full font-medium"
+        >
+          Retake
+        </button>
+        <button
+          onClick={() => setShowDestination(true)}
+          className={`px-6 py-3 bg-gradient-to-r ${
+            LAYERS.find(l => l.id === selectedLayer)?.color
+          } text-white rounded-full font-medium flex items-center gap-2`}
+        >
+          <Check className="w-5 h-5" />
+          Continue
+        </button>
+      </div>
+    </motion.div>
+  );
+  
+  const renderDestinationPicker = () => (
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      exit={{ y: 100 }}
+      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
+    >
+      <p className="text-white text-center mb-4 text-sm">Share to</p>
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <button
+          onClick={() => {
+            if (capturedBlob && userId) {
+              setUploading(true);
+              setTimeout(() => {
+                onCapture({
+                  mediaUrl: capturedMedia!,
+                  mediaType: mode === 'photo' ? 'image' : 'video',
+                  layer: selectedLayer,
+                  destination: 'feed'
+                });
+                setUploading(false);
+              }, 1000);
+            }
+          }}
+          disabled={uploading}
+          className="flex flex-col items-center gap-2 p-4 bg-white/20 rounded-xl text-white hover:bg-white/30"
+        >
+          <ImageIcon className="w-8 h-8" />
+          <span className="text-sm">Feed</span>
+        </button>
+        <button
+          onClick={() => {
+            if (capturedBlob && userId) {
+              setUploading(true);
+              setTimeout(() => {
+                onCapture({
+                  mediaUrl: capturedMedia!,
+                  mediaType: mode === 'photo' ? 'image' : 'video',
+                  layer: selectedLayer,
+                  destination: 'story'
+                });
+                setUploading(false);
+              }, 1000);
+            }
+          }}
+          disabled={uploading}
+          className="flex flex-col items-center gap-2 p-4 bg-white/20 rounded-xl text-white hover:bg-white/30"
+        >
+          <Sparkles className="w-8 h-8" />
+          <span className="text-sm">Story</span>
+        </button>
+        <button
+          onClick={() => {
+            if (capturedBlob && userId) {
+              setUploading(true);
+              setTimeout(() => {
+                onCapture({
+                  mediaUrl: capturedMedia!,
+                  mediaType: mode === 'photo' ? 'image' : 'video',
+                  layer: selectedLayer,
+                  destination: 'save'
+                });
+                setUploading(false);
+              }, 1000);
+            }
+          }}
+          disabled={uploading}
+          className="flex flex-col items-center gap-2 p-4 bg-white/20 rounded-xl text-white hover:bg-white/30"
+        >
+          <Camera className="w-8 h-8" />
+          <span className="text-sm">Save</span>
+        </button>
+      </div>
+      <button
+        onClick={() => setShowDestination(false)}
+        className="w-full py-3 text-white/70 text-sm"
+      >
+        Back
+      </button>
+    </motion.div>
+  );
+  
+  // ===== MAIN RENDER =====
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black z-50 flex flex-col"
+    >
+      {/* Header */}
+      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center" 
+           style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <button
+          onClick={onClose}
+          className="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        
+        {!capturedMedia && (
+          <div className="text-white text-sm">
+            {mode === 'photo' ? 'Photo' : 'Video'}
+            {activeAIFeatures.faceFilters && ' 🚀'}
+          </div>
+        )}
+      </div>
+      
+      {/* Main Camera View */}
+      {renderCameraView()}
+      
+      {/* AI Effects Panel */}
+      {!capturedMedia && !showLayerPicker && !showDestination && renderAIEffectsPanel()}
+      
+      {/* Filter Strip */}
+      {!capturedMedia && !showLayerPicker && !showDestination && renderFilterStrip()}
+      
+      {/* Controls */}
+      {!capturedMedia && !showLayerPicker && !showDestination && renderControls()}
+      
+      {/* Layer Picker */}
+      <AnimatePresence>
+        {showLayerPicker && !showDestination && renderLayerPicker()}
+        {showDestination && renderDestinationPicker()}
+      </AnimatePresence>
+      
+      {/* Recording Timer */}
+      {isRecording && (
+        <div className="absolute top-20 left-4 right-4 z-20">
+          <div className="h-1 bg-white/30 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-red-500 transition-all" 
+              style={{ width: `${(recordingTime / maxDuration) * 100}%` }} 
+            />
+          </div>
+          <div className="text-white text-center text-sm mt-2">
+            {recordingTime.toFixed(1)}s / {maxDuration}s
+          </div>
+        </div>
+      )}
+      
+      {/* Loading Overlay */}
+      {uploading && (
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+          <div className="text-white text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
+            <p>Uploading...</p>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
