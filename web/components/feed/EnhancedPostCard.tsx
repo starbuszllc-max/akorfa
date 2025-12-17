@@ -1,7 +1,8 @@
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MoreVertical, Trash2, Bell } from 'lucide-react';
 import LayeredLikeIcon from '@/components/ui/icons/LayeredLikeIcon';
 import ProfilePreviewPopup from './ProfilePreviewPopup';
 
@@ -124,6 +125,7 @@ function parseMediaArray(value: any): string[] {
 
 export default function EnhancedPostCard({ post, currentUserId, onLike, onCommentAdded }: PostProps) {
   const router = useRouter();
+  const menuRef = useRef<HTMLDivElement>(null);
   const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -143,10 +145,24 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
   const [failedMediaIndices, setFailedMediaIndices] = useState<Set<number>>(new Set());
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showProfilePreview, setShowProfilePreview] = useState(false);
+  const [showPostMenu, setShowPostMenu] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     setFailedMediaIndices(new Set());
   }, [post.id, post.mediaUrls]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowPostMenu(false);
+      }
+    };
+    if (showPostMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showPostMenu]);
 
   const username = post.profiles?.username || 'Anonymous';
   const avatarUrl = post.profiles?.avatar_url;
@@ -265,6 +281,28 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
 
   function handleShare() {
     setShowShareModal(true);
+  }
+
+  async function handleDeletePost() {
+    if (!confirm('Are you sure you want to delete this post?')) return;
+    try {
+      const res = await fetch(`/api/posts/${post.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setShowPostMenu(false);
+        setShareToastMessage('Post deleted');
+        setShowShareToast(true);
+        setTimeout(() => setShowShareToast(false), 2500);
+      }
+    } catch (err) {
+      console.error('Error deleting post:', err);
+    }
+  }
+
+  function handleNotifications() {
+    setNotificationsEnabled(!notificationsEnabled);
+    setShareToastMessage(notificationsEnabled ? 'Notifications disabled' : 'Priority notifications enabled');
+    setShowShareToast(true);
+    setTimeout(() => setShowShareToast(false), 2500);
   }
 
   async function handleShareOption(option: 'feed' | 'story' | 'community' | 'external' | 'copy') {
@@ -527,12 +565,56 @@ export default function EnhancedPostCard({ post, currentUserId, onLike, onCommen
             </div>
           </div>
         </div>
-        <motion.span 
-          whileHover={{ scale: 1.05 }}
-          className={`px-3 py-1 text-xs font-medium rounded-full ${layerStyle.bg} ${layerStyle.text} capitalize`}
-        >
-          {post.layer}
-        </motion.span>
+        <div className="flex items-center gap-2">
+          <motion.span 
+            whileHover={{ scale: 1.05 }}
+            className={`px-3 py-1 text-xs font-medium rounded-full ${layerStyle.bg} ${layerStyle.text} capitalize`}
+          >
+            {post.layer}
+          </motion.span>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setShowPostMenu(!showPostMenu)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors text-gray-600 dark:text-gray-400"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            <AnimatePresence>
+              {showPostMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-10 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 z-50 py-2"
+                >
+                  <button
+                    onClick={handleNotifications}
+                    className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
+                  >
+                    <Bell className="w-4 h-4" />
+                    {notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
+                  </button>
+                  {currentUserId === post.user_id && (
+                    <>
+                      <div className="border-t border-gray-200 dark:border-slate-700 my-1" />
+                      <button
+                        onClick={() => {
+                          handleDeletePost();
+                          setShowPostMenu(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete post
+                      </button>
+                    </>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
 
       {post.badges && post.badges.length > 0 && (
