@@ -43,3 +43,4 @@ build = ["bash", "-c", "npm run build:shared && cd web && npm run build"]
 
 [userenv.shared]
 NEXT_PUBLIC_GIPHY_API_KEY = "4tMIMBQNo0UKr9mZbMkerDKKeJgMji0b"
+RESEND_FROM_DOMAIN = "akorfa.publicvm.com"
