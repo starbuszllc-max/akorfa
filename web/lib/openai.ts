@@ -1,8 +1,6 @@
 import OpenAI from 'openai';
-import Groq from 'groq-sdk';
 
 let openaiInstance: OpenAI | null = null;
-let groqInstance: Groq | null = null;
 
 export function getOpenAI(): OpenAI {
   if (!openaiInstance) {
@@ -14,33 +12,17 @@ export function getOpenAI(): OpenAI {
   return openaiInstance;
 }
 
-export function getGroq(): Groq {
-  if (!groqInstance) {
-    if (!process.env.GROQ_API_KEY) {
-      throw new Error('GROQ_API_KEY environment variable is required');
-    }
-    groqInstance = new Groq({ apiKey: process.env.GROQ_API_KEY });
-  }
-  return groqInstance;
-}
-
 export function hasOpenAIKey(): boolean {
   return !!process.env.OPENAI_API_KEY;
 }
 
-export function hasGroqKey(): boolean {
-  return !!process.env.GROQ_API_KEY;
-}
-
-export function getAvailableAIProvider(): 'openai' | 'groq' | null {
+export function getAvailableAIProvider(): 'openai' | null {
   if (hasOpenAIKey()) return 'openai';
-  if (hasGroqKey()) return 'groq';
   return null;
 }
 
-export function getAIClient(): OpenAI | Groq | null {
+export function getAIClient(): OpenAI | null {
   if (hasOpenAIKey()) return getOpenAI();
-  if (hasGroqKey()) return getGroq();
   return null;
 }
 
@@ -55,9 +37,5 @@ export async function createChatCompletion(params: {
     throw new Error('No AI provider configured');
   }
 
-  if (hasOpenAIKey()) {
-    return await (client as OpenAI).chat.completions.create(params as any);
-  } else {
-    return await (client as Groq).chat.completions.create(params as any);
-  }
+  return await (client as OpenAI).chat.completions.create(params as any);
 }

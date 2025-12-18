@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAIClient, hasOpenAIKey, hasGroqKey, createChatCompletion, getOpenAI } from '../../../lib/openai';
+import { getAIClient, hasOpenAIKey, createChatCompletion, getOpenAI } from '../../../lib/openai';
 import { db } from '@/lib/db';
 import { profiles, assessments, posts, challengeParticipants, userBadges } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     const aiClient = getAIClient();
     if (!aiClient) {
       return NextResponse.json({ 
-        message: `Hello! I'm your AI coach. I can see you're on your personal growth journey. Your Akorfa score is currently ${context.profile?.akorfaScore || 0}. To get personalized insights, please configure either OpenAI or Groq in your environment variables. In the meantime, I'd suggest focusing on your lowest-scoring layer for the biggest impact!`,
+        message: `Hello! I'm your AI coach. I can see you're on your personal growth journey. Your Akorfa score is currently ${context.profile?.akorfaScore || 0}. To get personalized insights, please configure OpenAI in your environment variables. In the meantime, I'd suggest focusing on your lowest-scoring layer for the biggest impact!`,
         context: {
           score: context.profile?.akorfaScore,
           layerScores: context.profile?.layerScores,
@@ -103,7 +103,7 @@ Your role:
     ];
 
     const response = await createChatCompletion({
-      model: hasOpenAIKey() ? 'gpt-4o-mini' : 'mixtral-8x7b-32768',
+      model: 'gpt-4o-mini',
       messages: messages as any,
       max_tokens: 1024
     });
