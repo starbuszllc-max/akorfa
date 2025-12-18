@@ -1,0 +1,197 @@
+Key Change: NO camera access. ONLY:
+
+File upload (pre-recorded video/audio/photos)
+
+Microphone recording (for voiceovers/audio)
+
+NO camera capture
+
+Technical Requirements:
+
+Zero server costs - Everything runs in user's browser
+
+Mobile-first - Optimized for iPhone/Android touch
+
+PWA - Installable, works offline
+
+Media sources: File upload + microphone recording
+
+AI features using free browser-based models
+
+Export to device/social media
+
+Core Libraries:
+
+FFmpeg.wasm (video/audio processing)
+
+TensorFlow.js (AI features)
+
+MediaPipe (free ML models)
+
+Web Audio API (microphone + audio editing)
+
+Canvas API (image editing)
+
+IndexedDB (storage)
+
+Service Workers (PWA/offline)
+
+Architecture Rules:
+
+No backend - static hosting only (GitHub Pages)
+
+All processing in Web Workers
+
+Progressive enhancement
+
+Mobile-optimized models
+
+Cache AI models for offline
+
+EXACT FEATURE SPECIFICATION
+PART 1: MEDIA INPUT SYSTEM
+text
+TWO INPUT METHODS ONLY:
+
+1. FILE UPLOAD:
+   - Accepts: video/*, audio/*, image/*
+   - Multiple file selection
+   - Drag & drop (desktop) / tap (mobile)
+   - File validation (size, type, duration)
+
+2. MICROPHONE RECORDING:
+   - Voice recording only (no camera)
+   - Record button with visual feedback
+   - Pause/resume recording
+   - Noise monitoring while recording
+   - Save as audio file for editing
+
+NO CAMERA ACCESS AT ALL
+PART 2: MEDIA MANAGEMENT
+text
+MEDIA LIBRARY UI:
+- Grid view of uploaded files
+- Sort by: date, type, duration
+- Search by filename
+- Delete files
+- Storage usage indicator
+
+PREVIEW SYSTEM:
+- Video: Player with controls
+- Audio: Waveform display
+- Photo: Zoomable viewer
+- Metadata display for each
+PART 3: VIDEO EDITING (Pre-recorded Only)
+text
+BASIC EDITING:
+1. Trim with handles (drag)
+2. Split at marker
+3. Multiple video tracks (up to 3)
+4. Speed adjustment (0.25x to 4x)
+5. Reverse playback
+6. Crop & rotate
+7. Volume adjustment
+8. Fade in/out
+
+AI FEATURES:
+9. Auto-captions (Whisper.cpp)
+10. Scene detection
+11. Auto-zoom on faces
+12. Stabilization
+13. Color correction
+
+ADD VOICEOVER:
+- Record microphone directly onto timeline
+- Align with video scenes
+- Adjust voice volume relative to video
+PART 4: AUDIO EDITING (Uploaded + Mic Recording)
+text
+MICROPHONE FEATURES:
+1. Record voiceovers
+2. Record podcast-style audio
+3. Multiple takes management
+4. Noise gate (remove background)
+5. Compressor (even out volume)
+
+EDITING TOOLS:
+6. Waveform editing
+7. Trim/cut/split
+8. Multiple audio tracks
+9. Volume envelope
+10. Fade in/out
+11. Speed/pitch change
+12. Audio filters
+
+AI FEATURES:
+13. Noise reduction (RNNoise)
+14. Voice isolation
+15. Transcription (Whisper)
+16. Auto-ducking (for background music)
+PART 5: PHOTO EDITING (Pre-recorded Only)
+text
+BASIC EDITING:
+1. Crop with aspect ratios
+2. Rotate & flip
+3. Adjustments: brightness, contrast, saturation
+4. Filters (20+ presets)
+5. Text overlay with fonts
+6. Draw & stickers
+7. Collage maker
+
+AI FEATURES:
+8. Background removal
+9. Face touch-up
+10. Object removal
+11. Super-resolution
+12. Style transfer
+
+CREATE VIDEO FROM PHOTOS:
+- Slideshow with transitions
+- Add microphone narration
+- Add background music
+- Export as video
+PART 6: MUSIC & VOICEOVER SYSTEM
+text
+MUSIC SOURCES:
+1. User uploaded audio files
+2. Microphone recordings
+3. Free CC music (FreeSound API)
+4. Simple music generation (Tone.js)
+
+VOICEOVER WORKFLOW:
+1. Record microphone while watching video
+2. Auto-align to video markers
+3. Adjust timing post-recording
+4. Apply voice effects if needed
+5. Mix with video audio
+PART 7: EXPORT & SHARING
+text
+EXPORT OPTIONS:
+- Save to device
+- Share via Web Share API
+- Social media intents
+- QR code download
+
+FORMATS:
+- Video: MP4, WebM, GIF
+- Audio: MP3, WAV, M4A
+- Photo: JPEG, PNG, WebP
+
+SOCIAL PRESETS:
+- Instagram (photo/video)
+- TikTok (video)
+- YouTube Shorts
+- Podcast (audio only)
+PART 8: PWA & OFFLINE
+text
+PWA REQUIREMENTS:
+- Installable on mobile home screen
+- Works 100% offline after first load
+- Cache all AI models
+- Background processing for exports
+- Storage management
+
+OFFLINE LIMITS:
+- AI models cached locally
+- Media files stored in IndexedDB (limited by device)
+- No external API calls after first load
