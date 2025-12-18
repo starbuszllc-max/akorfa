@@ -83,6 +83,7 @@ The `@akorfa/shared` package contains pure TypeScript functions for deterministi
 *   **Supabase Auth**: Real email/password authentication with email confirmation, configured via `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 *   **Supabase Storage**: Cloud-based media storage for photos and videos. Requires an "uploads" bucket to be created in Supabase dashboard.
 *   **OpenAI**: Provides AI-powered insights, coaching, and content generation, configured via `OPENAI_API_KEY` (optional, with fallback). Uses `gpt-4o-mini`.
+*   **Resend**: Transactional email service (Dec 18, 2024). Configured via `RESEND_API_KEY` secret. Used for sending verification emails, password resets, and notifications with excellent deliverability. See `RESEND_SETUP.md` for configuration details.
 *   **Next.js 15**: React framework, utilizing App Router, Server Components, Client Components, and API routes.
 *   **Tailwind CSS**: Utility-first CSS framework with custom theme and dark mode support.
 *   **TypeScript**: Ensures type safety across the entire monorepo.
