@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User, MoreVertical, Check, CheckCheck, Phone, Video, Search, Smile, Paperclip, Camera, X, Trash2, VolumeX, Ban, Flag, Copy, Reply, Plus } from 'lucide-react';
+import { Send, ArrowLeft, Mic, MicOff, Image as ImageIcon, Loader2, MessageCircle, User, MoreVertical, Check, CheckCheck, Phone, Video, Search, Smile, Paperclip, X, Trash2, VolumeX, Ban, Flag, Copy, Reply, Plus } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import UserProfileCard from '@/components/messages/UserProfileCard';
 import StoryViewer from '@/components/stories/StoryViewer';
 import StoryCreator from '@/components/stories/StoryCreator';
-import CameraCapture from '@/components/camera/CameraCapture';
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react').then(mod => mod.default), { ssr: false });
 
@@ -93,7 +92,6 @@ function MessagesContent() {
   const [showStoryCreator, setShowStoryCreator] = useState(false);
   const [storiesLoading, setStoriesLoading] = useState(true);
   const [viewedStoryTimestamps, setViewedStoryTimestamps] = useState<Record<string, string>>({});
-  const [showCameraCapture, setShowCameraCapture] = useState(false);
   const [userOnlineStatus, setUserOnlineStatus] = useState<Record<string, boolean>>({});
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -494,52 +492,6 @@ function MessagesContent() {
     setSelectedMessageId(null);
   };
 
-  const handleCameraCapture = async (data: {
-    mediaUrl: string;
-    mediaType: 'image' | 'video';
-    layer: string;
-    destination: 'feed' | 'story' | 'save';
-  }) => {
-    if (!selectedConversation || !userId) {
-      setShowCameraCapture(false);
-      return;
-    }
-
-    setSending(true);
-    setShowCameraCapture(false);
-    
-    try {
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          senderId: userId,
-          receiverId: selectedConversation.otherUser.id,
-          messageType: data.mediaType,
-          mediaUrl: data.mediaUrl
-        })
-      });
-
-      if (res.ok) {
-        const resData = await res.json();
-        if (selectedConversation.id === 'new' && resData.conversationId) {
-          await fetchConversations(userId);
-          setSelectedConversation({
-            ...selectedConversation,
-            id: resData.conversationId
-          });
-          fetchMessages(resData.conversationId);
-        } else {
-          fetchMessages(selectedConversation.id);
-        }
-      }
-    } catch (error) {
-      console.error('Error sending camera capture:', error);
-    } finally {
-      setSending(false);
-    }
-  };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -625,13 +577,6 @@ function MessagesContent() {
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold text-[#16a34a]">Chats</h1>
                 <div className="flex items-center gap-2">
-                  <button 
-                    onClick={() => setShowCameraCapture(true)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-[#16a34a]/20 rounded-full transition-colors"
-                    title="Take photo or video"
-                  >
-                    <Camera className="w-5 h-5 text-[#16a34a]" />
-                  </button>
                   <div className="relative" ref={optionsMenuRef}>
                     <button 
                       onClick={() => setShowOptionsMenu(!showOptionsMenu)}
@@ -1075,23 +1020,13 @@ function MessagesContent() {
                             <div className="absolute bottom-14 left-0 w-48 bg-white dark:bg-[#1a1a1a] rounded-xl shadow-2xl border border-gray-200 dark:border-[#16a34a]/20 py-2 z-50">
                               <button 
                                 type="button"
-                                onClick={() => fileInputRef.current?.click()}
+                                onClick={() => { fileInputRef.current?.click(); setShowAttachMenu(false); }}
                                 className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-700 dark:text-gray-200"
                               >
                                 <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
                                   <ImageIcon className="w-5 h-5 text-white" />
                                 </div>
                                 <span>Photos & Videos</span>
-                              </button>
-                              <button 
-                                type="button"
-                                onClick={() => { setShowAttachMenu(false); setShowCameraCapture(true); }}
-                                className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-[#16a34a]/10 flex items-center gap-3 text-gray-700 dark:text-gray-200"
-                              >
-                                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                  <Camera className="w-5 h-5 text-white" />
-                                </div>
-                                <span>Camera</span>
                               </button>
                             </div>
                           )}
@@ -1175,14 +1110,6 @@ function MessagesContent() {
           userId={userId}
           onClose={() => setShowStoryCreator(false)}
           onCreated={handleStoryCreated}
-        />
-      )}
-
-      {showCameraCapture && userId && (
-        <CameraCapture
-          userId={userId}
-          onClose={() => setShowCameraCapture(false)}
-          onCapture={handleCameraCapture}
         />
       )}
     </>

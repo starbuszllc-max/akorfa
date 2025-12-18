@@ -11,7 +11,6 @@ import RightSidebar from '../../components/feed/RightSidebar';
 import SkeletonPost from '../../components/feed/SkeletonPost';
 import Toast from '../../components/feed/Toast';
 import FloatingComposeButton from '../../components/feed/FloatingComposeButton';
-import CameraCapture from '../../components/camera/CameraCapture';
 import PullToRefresh from '../../components/ui/PullToRefresh';
 
 interface Post {
@@ -39,7 +38,6 @@ export default function FeedPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' as 'success' | 'error' | 'info' });
   const [showMobileComposer, setShowMobileComposer] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
   const [showProfileUnlockedModal, setShowProfileUnlockedModal] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -157,44 +155,6 @@ export default function FeedPage() {
     await fetchPosts();
   }, [fetchPosts]);
 
-  const handleCameraCapture = async (data: {
-    mediaUrl: string;
-    mediaType: 'image' | 'video';
-    layer: string;
-    destination: 'feed' | 'story' | 'save';
-  }) => {
-    if (data.destination === 'feed') {
-      try {
-        const res = await fetch('/api/posts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUserId,
-            content: '',
-            layer: data.layer,
-            mediaUrl: data.mediaUrl,
-            mediaType: data.mediaType
-          })
-        });
-        if (res.ok) {
-          const responseData = await res.json();
-          setRefreshTrigger(prev => prev + 1);
-          if (responseData.isFirstPost) {
-            setShowProfileUnlockedModal(true);
-          } else {
-            showToast('Posted to feed!', 'success');
-          }
-        }
-      } catch (error) {
-        showToast('Failed to post', 'error');
-      }
-    } else if (data.destination === 'story') {
-      showToast('Stories coming soon!', 'info');
-    } else {
-      showToast('Saved to gallery!', 'success');
-    }
-  };
-
   return (
     <>
       <PullToRefresh onRefresh={handlePullRefresh}>
@@ -309,7 +269,6 @@ export default function FeedPage() {
         >
           <FloatingComposeButton 
             onClick={() => setShowMobileComposer(true)} 
-            onCameraClick={() => setShowCamera(true)} 
           />
         </motion.div>
       )}
@@ -399,16 +358,6 @@ export default function FeedPage() {
             </button>
           </motion.div>
         </motion.div>
-      )}
-    </AnimatePresence>
-
-    <AnimatePresence>
-      {showCamera && (
-        <CameraCapture
-          onClose={() => setShowCamera(false)}
-          onCapture={handleCameraCapture}
-          userId={currentUserId}
-        />
       )}
     </AnimatePresence>
 

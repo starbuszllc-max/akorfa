@@ -5,18 +5,13 @@ import { Plus } from 'lucide-react';
 
 interface FloatingComposeButtonProps {
   onClick?: () => void;
-  onCameraClick?: () => void;
 }
 
-export default function FloatingComposeButton({ onCameraClick }: FloatingComposeButtonProps) {
-  const handleClick = () => {
-    onCameraClick?.();
-  };
-
+export default function FloatingComposeButton({ onClick }: FloatingComposeButtonProps) {
   return (
     <div className="fixed bottom-32 right-6 md:hidden z-40">
       <motion.button
-        onClick={handleClick}
+        onClick={onClick}
         className="w-14 h-14 bg-gradient-to-br from-green-500 to-purple-600 text-white rounded-full shadow-lg flex items-center justify-center"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}

@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
-import TikTokCamera from '@/components/camera/TikTokCamera';
 import VideoEditor from '@/components/camera/VideoEditor';
-import { Camera, Type, Image, Video, X, Sparkles, Loader2, Send } from 'lucide-react';
+import { Type, Image, X, Sparkles, Loader2, Send, Clapperboard } from 'lucide-react';
+import Link from 'next/link';
 
-type EditorStep = 'menu' | 'camera' | 'editor' | 'caption';
+type EditorStep = 'menu' | 'editor' | 'caption';
 
 interface EditedMedia {
   url: string;
@@ -39,11 +39,6 @@ export default function CreatePage() {
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
   const userId = typeof window !== 'undefined' ? localStorage.getItem('demo_user_id') : null;
-
-  const handleCameraComplete = (data: { mediaUrl: string; mediaType: 'image' | 'video' }) => {
-    setCapturedMedia({ url: data.mediaUrl, type: data.mediaType });
-    setStep('editor');
-  };
 
   const handleEditorComplete = (data: EditedMedia) => {
     setEditedMedia(data);
@@ -123,18 +118,6 @@ export default function CreatePage() {
     setPosting(false);
   };
 
-  if (step === 'camera') {
-    return (
-      <AnimatePresence>
-        <TikTokCamera
-          onClose={() => setStep('menu')}
-          onComplete={handleCameraComplete}
-          userId={userId}
-        />
-      </AnimatePresence>
-    );
-  }
-
   if (step === 'editor' && capturedMedia) {
     return (
       <AnimatePresence>
@@ -144,7 +127,7 @@ export default function CreatePage() {
           onComplete={handleEditorComplete}
           onBack={() => {
             setCapturedMedia(null);
-            setStep('camera');
+            setStep('menu');
           }}
         />
       </AnimatePresence>
@@ -257,17 +240,6 @@ export default function CreatePage() {
       <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-6">
         <div className="w-full max-w-md space-y-3">
           <button
-            onClick={() => setStep('camera')}
-            className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-3 active:scale-[0.98] transition-all"
-          >
-            <Camera className="w-5 h-5 text-green-400 flex-shrink-0 ml-3" strokeWidth={2.5} />
-            <div className="text-left flex-1">
-              <span className="text-white font-medium text-sm block">Camera</span>
-              <span className="text-white/60 text-xs">Record video or take photo</span>
-            </div>
-          </button>
-
-          <button
             onClick={() => {
               const input = document.createElement('input');
               input.type = 'file';
@@ -305,6 +277,17 @@ export default function CreatePage() {
               <span className="text-white/60 text-xs">Share your thoughts</span>
             </div>
           </button>
+
+          <Link
+            href="/studio"
+            className="w-full py-3 bg-gradient-to-r from-green-600/20 to-purple-600/20 hover:from-green-600/30 hover:to-purple-600/30 rounded-xl flex items-center gap-3 active:scale-[0.98] transition-all"
+          >
+            <Clapperboard className="w-5 h-5 text-green-400 flex-shrink-0 ml-3" strokeWidth={2.5} />
+            <div className="text-left flex-1">
+              <span className="text-white font-medium text-sm block">Media Studio</span>
+              <span className="text-white/60 text-xs">Advanced editing tools</span>
+            </div>
+          </Link>
         </div>
       </div>
 

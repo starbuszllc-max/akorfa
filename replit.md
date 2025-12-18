@@ -44,20 +44,21 @@ The platform follows modern, minimalist design principles:
 - Compact stat cards using 4-column grid (Level, Streak, Followers, Following)
 - Privacy-conscious: Public profiles show only Level, Streak, and social counts
 
-**Messenger Camera Integration:**
-- Camera icon in header opens CameraCapture component
-- Attachment menu includes both "Photos & Videos" (file picker) and "Camera" (live capture)
-- CameraCapture handles upload internally before sending media URLs
+**Media Studio (Dec 2024):**
+The platform now includes a comprehensive Media Studio at `/studio` for zero-server media editing:
+- **File Upload**: Drag-and-drop or click to upload videos, audio, and images (up to 500MB)
+- **Microphone Recording**: Browser-based audio recording with live level visualization
+- **Media Library**: Persistent storage using IndexedDB, survives page refreshes
+- **Video Editor**: Trim, speed (0.25x-4x), rotation, flip, voiceover controls
+- **Audio Editor**: Waveform visualization, trim, speed, and effects
+- **Photo Editor**: Brightness/contrast/saturation adjustments, 10 filters, rotation/flip, text overlay
+- **Export**: Download edited media directly to device
 
-**TikTok-Style Camera (Dec 2024):**
-- Full-screen portrait camera feed with 9:16 aspect ratio
-- Camera constraints: 1080x1920 ideal resolution, 30fps ideal with 60fps max
-- Modern glassmorphism UI with backdrop blur on controls
-- Smooth Framer Motion animations with tap feedback
-- Minimal interface: flip camera, beauty filter, text overlay, music controls
-- Timer panel for delayed capture (off, 3s, 10s)
-- Flash toggle with torch support on compatible devices
-- Filter swipe with visual indicators and filter name display
+**Camera Disabled (Dec 2024):**
+Native camera access has been disabled across the platform. Users now upload pre-recorded media:
+- Feed, Create, and Messages pages only support file picker uploads
+- Camera buttons and CameraCapture modals have been removed
+- Media Studio link added to Create page and ExploreMenu for advanced editing
 
 ### Messenger Stories/Status (Dec 2024)
 The messages page includes WhatsApp-style Status/Stories functionality:

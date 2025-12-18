@@ -22,6 +22,7 @@ import {
   Camera,
   Trophy,
   Video,
+  Clapperboard,
 } from 'lucide-react';
 
 const menuLinks = [
@@ -118,13 +119,13 @@ export default function ExploreMenu({ isOpen, onClose, followerCount = 0 }: Expl
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2 mb-3">
+                <Link href="/studio" onClick={onClose} className="flex items-center gap-2 px-3 py-2.5 bg-gradient-to-r from-green-500/30 to-purple-500/30 rounded-xl hover:from-green-500/40 hover:to-purple-500/40 transition-all">
+                  <Clapperboard className="w-4 h-4" />
+                  <span className="text-sm font-medium">Media Studio</span>
+                </Link>
                 <Link href="/stories" onClick={onClose} className="flex items-center gap-2 px-3 py-2.5 bg-white/20 rounded-xl hover:bg-white/30 transition-all">
                   <Camera className="w-4 h-4" />
                   <span className="text-sm font-medium">View Stories</span>
-                </Link>
-                <Link href="/assessments" onClick={onClose} className="flex items-center gap-2 px-3 py-2.5 bg-white/20 rounded-xl hover:bg-white/30 transition-all">
-                  <ClipboardCheck className="w-4 h-4" />
-                  <span className="text-sm font-medium">Assessment</span>
                 </Link>
                 <Link href="/challenges" onClick={onClose} className="flex items-center gap-2 px-3 py-2.5 bg-white/20 rounded-xl hover:bg-white/30 transition-all">
                   <Trophy className="w-4 h-4" />
