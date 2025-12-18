@@ -34,7 +34,8 @@ export default function SignupPage() {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // Don't send Supabase email - we'll use Resend instead
+          emailRedirectTo: undefined,
         },
       });
 
