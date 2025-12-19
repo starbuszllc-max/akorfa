@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { aiMentorSessions } from '@akorfa/shared';
 import { eq, desc } from 'drizzle-orm';
-import { getOpenAI, hasOpenAIKey } from '../../../lib/openai';
+import { getGroq, hasGroq } from '../../../lib/groq';
 
 const SYSTEM_PROMPT = `You are Akorfa, an AI mentor specializing in teaching about human systems, social dynamics, and personal growth. You guide users through understanding:
 
@@ -86,16 +86,16 @@ export async function POST(req: Request) {
       ...messages.map((m: any) => ({ role: m.role as 'user' | 'assistant', content: m.content }))
     ];
 
-    if (!hasOpenAIKey()) {
+    if (!hasGroq()) {
       return NextResponse.json({ 
-        error: 'OpenAI API key not configured',
-        response: 'I apologize, but I cannot respond right now as the AI service is not configured. Please ensure the OpenAI API key is set up.'
+        error: 'AI service not configured',
+        response: 'I apologize, but I cannot respond right now as the AI service is not configured.'
       }, { status: 503 });
     }
 
-    const openai = getOpenAI();
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+    const groq = getGroq();
+    const completion = await groq.chat.completions.create({
+      model: 'deepseek/deepseek-chat',
       messages: chatMessages,
       max_tokens: 500,
       temperature: 0.7
