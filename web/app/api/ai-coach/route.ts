@@ -103,7 +103,7 @@ Your role:
 
     const groq = getGroq();
     const response = await groq.chat.completions.create({
-      model: 'deepseek/deepseek-chat',
+      model: 'mixtral-8x7b-32768',
       messages: messages as any,
       max_tokens: 1024
     });
@@ -163,7 +163,7 @@ User Context:
 Respond with JSON in this format: { "suggestions": [{ "title": "short title", "description": "one sentence description", "layer": "one of the seven layers" }] }`;
 
     const response = await groq.chat.completions.create({
-      model: 'deepseek/deepseek-chat',
+      model: 'mixtral-8x7b-32768',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: 'Generate my personalized growth suggestions.' }

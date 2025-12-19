@@ -95,7 +95,7 @@ export async function POST(req: Request) {
 
     const groq = getGroq();
     const completion = await groq.chat.completions.create({
-      model: 'deepseek/deepseek-chat',
+      model: 'mixtral-8x7b-32768',
       messages: chatMessages,
       max_tokens: 500,
       temperature: 0.7
