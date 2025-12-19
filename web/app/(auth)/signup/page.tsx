@@ -34,8 +34,6 @@ export default function SignupPage() {
           data: {
             full_name: fullName,
           },
-          // Disable Supabase's automatic email - we handle verification with Resend
-          skipEmailVerification: true,
         },
       });
 
