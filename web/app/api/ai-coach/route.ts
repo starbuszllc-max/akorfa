@@ -173,7 +173,21 @@ Respond with JSON in this format: { "suggestions": [{ "title": "short title", "d
       max_tokens: 512
     });
 
-    const result = JSON.parse((response.choices[0].message.content as string) || '{}');
+    let result: any = {};
+    const content = (response.choices[0].message.content as string) || '{}';
+    
+    try {
+      result = JSON.parse(content);
+    } catch (e) {
+      // If JSON parsing fails, return default suggestions
+      result = {
+        suggestions: [
+          { title: 'Complete an Assessment', description: 'Take your first assessment to get personalized insights', layer: 'internal' },
+          { title: 'Join a Challenge', description: 'Participate in a community challenge to boost your growth', layer: 'social' },
+          { title: 'Daily Reflection', description: 'Spend 5 minutes reflecting on your goals today', layer: 'conscious' }
+        ]
+      };
+    }
 
     return NextResponse.json({ 
       suggestions: result.suggestions || [],
