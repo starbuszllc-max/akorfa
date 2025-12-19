@@ -1,20 +1,31 @@
 import Groq from 'groq-sdk';
+import OpenAI from 'openai';
 
-let groqInstance: Groq | null = null;
+let groqInstance: any = null;
 
-export function getGroq(): Groq {
+export function getGroq() {
   if (!groqInstance) {
-    const apiKey = process.env.GROQ_API_KEY;
-    
-    if (!apiKey) {
-      throw new Error('Groq API key not configured (GROQ_API_KEY env var missing)');
+    // Try direct Groq API first (for Vercel production)
+    if (process.env.GROQ_API_KEY) {
+      groqInstance = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    } 
+    // Fall back to Replit OpenRouter integration (for dev)
+    else if (process.env.AI_INTEGRATIONS_OPENROUTER_API_KEY && process.env.AI_INTEGRATIONS_OPENROUTER_BASE_URL) {
+      groqInstance = new OpenAI({
+        baseURL: process.env.AI_INTEGRATIONS_OPENROUTER_BASE_URL,
+        apiKey: process.env.AI_INTEGRATIONS_OPENROUTER_API_KEY,
+      });
+    } 
+    else {
+      throw new Error('Groq/OpenRouter API not configured');
     }
-    
-    groqInstance = new Groq({ apiKey });
   }
   return groqInstance;
 }
 
 export function hasGroq(): boolean {
-  return !!process.env.GROQ_API_KEY;
+  return !!(
+    process.env.GROQ_API_KEY || 
+    (process.env.AI_INTEGRATIONS_OPENROUTER_API_KEY && process.env.AI_INTEGRATIONS_OPENROUTER_BASE_URL)
+  );
 }

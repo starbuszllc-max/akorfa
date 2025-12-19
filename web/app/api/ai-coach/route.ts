@@ -102,8 +102,9 @@ Your role:
     ];
 
     const groq = getGroq();
+    const model = process.env.GROQ_API_KEY ? 'mixtral-8x7b-32768' : 'deepseek/deepseek-chat';
     const response = await groq.chat.completions.create({
-      model: 'mixtral-8x7b-32768',
+      model,
       messages: messages as any,
       max_tokens: 1024
     });
@@ -162,8 +163,9 @@ User Context:
 
 Respond with JSON in this format: { "suggestions": [{ "title": "short title", "description": "one sentence description", "layer": "one of the seven layers" }] }`;
 
+    const model = process.env.GROQ_API_KEY ? 'mixtral-8x7b-32768' : 'deepseek/deepseek-chat';
     const response = await groq.chat.completions.create({
-      model: 'mixtral-8x7b-32768',
+      model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: 'Generate my personalized growth suggestions.' }
