@@ -2,27 +2,61 @@
 
 This guide explains how to configure Resend for sending transactional emails in Akorfa.
 
-## Setup Steps
+## Critical Setup: Domain Configuration for Deliverability
 
-### 1. Resend Account & API Key
-- Your Resend API key is already configured as an environment variable: `RESEND_API_KEY`
-- You can find your API key at: https://resend.com/settings/api-keys
+Email verification going to spam is almost always a domain configuration issue. Follow these steps exactly:
 
-### 2. Configure Supabase SMTP with Resend
+### 1. Verify Your Domain in Resend
 
-To use Resend as the email provider for Supabase Auth emails (verification, password reset, etc.):
+1. Go to https://resend.com/domains
+2. Click **"Add Domain"** and enter your domain (e.g., `akorfa.publicvm.com`)
+3. Resend will provide DNS records that YOU MUST add to your domain provider:
+   - **SPF Record** (prevents spoofing)
+   - **DKIM Record** (verifies authenticity)
+   - **DMARC Record** (sets policy for authentication failures)
+4. Add these records to your domain's DNS settings (GoDaddy, Vercel, etc.)
+5. Return to Resend and click "Verify" - wait until all records show ✓
 
-1. Go to your Supabase Dashboard → **Authentication → Providers**
-2. Scroll down to **SMTP Settings**
-3. Configure the following:
-   - **Host:** `smtp.resend.com`
-   - **Port:** `465` (SSL) or `587` (TLS)
-   - **Username:** `resend`
-   - **Password:** Your Resend API Key
-   - **From Address:** `noreply@akorfa.publicvm.com`
-   - **From Name:** `Akorfa`
+**⚠️ This is the most important step. Without DNS verification, emails will go to spam.**
 
-### 3. Using the Email Service
+### 2. Set Resend API Key
+
+- Ensure `RESEND_API_KEY` is set as an environment variable in Vercel
+- Get your API key at: https://resend.com/settings/api-keys
+
+### 3. Configure Environment Variables
+
+In your Vercel project settings, ensure these are set:
+- `RESEND_API_KEY` - Your Resend API key
+- `RESEND_FROM_DOMAIN` - Your verified domain (e.g., `akorfa.publicvm.com`)
+
+### 4. Test Email Sending
+
+Run a test verification email to yourself:
+1. Sign up for a new account with your email
+2. Check inbox AND spam folder
+3. If still in spam after domain verification, contact Resend support
+
+## Email Templates (Updated Dec 2024)
+
+All emails now feature:
+- Professional gradient header with Akorfa branding
+- Proper email structure with semantic HTML
+- Plain text version for better client compatibility
+- Clear security messaging and expiration warnings
+- Mobile-responsive design
+- Both HTML and text versions sent (improves deliverability)
+
+### Improved Email Features
+
+The updated email templates include:
+- **Professional styling** - Gradient headers, proper spacing, modern design
+- **Dual format** - HTML and plain text versions for maximum compatibility
+- **Security messaging** - Link expiration times and clear action buttons
+- **Spam-safe content** - No spam trigger words, proper formatting
+- **Mobile optimized** - Responsive tables instead of divs
+
+## Using the Email Service
 
 The email service is available at `/lib/resend.ts` and provides three main methods:
 
@@ -45,7 +79,7 @@ await emailService.sendNotificationEmail(
 );
 ```
 
-### 4. API Endpoint
+## API Endpoint
 
 Use the email API endpoint for sending emails:
 
@@ -69,21 +103,27 @@ const response = await fetch('/api/email/send', {
 });
 ```
 
-## Email Templates
-
-All emails are sent from `noreply@akorfa.com` with professional HTML templates that include:
-- Branded header and styling
-- Clear call-to-action buttons
-- Footer with copyright information
-- Mobile-responsive design
-
 ## Troubleshooting
 
-- **Emails still going to spam:** Ensure your Resend domain is verified in your Resend account
-- **SMTP connection issues:** Verify credentials and port settings in Supabase SMTP settings
-- **Rate limiting:** Check your Resend plan limits at https://resend.com/pricing
+| Issue | Solution |
+|-------|----------|
+| **Emails going to spam** | Verify your domain in Resend (add SPF/DKIM/DMARC records to DNS). This is the #1 cause. |
+| **Domain not verifying** | Wait 24-48 hours after adding DNS records. ISPs cache DNS entries. Check your domain provider for proper record format. |
+| **Low deliverability** | Ensure both HTML and text versions are being sent. Check that sender name matches domain. |
+| **Rate limiting** | Check your Resend plan limits at https://resend.com/pricing |
+| **SMTP connection issues** | If using SMTP, verify credentials and port settings (465 for SSL, 587 for TLS) |
+
+## Email Sender Configuration
+
+Emails are sent from: `noreply@[your-verified-domain]`
+
+Example:
+- Domain configured in Resend: `akorfa.publicvm.com`
+- Sender email: `noreply@akorfa.publicvm.com`
+- This must match your verified domain for SPF/DKIM to work
 
 ## Related Files
 
-- Email service: `/web/lib/resend.ts`
+- Email service: `/web/lib/resend.ts` (updated Dec 2024)
 - Email API endpoint: `/web/app/api/email/send/route.ts`
+- Signup page: `/web/app/(auth)/signup/page.tsx`
