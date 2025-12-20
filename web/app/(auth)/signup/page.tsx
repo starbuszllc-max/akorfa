@@ -43,6 +43,21 @@ export default function SignupPage() {
       }
 
       if (data.user) {
+        // Create profile record for the new user
+        try {
+          await fetch('/api/profiles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: data.user.id,
+              username: fullName.toLowerCase().replace(/\s+/g, '_') || data.user.email?.split('@')[0],
+              full_name: fullName,
+            }),
+          });
+        } catch (err) {
+          console.error('Error creating profile:', err);
+        }
+
         // Send verification email via Resend instead of Supabase
         try {
           const verificationLink = `${window.location.origin}/auth/callback?code=${data.session?.access_token || ''}`;

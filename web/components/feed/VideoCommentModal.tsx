@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Loader2 } from 'lucide-react';
+import { X, Send, Loader2, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Comment {
   id: string;
@@ -24,10 +25,12 @@ interface VideoCommentModalProps {
 }
 
 export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAdded }: VideoCommentModalProps) {
+  const { user, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -57,22 +60,26 @@ export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAd
 
   const handleSubmit = async () => {
     if (!content.trim() || submitting) return;
+    if (!user) {
+      setError('Please log in to comment');
+      return;
+    }
 
     setSubmitting(true);
+    setError(null);
     try {
-      const userId = localStorage.getItem('demo_user_id');
       const res = await fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           post_id: postId,
-          user_id: userId,
+          user_id: user.id,
           content: content.trim()
         })
       });
 
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         const newComment: Comment = {
           ...data.comment,
           profiles: {
@@ -83,9 +90,12 @@ export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAd
         setComments(prev => [newComment, ...prev]);
         setContent('');
         onCommentAdded?.();
+      } else {
+        setError(data.error || 'Failed to post comment. Make sure your profile is set up.');
       }
     } catch (error) {
       console.error('Failed to post comment:', error);
+      setError('Network error. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -137,6 +147,16 @@ export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAd
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-2 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300"
+                >
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </motion.div>
+              )}
               {loading ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
@@ -173,6 +193,11 @@ export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAd
             </div>
 
             <div className="p-4 border-t border-gray-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/85">
+              {!user && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  Log in to comment
+                </p>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -180,8 +205,9 @@ export default function VideoCommentModal({ isOpen, onClose, postId, onCommentAd
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                  placeholder="Add a comment..."
-                  className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-slate-800 border-0 rounded-full text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 outline-none"
+                  placeholder={user ? "Add a comment..." : "Log in to comment"}
+                  disabled={!user || authLoading}
+                  className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-slate-800 border-0 rounded-full text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                 />
                 <button
                   onClick={handleSubmit}
