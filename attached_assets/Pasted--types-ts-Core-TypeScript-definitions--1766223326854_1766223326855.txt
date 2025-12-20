@@ -1,0 +1,772 @@
+// ================================
+// types.ts
+// Core TypeScript definitions
+// ================================
+
+export type Handedness = 'left' | 'right' | 'unknown';
+
+export interface TouchPoint {
+  x: number;
+  y: number;
+  timestamp: number;
+}
+
+export interface HandednessState {
+  detected: Handedness;
+  confidence: number;
+  userOverride: Handedness | null;
+  adaptiveEnabled: boolean;
+  lastUpdated: number;
+}
+
+export interface ComfortZone {
+  easy: { x: number; y: number; radius: number };
+  stretch: { x: number; y: number; radius: number };
+  hard: { x: number; y: number; radius: number };
+}
+
+export interface TouchStats {
+  leftQuadrant: number;
+  rightQuadrant: number;
+  leftSwipes: number;
+  rightSwipes: number;
+  totalInteractions: number;
+}
+
+// ================================
+// store.ts
+// Zustand state management
+// ================================
+
+import { create } from 'zustand';
+import { MMKV } from 'react-native-mmkv';
+
+const storage = new MMKV();
+
+interface AkorfaStore extends HandednessState {
+  touchStats: TouchStats;
+  recordTouch: (x: number, y: number, screenWidth: number) => void;
+  recordSwipe: (direction: 'left' | 'right') => void;
+  setUserOverride: (handedness: Handedness | null) => void;
+  setAdaptiveEnabled: (enabled: boolean) => void;
+  resetData: () => void;
+  getEffectiveHandedness: () => Handedness;
+  shouldShowSuggestion: () => boolean;
+}
+
+// Load persisted state
+const loadPersistedState = (): Partial<HandednessState> => {
+  try {
+    const detected = storage.getString('handedness.detected') as Handedness;
+    const confidence = storage.getNumber('handedness.confidence') || 0;
+    const userOverride = storage.getString('handedness.userOverride') as Handedness | null;
+    const adaptiveEnabled = storage.getBoolean('handedness.adaptiveEnabled') ?? true;
+    
+    return { detected, confidence, userOverride, adaptiveEnabled };
+  } catch {
+    return {};
+  }
+};
+
+export const useHandednessStore = create<AkorfaStore>((set, get) => ({
+  // Initial state from storage or defaults
+  ...{
+    detected: 'unknown',
+    confidence: 0,
+    userOverride: null,
+    adaptiveEnabled: true,
+    lastUpdated: Date.now(),
+    ...loadPersistedState()
+  },
+  
+  touchStats: {
+    leftQuadrant: 0,
+    rightQuadrant: 0,
+    leftSwipes: 0,
+    rightSwipes: 0,
+    totalInteractions: 0
+  },
+
+  recordTouch: (x: number, y: number, screenWidth: number) => {
+    const state = get();
+    const isLeftSide = x < screenWidth / 2;
+    
+    const newStats = {
+      ...state.touchStats,
+      leftQuadrant: state.touchStats.leftQuadrant + (isLeftSide ? 1 : 0),
+      rightQuadrant: state.touchStats.rightQuadrant + (isLeftSide ? 0 : 1),
+      totalInteractions: state.touchStats.totalInteractions + 1
+    };
+
+    // Calculate handedness from stats
+    const { handedness, confidence } = calculateHandedness(newStats);
+    
+    set({
+      touchStats: newStats,
+      detected: handedness,
+      confidence,
+      lastUpdated: Date.now()
+    });
+
+    // Persist to storage
+    storage.set('handedness.detected', handedness);
+    storage.set('handedness.confidence', confidence);
+  },
+
+  recordSwipe: (direction: 'left' | 'right') => {
+    const state = get();
+    
+    const newStats = {
+      ...state.touchStats,
+      leftSwipes: state.touchStats.leftSwipes + (direction === 'left' ? 1 : 0),
+      rightSwipes: state.touchStats.rightSwipes + (direction === 'right' ? 1 : 0)
+    };
+
+    const { handedness, confidence } = calculateHandedness(newStats);
+    
+    set({
+      touchStats: newStats,
+      detected: handedness,
+      confidence,
+      lastUpdated: Date.now()
+    });
+
+    storage.set('handedness.detected', handedness);
+    storage.set('handedness.confidence', confidence);
+  },
+
+  setUserOverride: (handedness: Handedness | null) => {
+    set({ userOverride: handedness });
+    if (handedness) {
+      storage.set('handedness.userOverride', handedness);
+    } else {
+      storage.delete('handedness.userOverride');
+    }
+  },
+
+  setAdaptiveEnabled: (enabled: boolean) => {
+    set({ adaptiveEnabled: enabled });
+    storage.set('handedness.adaptiveEnabled', enabled);
+  },
+
+  resetData: () => {
+    set({
+      detected: 'unknown',
+      confidence: 0,
+      userOverride: null,
+      touchStats: {
+        leftQuadrant: 0,
+        rightQuadrant: 0,
+        leftSwipes: 0,
+        rightSwipes: 0,
+        totalInteractions: 0
+      },
+      lastUpdated: Date.now()
+    });
+
+    storage.delete('handedness.detected');
+    storage.delete('handedness.confidence');
+    storage.delete('handedness.userOverride');
+  },
+
+  getEffectiveHandedness: () => {
+    const state = get();
+    return state.userOverride || state.detected;
+  },
+
+  shouldShowSuggestion: () => {
+    const state = get();
+    // Show suggestion if confidence is high but no override set
+    return state.confidence >= 0.75 && state.userOverride === null;
+  }
+}));
+
+// ================================
+// handednessDetection.ts
+// Core detection logic
+// ================================
+
+function calculateHandedness(stats: TouchStats): { handedness: Handedness; confidence: number } {
+  // Need minimum interactions to detect
+  if (stats.totalInteractions < 10) {
+    return { handedness: 'unknown', confidence: 0 };
+  }
+
+  // Touch position analysis (60% weight)
+  // Left-handed users touch more on left side
+  const leftTouchRatio = stats.leftQuadrant / stats.totalInteractions;
+  const rightTouchRatio = stats.rightQuadrant / stats.totalInteractions;
+  
+  // Swipe analysis (40% weight)
+  // Left-handed users swipe left more naturally with thumb
+  const swipeTotal = stats.leftSwipes + stats.rightSwipes;
+  const leftSwipeRatio = swipeTotal > 0 ? stats.leftSwipes / swipeTotal : 0.5;
+  const rightSwipeRatio = swipeTotal > 0 ? stats.rightSwipes / swipeTotal : 0.5;
+
+  // Combined scoring
+  const leftScore = (leftTouchRatio * 0.6) + (leftSwipeRatio * 0.4);
+  const rightScore = (rightTouchRatio * 0.6) + (rightSwipeRatio * 0.4);
+
+  // Determine handedness
+  const handedness: Handedness = leftScore > rightScore ? 'left' : 'right';
+  
+  // Confidence is the margin between scores
+  const maxScore = Math.max(leftScore, rightScore);
+  const minScore = Math.min(leftScore, rightScore);
+  const margin = maxScore - minScore;
+  
+  // Scale confidence: higher margin = higher confidence
+  // Cap at 0.95 to never be 100% certain
+  const confidence = Math.min(margin * 2, 0.95);
+
+  return { handedness, confidence };
+}
+
+// ================================
+// comfortZones.ts
+// Thumb reachability calculations
+// ================================
+
+import { Dimensions } from 'react-native';
+
+export function calculateComfortZones(handedness: Handedness): ComfortZone {
+  const { width, height } = Dimensions.get('window');
+  const isLeft = handedness === 'left';
+  
+  // Research shows thumb can comfortably reach ~40% of screen width
+  const comfortableReach = width * 0.4;
+  
+  // Center of comfort zone is in lower quadrant on preferred side
+  const centerX = isLeft ? comfortableReach / 2 : width - (comfortableReach / 2);
+  const centerY = height * 0.7; // Lower third is easiest to reach
+
+  return {
+    easy: {
+      x: centerX,
+      y: centerY,
+      radius: comfortableReach * 0.5
+    },
+    stretch: {
+      x: centerX,
+      y: centerY,
+      radius: comfortableReach * 0.8
+    },
+    hard: {
+      x: centerX,
+      y: centerY,
+      radius: comfortableReach * 1.2
+    }
+  };
+}
+
+// Check if a point is within a comfort zone
+export function isInComfortZone(
+  x: number,
+  y: number,
+  zone: 'easy' | 'stretch' | 'hard',
+  handedness: Handedness
+): boolean {
+  const zones = calculateComfortZones(handedness);
+  const targetZone = zones[zone];
+  
+  const distance = Math.sqrt(
+    Math.pow(x - targetZone.x, 2) + Math.pow(y - targetZone.y, 2)
+  );
+  
+  return distance <= targetZone.radius;
+}
+
+// ================================
+// adaptiveLayout.ts
+// Layout utilities for adaptive UI
+// ================================
+
+interface AdaptivePosition {
+  position: 'absolute';
+  bottom?: number;
+  top?: number;
+  left?: number;
+  right?: number;
+}
+
+export function getAdaptiveButtonPosition(
+  priority: 'primary' | 'secondary',
+  handedness: Handedness,
+  adaptiveEnabled: boolean
+): AdaptivePosition {
+  // Don't adapt if disabled or unknown
+  if (!adaptiveEnabled || handedness === 'unknown') {
+    return {
+      position: 'absolute',
+      bottom: priority === 'primary' ? 80 : 140,
+      right: 16
+    };
+  }
+
+  const isLeft = handedness === 'left';
+  
+  if (priority === 'primary') {
+    return {
+      position: 'absolute',
+      bottom: 80,
+      [isLeft ? 'left' : 'right']: 16
+    };
+  } else {
+    return {
+      position: 'absolute',
+      bottom: 140,
+      [isLeft ? 'left' : 'right']: 16
+    };
+  }
+}
+
+export function getAdaptiveFloatingPosition(
+  handedness: Handedness,
+  adaptiveEnabled: boolean,
+  verticalOffset: number = 200
+): AdaptivePosition {
+  if (!adaptiveEnabled || handedness === 'unknown') {
+    return {
+      position: 'absolute',
+      bottom: verticalOffset,
+      right: 16
+    };
+  }
+
+  const isLeft = handedness === 'left';
+  
+  return {
+    position: 'absolute',
+    bottom: verticalOffset,
+    [isLeft ? 'left' : 'right']: 16
+  };
+}
+
+// ================================
+// hooks/useHandedness.ts
+// React hooks for handedness system
+// ================================
+
+import { useEffect } from 'react';
+import { GestureResponderEvent } from 'react-native';
+
+export function useHandedness() {
+  const store = useHandednessStore();
+  
+  return {
+    handedness: store.getEffectiveHandedness(),
+    detected: store.detected,
+    confidence: store.confidence,
+    isOverridden: store.userOverride !== null,
+    isAdaptive: store.adaptiveEnabled && store.confidence >= 0.75,
+    shouldShowSuggestion: store.shouldShowSuggestion()
+  };
+}
+
+export function useTouchTracking(enabled: boolean = true) {
+  const { recordTouch } = useHandednessStore();
+  const { width } = Dimensions.get('window');
+
+  const handleTouch = (event: GestureResponderEvent) => {
+    if (!enabled) return;
+    
+    const { locationX } = event.nativeEvent;
+    recordTouch(locationX, 0, width);
+  };
+
+  return { handleTouch };
+}
+
+export function useSwipeTracking(enabled: boolean = true) {
+  const { recordSwipe } = useHandednessStore();
+
+  const handleSwipe = (direction: 'left' | 'right') => {
+    if (!enabled) return;
+    recordSwipe(direction);
+  };
+
+  return { handleSwipe };
+}
+
+// ================================
+// components/HandednessProvider.tsx
+// Context provider component
+// ================================
+
+import React, { useEffect } from 'react';
+import { View, ViewProps } from 'react-native';
+
+interface HandednessProviderProps extends ViewProps {
+  children: React.ReactNode;
+  autoDetect?: boolean;
+}
+
+export const HandednessProvider: React.FC<HandednessProviderProps> = ({
+  children,
+  autoDetect = true,
+  ...viewProps
+}) => {
+  const { handleTouch } = useTouchTracking(autoDetect);
+
+  return (
+    <View 
+      {...viewProps}
+      onTouchStart={handleTouch}
+      style={[{ flex: 1 }, viewProps.style]}
+    >
+      {children}
+    </View>
+  );
+};
+
+// ================================
+// components/AdaptivePrimaryButton.tsx
+// Self-positioning button component
+// ================================
+
+import { Pressable, Text, StyleSheet } from 'react-native';
+
+interface AdaptivePrimaryButtonProps {
+  onPress: () => void;
+  label: string;
+  icon?: React.ReactNode;
+  priority?: 'primary' | 'secondary';
+}
+
+export const AdaptivePrimaryButton: React.FC<AdaptivePrimaryButtonProps> = ({
+  onPress,
+  label,
+  icon,
+  priority = 'primary'
+}) => {
+  const { handedness, isAdaptive } = useHandedness();
+  const position = getAdaptiveButtonPosition(priority, handedness, isAdaptive);
+
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.button, position]}
+      accessibilityLabel={label}
+      accessibilityRole="button"
+    >
+      {icon}
+      <Text style={styles.buttonText}>{label}</Text>
+    </Pressable>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#3B82F6',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600'
+  }
+});
+
+// ================================
+// components/FloatingActionControl.tsx
+// Draggable floating button
+// ================================
+
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  runOnJS
+} from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+
+interface FloatingActionControlProps {
+  onPress: () => void;
+  icon: React.ReactNode;
+  label: string;
+  verticalOffset?: number;
+}
+
+export const FloatingActionControl: React.FC<FloatingActionControlProps> = ({
+  onPress,
+  icon,
+  label,
+  verticalOffset = 200
+}) => {
+  const { handedness, isAdaptive } = useHandedness();
+  const { width, height } = Dimensions.get('window');
+  
+  const basePosition = getAdaptiveFloatingPosition(handedness, isAdaptive, verticalOffset);
+  
+  // Initialize position based on handedness
+  const isLeft = handedness === 'left';
+  const translateX = useSharedValue(isLeft ? 16 : width - 72);
+  const translateY = useSharedValue(height - verticalOffset);
+
+  const gesture = Gesture.Pan()
+    .onUpdate((event) => {
+      translateX.value = event.absoluteX - 28; // Half button width
+      translateY.value = event.absoluteY - 28;
+    })
+    .onEnd(() => {
+      // Snap to nearest edge
+      const snapToLeft = translateX.value < width / 2;
+      translateX.value = withSpring(snapToLeft ? 16 : width - 72);
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value }
+    ]
+  }));
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View style={[floatingStyles.container, animatedStyle]}>
+        <Pressable
+          onPress={onPress}
+          style={floatingStyles.button}
+          accessibilityLabel={label}
+        >
+          {icon}
+        </Pressable>
+      </Animated.View>
+    </GestureDetector>
+  );
+};
+
+const floatingStyles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    width: 56,
+    height: 56
+  },
+  button: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#3B82F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8
+  }
+});
+
+// ================================
+// components/ComfortZoneOverlay.tsx
+// DEV ONLY - Visualize thumb zones
+// ================================
+
+import { Canvas, Circle, Group } from '@shopify/react-native-skia';
+
+export const ComfortZoneOverlay: React.FC = () => {
+  const { handedness } = useHandedness();
+  const { width, height } = Dimensions.get('window');
+  const zones = calculateComfortZones(handedness);
+
+  if (__DEV__ === false) return null;
+
+  return (
+    <Canvas style={{ position: 'absolute', width, height, pointerEvents: 'none' }}>
+      <Group opacity={0.2}>
+        {/* Hard zone */}
+        <Circle
+          cx={zones.hard.x}
+          cy={zones.hard.y}
+          r={zones.hard.radius}
+          color="red"
+        />
+        {/* Stretch zone */}
+        <Circle
+          cx={zones.stretch.x}
+          cy={zones.stretch.y}
+          r={zones.stretch.radius}
+          color="yellow"
+        />
+        {/* Easy zone */}
+        <Circle
+          cx={zones.easy.x}
+          cy={zones.easy.y}
+          r={zones.easy.radius}
+          color="green"
+        />
+      </Group>
+    </Canvas>
+  );
+};
+
+// ================================
+// components/HandednessSettingsScreen.tsx
+// User control interface
+// ================================
+
+import { ScrollView, Switch } from 'react-native';
+
+export const HandednessSettingsScreen: React.FC = () => {
+  const store = useHandednessStore();
+  const { handedness, detected, confidence, isOverridden, isAdaptive } = useHandedness();
+
+  return (
+    <ScrollView style={settingsStyles.container}>
+      <View style={settingsStyles.section}>
+        <Text style={settingsStyles.title}>Handedness Detection</Text>
+        
+        <View style={settingsStyles.row}>
+          <Text>Detected: {detected}</Text>
+          <Text>Confidence: {(confidence * 100).toFixed(0)}%</Text>
+        </View>
+
+        <View style={settingsStyles.row}>
+          <Text>Effective: {handedness}</Text>
+          <Text>{isOverridden ? '(Manual)' : '(Auto)'}</Text>
+        </View>
+      </View>
+
+      <View style={settingsStyles.section}>
+        <Text style={settingsStyles.title}>Manual Override</Text>
+        
+        <Pressable
+          style={settingsStyles.button}
+          onPress={() => store.setUserOverride('left')}
+        >
+          <Text>I'm Left-Handed</Text>
+        </Pressable>
+
+        <Pressable
+          style={settingsStyles.button}
+          onPress={() => store.setUserOverride('right')}
+        >
+          <Text>I'm Right-Handed</Text>
+        </Pressable>
+
+        <Pressable
+          style={settingsStyles.button}
+          onPress={() => store.setUserOverride(null)}
+        >
+          <Text>Use Auto-Detection</Text>
+        </Pressable>
+      </View>
+
+      <View style={settingsStyles.section}>
+        <Text style={settingsStyles.title}>Adaptive UI</Text>
+        
+        <View style={settingsStyles.row}>
+          <Text>Enable Adaptive Layout</Text>
+          <Switch
+            value={store.adaptiveEnabled}
+            onValueChange={store.setAdaptiveEnabled}
+          />
+        </View>
+
+        <Text style={settingsStyles.explanation}>
+          When enabled, buttons and controls move to your comfortable reach zone.
+        </Text>
+      </View>
+
+      <View style={settingsStyles.section}>
+        <Pressable
+          style={[settingsStyles.button, settingsStyles.dangerButton]}
+          onPress={store.resetData}
+        >
+          <Text style={settingsStyles.dangerText}>Reset All Data</Text>
+        </Pressable>
+      </View>
+
+      <View style={settingsStyles.section}>
+        <Text style={settingsStyles.title}>Why We Detect Handedness</Text>
+        <Text style={settingsStyles.explanation}>
+          Most apps are designed for right-handed users. We detect how you naturally
+          hold your phone to make controls easier to reach. All detection happens
+          locally on your device. We never store exact touch coordinates, only
+          anonymized patterns. You can disable this anytime.
+        </Text>
+      </View>
+    </ScrollView>
+  );
+};
+
+const settingsStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff'
+  },
+  section: {
+    marginBottom: 32
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12
+  },
+  button: {
+    backgroundColor: '#E5E7EB',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 8
+  },
+  dangerButton: {
+    backgroundColor: '#FEE2E2'
+  },
+  dangerText: {
+    color: '#DC2626',
+    fontWeight: '600'
+  },
+  explanation: {
+    fontSize: 14,
+    color: '#6B7280',
+    lineHeight: 20,
+    marginTop: 8
+  }
+});
+
+// ================================
+// USAGE EXAMPLE
+// ================================
+
+/*
+import { HandednessProvider } from './components/HandednessProvider';
+import { AdaptivePrimaryButton } from './components/AdaptivePrimaryButton';
+import { FloatingActionControl } from './components/FloatingActionControl';
+
+export default function App() {
+  return (
+    <HandednessProvider autoDetect={true}>
+      <YourAppContent />
+      
+      <AdaptivePrimaryButton
+        onPress={() => console.log('Primary action')}
+        label="Record"
+        priority="primary"
+      />
+      
+      <FloatingActionControl
+        onPress={() => console.log('Floating action')}
+        icon={<CameraIcon />}
+        label="Quick capture"
+      />
+    </HandednessProvider>
+  );
+}
+*/

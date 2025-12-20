@@ -1,0 +1,205 @@
+ACT AS A PRINCIPAL MOBILE + AI SYSTEM ARCHITECT.
+
+BUILD A WORKING, MAINTAINABLE, HANDEDNESS-AWARE MOBILE PLATFORM
+CALLED “AKORFA”.
+
+AKORFA IS A MULTI-CONCEPT PLATFORM:
+1) A deep insight & learning school for human systems
+2) A calm, intentional social space for sharing insight, not noise
+
+DO NOT BUILD A DOPAMINE-DRIVEN SOCIAL APP.
+DO NOT OVER-ENGINEER.
+BUILD REAL, WORKING CODE ONLY.
+
+PRIORITY:
+CLARITY > TRUST > PERFORMANCE > FEATURES.
+
+--------------------------------
+🎯 CORE PRODUCT PHILOSOPHY
+--------------------------------
+Akorfa combines:
+- reflection
+- learning
+- dialogue
+- selective social expression
+
+The social layer must:
+- feel thoughtful, not addictive
+- reward insight, not volume
+- respect cognitive & physical comfort
+- integrate with learning layers
+
+--------------------------------
+🧠 PLATFORM MODES (IMPORTANT)
+--------------------------------
+The app has TWO MODES:
+
+1. INSIGHT MODE (default)
+   - Reading
+   - Learning modules
+   - Deep explanations
+   - Calm UI
+
+2. SOCIAL MODE (intentional entry)
+   - Short videos (Snapchat-like)
+   - Direct messaging
+   - Insight sharing
+   - Small-group discussions
+
+MODE SWITCH MUST BE EXPLICIT.
+NO INFINITE SCROLL BY DEFAULT.
+
+--------------------------------
+🧱 TECH STACK (MANDATORY)
+--------------------------------
+- React Native + TypeScript
+- Zustand (state)
+- Reanimated 3
+- Gesture Handler v2
+- MMKV (local storage)
+- NativeWind (styling)
+
+--------------------------------
+🧠 SYSTEM 1: HANDEDNESS DETECTION
+--------------------------------
+Detect handedness ONLY from:
+- touch start zones
+- swipe direction bias
+- repeated reach corrections
+
+All inference is:
+- local
+- anonymized
+- optional
+- explainable
+
+Return:
+- handedness: 'left' | 'right' | 'unknown'
+- confidence: number (0–1)
+
+Never auto-adapt if confidence < 0.75.
+
+--------------------------------
+🧠 SYSTEM 2: ADAPTIVE UI (LIMITED)
+--------------------------------
+Adaptive UI applies ONLY to:
+- Record button (video)
+- Send button (DM)
+- Primary insight actions
+- Floating controls
+
+NEVER adapt:
+- reading layout
+- text alignment
+- navigation hierarchy
+
+If UI adapts, explain WHY via toast.
+
+--------------------------------
+🧠 SYSTEM 3: SOCIAL FEATURES (MINIMAL & SAFE)
+--------------------------------
+IMPLEMENT ONLY:
+
+1. Short-form video recording (no effects)
+2. Direct messaging (1–1)
+3. Insight posts (text + video)
+4. Small circles (max 12 users)
+
+NO:
+- public follower counts
+- viral mechanics
+- algorithmic amplification
+- endless feeds
+
+--------------------------------
+🧠 SYSTEM 4: COMFORT ZONES
+--------------------------------
+Calculate thumb comfort zones based on:
+- screen size
+- handedness
+- 40% reach heuristic
+
+Expose dev-only overlay to visualize zones.
+
+--------------------------------
+🧠 SYSTEM 5: USER AGENCY (NON-NEGOTIABLE)
+--------------------------------
+Provide:
+- Manual handedness selection
+- Disable adaptive UI toggle
+- “Why am I seeing this?” explanations
+- Reset local behavioral data
+
+No dark patterns.
+No silent behavior changes.
+
+--------------------------------
+🧠 SYSTEM 6: PERFORMANCE RULES
+--------------------------------
+- No detection during scroll
+- No detection during animations
+- No background inference
+- Memory < 10MB
+- Battery impact < 1%
+- 60fps baseline
+
+--------------------------------
+🧩 COMPONENTS TO BUILD
+--------------------------------
+ONLY BUILD THESE:
+
+1. <HandednessProvider />
+2. <AdaptivePrimaryButton />
+3. <FloatingActionControl />
+4. <VideoRecordButton />
+5. <InsightPostCard />
+6. <DirectMessageScreen />
+7. <ComfortZoneOverlay /> (DEV ONLY)
+8. <HandednessSettingsScreen />
+
+--------------------------------
+📦 STATE MODEL
+--------------------------------
+Store ONLY:
+- handedness
+- confidence
+- user override
+- adaptive enabled flag
+- current app mode (insight | social)
+
+--------------------------------
+🧪 REQUIRED OUTPUT
+--------------------------------
+YOU MUST OUTPUT:
+
+1. Full TypeScript types
+2. Zustand stores
+3. Handedness detection logic
+4. Adaptive layout utilities
+5. Video record button logic
+6. DM screen UI (basic)
+7. Example “Insight + Social” screen
+8. Clear comments explaining WHY decisions were made
+
+--------------------------------
+🚫 ABSOLUTE PROHIBITIONS
+--------------------------------
+DO NOT:
+- invent APIs
+- leave TODOs
+- abstract excessively
+- add growth hacks
+- design addictive mechanics
+
+--------------------------------
+🎯 FINAL GOAL
+--------------------------------
+Produce a platform that:
+- feels intelligent
+- supports learning AND expression
+- respects the human nervous system
+- can be extended safely by AI
+- can scale socially without collapsing cognitively
+
+OUTPUT READY-TO-COPY CODE.
+NO EXPLANATIONS OUTSIDE COMMENTS.
