@@ -49,6 +49,21 @@ export async function POST(req: Request) {
       return NextResponse.json({error: 'post_id and content are required'}, {status: 400});
     }
 
+    // If user_id provided, ensure profile exists
+    if (user_id) {
+      const existingProfile = await db.select().from(profiles).where(eq(profiles.id, user_id)).limit(1);
+      if (existingProfile.length === 0) {
+        // Create profile if it doesn't exist
+        await db.insert(profiles).values({
+          id: user_id,
+          username: `User_${user_id.slice(0, 8)}`
+        }).catch(err => {
+          // Silently fail if profile creation fails (it might already exist)
+          console.log('Profile creation note:', err.message);
+        });
+      }
+    }
+
     const insertData: any = {
       postId: post_id,
       userId: user_id || null,
@@ -87,7 +102,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({comment: newComment});
   } catch (err: any) {
-    console.error(err);
+    console.error('Comment error:', err);
     return NextResponse.json({error: err.message ?? String(err)}, {status: 500});
   }
 }
