@@ -20,16 +20,22 @@ function getSenderEmail(): string {
 
 function getEmailTemplate(heading: string, bodyText: string, buttonUrl?: string, buttonText?: string, footerText?: string): { html: string; text: string } {
   const actionButton = buttonUrl && buttonText ? `
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 24px 0; width: 100%;">
-              <tr>
-                <td align="center">
-                  <a href="${buttonUrl}" style="display: inline-block; background-color: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; border: 2px solid #16a34a;">
-                    ${buttonText}
-                  </a>
-                </td>
-              </tr>
-            </table>
-          ` : '';
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="padding: 20px 0;">
+                <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" bgcolor="#16a34a" style="border-radius: 4px;">
+                      <a href="${buttonUrl}" style="background-color: #16a34a; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 4px; font-weight: 600; display: inline-block; border: 1px solid #16a34a;">
+                        ${buttonText}
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        ` : '';
 
   const html = `
     <!DOCTYPE html>
@@ -37,86 +43,33 @@ function getEmailTemplate(heading: string, bodyText: string, buttonUrl?: string,
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            line-height: 1.6;
-            color: #1f2937;
-            background-color: #f9fafb;
-            margin: 0;
-            padding: 0;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-          }
-          .header {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            padding: 32px 24px;
-            text-align: center;
-            color: white;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-          }
-          .content {
-            padding: 32px 24px;
-          }
-          .content p {
-            margin: 0 0 16px 0;
-            font-size: 16px;
-            color: #374151;
-            line-height: 1.6;
-          }
-          .footer {
-            padding: 24px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-            background-color: #f9fafb;
-            font-size: 12px;
-            color: #6b7280;
-          }
-          .divider {
-            height: 1px;
-            background-color: #e5e7eb;
-            margin: 24px 0;
-          }
-          .highlight {
-            background-color: #f0fdf4;
-            padding: 16px;
-            border-left: 4px solid #16a34a;
-            border-radius: 4px;
-            margin: 16px 0;
-          }
-        </style>
       </head>
-      <body>
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
+      <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333333; background-color: #ffffff; margin: 0; padding: 0;">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-            <td style="padding: 0;">
-              <div class="container">
-                <div class="header">
-                  <h1>${heading}</h1>
-                </div>
-                <div class="content">
-                  ${bodyText}
-                  ${actionButton}
-                </div>
-                <div class="footer">
-                  <p style="margin: 0; color: #6b7280;">
-                    ${footerText || 'If you did not request this email, please ignore it. This email contains sensitive security information.'}
-                  </p>
-                  <p style="margin: 12px 0 0 0; color: #9ca3af;">
+            <td style="padding: 20px;">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+                <tr>
+                  <td style="background-color: #16a34a; padding: 24px; text-align: center; color: #ffffff;">
+                    <h1 style="margin: 0; font-size: 24px; font-weight: bold;">
+                      ${heading}
+                    </h1>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 24px; font-size: 14px; line-height: 1.6; color: #333333;">
+                    ${bodyText}
+                    ${actionButton}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px 24px; border-top: 1px solid #dddddd; font-size: 12px; color: #666666; text-align: center;">
+                    ${footerText || 'If you did not request this email, please ignore it.'}
+                    <br><br>
                     © 2025 Akorfa. All rights reserved.
-                  </p>
-                </div>
-              </div>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
@@ -144,20 +97,20 @@ export const emailService = {
     try {
       const { html, text } = getEmailTemplate(
         'Verify Your Email',
-        `<p>Welcome to Akorfa! We're excited to have you join our community.</p>
-         <p>To get started, please verify your email address by clicking the button below. This helps us keep your account secure.</p>
-         <div class="highlight">
-           <p style="margin: 0; font-weight: 600;">This verification link will expire in 24 hours.</p>
-         </div>`,
+        `<p>Welcome to Akorfa!</p>
+         <p>Please verify your email address to activate your account. Click the button below to proceed.</p>
+         <p style="margin-top: 20px; font-size: 13px; color: #666666;">
+           This verification link will expire in 24 hours.
+         </p>`,
         verificationUrl,
-        'Verify Email Address',
-        'If you did not sign up for Akorfa, please disregard this email and do not click the link.'
+        'Verify Email',
+        'If you did not create this account, you can safely ignore this email.'
       );
 
       const result = await getResend().emails.send({
         from: getSenderEmail(),
         to: email,
-        subject: 'Verify your Akorfa account - Action required',
+        subject: 'Verify your Akorfa account',
         html,
         text,
       });
@@ -172,20 +125,20 @@ export const emailService = {
     try {
       const { html, text } = getEmailTemplate(
         'Reset Your Password',
-        `<p>We received a request to reset the password for your Akorfa account.</p>
-         <p>Click the button below to create a new password. If you did not make this request, you can safely ignore this email.</p>
-         <div class="highlight">
-           <p style="margin: 0; font-weight: 600;">This link will expire in 1 hour for security reasons.</p>
-         </div>`,
+        `<p>We received a request to reset your password.</p>
+         <p>Click the button below to create a new password. This link will expire in 1 hour.</p>
+         <p style="margin-top: 20px; font-size: 13px; color: #666666;">
+           If you did not request this reset, you can safely ignore this email.
+         </p>`,
         resetUrl,
         'Reset Password',
-        'If you did not request a password reset, please ignore this email. Your account remains secure.'
+        'If you did not request this password reset, please ignore this email.'
       );
 
       const result = await getResend().emails.send({
         from: getSenderEmail(),
         to: email,
-        subject: 'Reset your Akorfa password - Action required',
+        subject: 'Reset your password',
         html,
         text,
       });
